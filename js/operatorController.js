@@ -3,11 +3,12 @@ const manager = new SceneManager();
 const $ = id => document.getElementById(id);
 const pad = n => String(Math.floor(n)).padStart(2, '0');
 const format = seconds => `${pad(seconds / 60)}:${pad(seconds % 60)}`;
+const ordinal = index => ['一','二','三','四','五','六','七','八','九','十'][index] || String(index + 1);
 $('scene-count').textContent = pad(scenes.length); $('total-heading').textContent = pad(scenes.length);
 scenes.forEach((scene, index) => {
   const button = document.createElement('button'); button.className = 'scene-item';
   const number = document.createElement('span'); number.className = 'number'; number.textContent = pad(index + 1);
-  const text = document.createElement('span'); const title = document.createElement('strong'); title.textContent = `第${['一','二','三','四','五','六','七','八','九','十'][index] || index + 1}幕：${scene.title}`;
+  const text = document.createElement('span'); const title = document.createElement('strong'); title.textContent = `第${ordinal(index)}幕：${scene.title}`;
   const subtitle = document.createElement('small'); subtitle.textContent = scene.subtitle || scene.description; text.append(title, subtitle);
   const marker = document.createElement('span'); marker.className = 'scene-state'; marker.textContent = '●'; button.append(number, text, marker);
   button.addEventListener('click', () => manager.go(index)); $('scene-list').append(button);
@@ -32,7 +33,7 @@ let state; manager.subscribe(value => { state = value; });
 function render() {
   const scene = scenes[state.index], selected = scene || scenes[0];
   const time = scene ? Math.min(elapsed(state), scene.duration) : 0;
-  $('current-title').textContent = scene ? `第一幕：${scene.title}` : state.index >= scenes.length ? '演出结束' : '等待开始';
+  $('current-title').textContent = scene ? `第${ordinal(state.index)}幕：${scene.title}` : state.index >= scenes.length ? '演出结束' : '等待开始';
   $('preview-wait').hidden = state.index !== -1 || state.black;
   $('elapsed').textContent = format(time); $('duration').textContent = format(selected?.duration || 0);
   $('progress').style.width = `${selected ? time / selected.duration * 100 : 0}%`;
