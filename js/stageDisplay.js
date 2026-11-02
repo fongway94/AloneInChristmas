@@ -3,6 +3,8 @@ import { AudioManager } from './audioManager.js';
 const manager = new SceneManager();
 const preview = new URLSearchParams(location.search).has('preview');
 const audio = new AudioManager(preview);
+// 提前載入圖片，降低現場切換時等待解碼的機率。
+const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.photo]).filter(Boolean))].map(src => { const image = new Image(); image.src = src; return image; });
 const root = document.querySelector('#stage');
 let currentIndex = null, currentRun = null, view = null, state;
 function build(scene) {
@@ -12,6 +14,7 @@ function build(scene) {
   const layer = document.createElement('div'); layer.className = `scene-layer scene-${scene.type}`;
   const environment = document.createElement('div'); environment.className = 'environment'; environment.style.backgroundImage = `url("${scene.background}")`;
   layer.append(environment);
+  const warmGlow = document.createElement('div'); warmGlow.className = 'warm-glow'; warmGlow.style.opacity = String(scene.warmth || 0); layer.append(warmGlow);
   const haze = document.createElement('div'); haze.className = 'atmosphere'; layer.append(haze);
   let phone = null; const cards = [];
   if (scene.type === 'phone' || scene.type === 'social') {

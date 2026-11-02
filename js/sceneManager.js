@@ -1,7 +1,7 @@
 import { scenes } from '../scenes/index.js';
 export { scenes };
-const KEY = 'alone-in-christmas-state-v2';
-const CHANNEL = 'alone-in-christmas-v2';
+const KEY = 'alone-in-christmas-state-v3';
+const CHANNEL = 'alone-in-christmas-v3';
 const initial = () => ({ index: -1, elapsed: 0, playing: false, black: false, updatedAt: Date.now(), revision: 0 });
 export function elapsed(state, now = Date.now()) {
   return Math.max(0, state.elapsed + (state.playing ? (now - state.updatedAt) / 1000 : 0));
