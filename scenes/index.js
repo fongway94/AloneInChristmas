@@ -1,3 +1,3 @@
-import scene01 from './scene01.js';
-// 按演出顺序排列；新增场景时在此引入并加入数组。
-export const scenes = [scene01];
+import actOne from './scene01.js';
+// 依演出順序排列操作提示；第二幕完成後可在此加入。
+export const scenes = [...actOne];

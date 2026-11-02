@@ -1,7 +1,7 @@
 import { scenes } from '../scenes/index.js';
 export { scenes };
-const KEY = 'alone-in-christmas-state-v1';
-const CHANNEL = 'alone-in-christmas-v1';
+const KEY = 'alone-in-christmas-state-v2';
+const CHANNEL = 'alone-in-christmas-v2';
 const initial = () => ({ index: -1, elapsed: 0, playing: false, black: false, updatedAt: Date.now(), revision: 0 });
 export function elapsed(state, now = Date.now()) {
   return Math.max(0, state.elapsed + (state.playing ? (now - state.updatedAt) / 1000 : 0));
@@ -25,7 +25,7 @@ export class SceneManager {
     try { localStorage.setItem(KEY, JSON.stringify(this.state)); } catch (_) {}
     this.channel?.postMessage(this.state); this.notify();
   }
-  go(index) { if (index < 0 || index > scenes.length) return; this.update({ index, elapsed: 0, playing: index < scenes.length, black: false }); }
+  go(index) { if (index < 0 || index > scenes.length) return; this.update({ index, elapsed: 0, playing: index < scenes.length, black: false, runId: (this.state.runId || 0) + 1 }); }
   next() { this.go(Math.min(this.state.index + 1, scenes.length)); }
   previous() { if (this.state.index > 0) this.go(this.state.index - 1); }
   restart() { if (this.state.index >= 0 && this.state.index < scenes.length) this.go(this.state.index); }

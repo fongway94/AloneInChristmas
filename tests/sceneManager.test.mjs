@@ -19,6 +19,8 @@ operator.togglePlay(); now += 1000; assert.equal(elapsed(stage.state), 6.5);
 operator.toggleBlack(); assert.equal(stage.state.black, true); operator.toggleBlack(); assert.equal(stage.state.black, false);
 operator.restart(); assert.equal(elapsed(stage.state), 0);
 now += (scenes[0].duration + 10) * 1000; assert.equal(stage.state.index, 0); // completion never auto-advances
+operator.next(); assert.equal(stage.state.index, 1);
+operator.go(scenes.length - 1); now += (scenes.at(-1).duration + 10) * 1000; assert.equal(stage.state.index, scenes.length - 1);
 operator.next(); assert.equal(stage.state.index, scenes.length); assert.equal(stage.state.playing, false);
-operator.previous(); assert.equal(stage.state.index, 0); assert.equal(elapsed(stage.state), 0);
+operator.previous(); assert.equal(stage.state.index, scenes.length - 1); assert.equal(elapsed(stage.state), 0);
 console.log('场景状态、暂停、重播、黑屏、结束保持及存储事件同步测试通过。');

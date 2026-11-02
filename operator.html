@@ -1,37 +1,37 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101414"><title>演出控制台 · 圣诞独行</title><link rel="stylesheet" href="css/operator.css"></head>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101414"><title>演出控制台 · 一個人的聖誕</title><link rel="stylesheet" href="css/operator.css"></head>
 <body>
 <div class="app-shell">
   <aside class="sidebar">
-    <div class="brand"><div class="brand-mark">✳</div><div><div class="brand-title">圣诞独行</div><div class="brand-sub">舞台视觉系统</div></div></div>
+    <div class="brand"><div class="brand-mark">✳</div><div><div class="brand-title">一個人的聖誕</div><div class="brand-sub">舞台視覺系統</div></div></div>
     <div class="sidebar-divider"></div>
-    <div class="side-label">演出项目</div>
-    <div class="project-card"><span class="project-icon">✦</span><span><strong>圣诞独行</strong><small>舞台背景演示</small></span><span class="project-chevron">⌄</span></div>
-    <div class="side-label scene-label">场景列表 <span id="scene-count">01</span></div>
+    <div class="side-label">演出項目</div>
+    <div class="project-card"><span class="project-icon">✦</span><span><strong>一個人的聖誕</strong><small>舞台背景演示</small></span><span class="project-chevron">⌄</span></div>
+    <div class="side-label scene-label">第一幕 · 畫面列表 <span id="scene-count">01</span></div>
     <div id="scene-list" class="scene-list"></div>
-    <div class="sidebar-bottom"><div class="side-note-icon">✧</div><div><strong>演出提示</strong><p>场景结束后将保持黑屏，<br>等待您手动推进。</p></div></div>
+    <div class="sidebar-bottom"><div class="side-note-icon">✧</div><div><strong>演出提示</strong><p>每個畫面播放後都會等待，<br>請配合演員手動推進。</p></div></div>
   </aside>
   <main class="main">
-    <header class="topbar"><div class="breadcrumb">演出项目 <span>/</span> <strong>控制台</strong></div><div class="top-right"><span class="connection"><i></i> 本地同步已就绪</span><button id="open-stage" class="open-stage"><span>↗</span> 打开舞台画面</button></div></header>
+    <header class="topbar"><div class="breadcrumb">演出項目 <span>/</span> <strong>控制台</strong></div><div class="top-right"><span class="connection"><i></i> 本地同步已就緒</span><button id="open-stage" class="open-stage"><span>↗</span> 打開舞台畫面</button></div></header>
     <div class="content">
-      <div class="page-heading"><div><div class="eyebrow"><span></span> 演出控制台</div><h1>让故事，在光影中发生<span>。</span></h1><p>一切准备就绪。从这里，开始这场演出。</p></div><div class="heading-index"><span>当前演出</span><strong>01 <em>/</em> <span id="total-heading">01</span></strong></div></div>
+      <div class="page-heading"><div><div class="eyebrow"><span></span> 演出控制台</div><h1>讓故事，在光影中發生<span>。</span></h1><p>一切準備就緒。從這裡，開始這場演出。</p></div><div class="heading-index"><span>當前演出</span><strong><span id="current-heading">00</span> <em>/</em> <span id="total-heading">07</span></strong></div></div>
       <div class="dashboard">
         <section class="monitor-panel panel">
-          <div class="panel-heading"><div><span class="section-kicker">舞台监看</span><h2>当前画面 <span class="live-tag"><i></i> 实时预览</span></h2></div><span class="monitor-ratio">16 : 9</span></div>
-          <div class="preview-wrap"><iframe id="preview" src="index.html?preview=1" title="舞台画面实时预览" tabindex="-1"></iframe><div id="preview-wait" class="preview-wait"><span class="wait-symbol">✳</span><span>舞台已就绪</span><small>点击「下一幕」开始演出</small></div><div class="preview-corner">舞台画面</div></div>
-          <div class="monitor-footer"><div class="monitor-scene"><span class="scene-dot"></span><div><small>当前场景</small><strong id="current-title">等待开始</strong></div></div><div class="monitor-time"><span id="elapsed">00:00</span><span class="time-divider">/</span><span id="duration">00:40</span></div></div>
+          <div class="panel-heading"><div><span class="section-kicker">舞台監看</span><h2>當前畫面 <span class="live-tag"><i></i> 即時預覽</span></h2></div><span class="monitor-ratio">16 : 9</span></div>
+          <div class="preview-wrap"><iframe id="preview" src="index.html?preview=1" title="舞台畫面即時預覽" tabindex="-1"></iframe><div id="preview-wait" class="preview-wait"><span class="wait-symbol">✳</span><span>舞台已就緒</span><small>點擊「下一個畫面」開始演出</small></div><div class="preview-corner">舞台畫面</div></div>
+          <div class="monitor-footer"><div class="monitor-scene"><span class="scene-dot"></span><div><small>目前畫面</small><strong id="current-title">等待開始</strong></div></div><div class="monitor-time"><span id="elapsed">00:00</span><span class="time-divider">/</span><span id="duration">00:40</span></div></div>
           <div class="progress-track"><div id="progress"></div></div>
-          <div class="progress-labels"><span id="status-text">准备就绪</span><span>场景结束后自动淡出</span></div>
+          <div class="progress-labels"><span id="status-text">準備就緒</span><span>每個畫面皆由操作員推進</span></div>
         </section>
-        <section class="control-panel panel"><div class="panel-heading"><div><span class="section-kicker">演出操作</span><h2>播放控制</h2></div><span class="control-icon">⌘</span></div><p class="control-description">按演出节奏推进场景，舞台画面将同步更新。</p>
-          <div class="primary-controls"><button id="previous" class="control-button previous"><span class="button-icon">←</span><span>上一幕<small>返回上一场景</small></span><kbd>←</kbd></button><button id="next" class="control-button next"><span class="button-icon">→</span><span>下一幕<small>开始 / 推进场景</small></span><kbd>→</kbd></button></div>
-          <div class="secondary-controls"><button id="play"><span>Ⅱ</span><strong>暂停</strong></button><button id="restart"><span>↺</span><strong>重新播放</strong></button><button id="black"><span>◐</span><strong>黑屏</strong></button></div>
-          <div class="control-divider"></div><div class="shortcut-heading">快捷键 <span>KEYBOARD SHORTCUTS</span></div><div class="shortcuts"><div><kbd>→</kbd><kbd>空格</kbd><span>下一幕</span></div><div><kbd>←</kbd><span>上一幕</span></div><div><kbd>B</kbd><span>黑屏</span></div><div><kbd>R</kbd><span>重新播放</span></div><div><kbd>F</kbd><span>全屏当前窗口</span></div></div>
-          <div class="fullscreen-tip"><span>ⓘ</span><p>将舞台画面移至投影屏，点击该窗口并按 <b>F</b> 进入全屏。</p></div>
+        <section class="control-panel panel"><div class="panel-heading"><div><span class="section-kicker">演出操作</span><h2>播放控制</h2></div><span class="control-icon">⌘</span></div><p class="control-description">請依照演員的動作推進，畫面不會自動跳到下一段。</p>
+          <label class="cue-select-label" for="cue-select">快速選擇畫面</label><select id="cue-select" class="cue-select"><option value="-1">待命</option></select><div class="primary-controls"><button id="previous" class="control-button previous"><span class="button-icon">←</span><span>上一個畫面<small>返回上一段</small></span><kbd>←</kbd></button><button id="next" class="control-button next"><span class="button-icon">→</span><span>下一個畫面<small>開始 / 推進畫面</small></span><kbd>→</kbd></button></div>
+          <div class="secondary-controls"><button id="play"><span>Ⅱ</span><strong>暫停</strong></button><button id="restart"><span>↺</span><strong>重新播放</strong></button><button id="black"><span>◐</span><strong>黑場</strong></button></div>
+          <div class="control-divider"></div><div class="shortcut-heading">快捷鍵 <span>按鍵提示</span></div><div class="shortcuts"><div><kbd>→</kbd><kbd>空格</kbd><span>下一個畫面</span></div><div><kbd>←</kbd><span>上一個畫面</span></div><div><kbd>B</kbd><span>黑場</span></div><div><kbd>R</kbd><span>重新播放</span></div><div><kbd>F</kbd><span>全螢幕當前視窗</span></div></div>
+          <div class="fullscreen-tip"><span>ⓘ</span><p>將舞台畫面移至投影屏，點擊該視窗並按 <b>F</b> 進入全螢幕。</p></div>
         </section>
       </div>
-      <section class="up-next"><div class="up-icon">✦</div><div><span>第一幕 · 场景简介</span><p id="scene-description">接连而来的消息，将一个平凡的早晨推向失控。</p></div><div class="up-meta"><span>预计时长</span><strong id="scene-length">约 40 秒</strong></div></section>
-      <footer><span>圣诞独行 <i>·</i> 舞台视觉系统</span><span>为每一个值得被看见的瞬间</span></footer>
+      <section class="up-next"><div class="up-icon">✦</div><div><span>第一幕 · 演員與操作提示</span><p id="scene-description">女孩坐在床邊，拿起手機。</p><p id="operator-cue" class="operator-cue"></p></div><div class="up-meta"><span>動畫約需</span><strong id="scene-length">約 15 秒</strong></div></section>
+      <footer><span>一個人的聖誕 <i>·</i> 舞台視覺系統</span><span>為每一個值得被看見的瞬間</span></footer>
     </div>
   </main>
 </div><script type="module" src="js/operatorController.js"></script></body></html>
