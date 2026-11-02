@@ -1,5 +1,6 @@
 import { SceneManager, scenes, elapsed } from './sceneManager.js';
 import { AudioManager } from './audioManager.js';
+import { createAtmosphere } from './atmosphere.js';
 const manager = new SceneManager();
 const preview = new URLSearchParams(location.search).has('preview');
 const audio = new AudioManager(preview);
@@ -16,6 +17,8 @@ function build(scene) {
   layer.append(environment);
   const warmGlow = document.createElement('div'); warmGlow.className = 'warm-glow'; warmGlow.style.opacity = String(scene.warmth || 0); layer.append(warmGlow);
   const haze = document.createElement('div'); haze.className = 'atmosphere'; layer.append(haze);
+  const motionCanvas = document.createElement('canvas'); motionCanvas.className = 'motion-canvas'; motionCanvas.setAttribute('aria-hidden', 'true'); layer.append(motionCanvas);
+  const motion = createAtmosphere(motionCanvas, scene.motion);
   let phone = null; const cards = [];
   if (scene.type === 'phone' || scene.type === 'social') {
     phone = document.createElement('div'); phone.className = 'phone';
@@ -43,17 +46,27 @@ function build(scene) {
   if (scene.caption) { caption = document.createElement('div'); caption.className = 'scene-caption'; caption.textContent = scene.caption; layer.append(caption); }
   const fade = document.createElement('div'); fade.className = 'blackout'; layer.append(fade);
   root.append(layer);
-  return { layer, phone, cards, caption };
+  return { layer, phone, cards, caption, motion, motionFrame: null };
 }
 manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); } });
 function frame() {
   const scene = scenes[state.index];
   if (scene && view) {
-    const time = Math.min(elapsed(state), scene.duration), { layer, phone, cards, caption } = view;
+    const rawTime = elapsed(state), time = Math.min(rawTime, scene.duration), { layer, phone, cards, caption, motion } = view;
+    const fullyFaded = scene.fadeAt != null && time >= scene.fadeAt + scene.fadeDuration;
+    // 背景持續微動直到操作員推進；暫停時以同一個時間點凍結。
+    const motionFrame = Math.floor(rawTime * 24);
+    if (!state.black && !fullyFaded && view.motionFrame !== motionFrame) {
+      motion.draw(rawTime); view.motionFrame = motionFrame;
+    }
+    if (!state.black && !fullyFaded) {
+      const drift = (1 - Math.cos(rawTime * Math.PI / 48)) / 2;
+      layer.style.setProperty('--room-scale', String(1.025 + drift * .04));
+    }
     layer.style.setProperty('--darkness', String(scene.dim || 0));
     layer.style.setProperty('--fade', scene.fadeAt == null ? '0' : String(Math.min(1, Math.max(0, (time - scene.fadeAt) / scene.fadeDuration))));
     layer.style.setProperty('--entrance', String(Math.min(1, time / scene.transitionIn)));
-    layer.classList.toggle('paused', !state.playing || time >= scene.duration);
+    layer.classList.toggle('paused', !state.playing || state.black || fullyFaded);
     if (caption) caption.classList.toggle('visible', time >= scene.captionAt);
     if (phone) {
       const notes = scene.notifications || [];
@@ -66,7 +79,7 @@ function frame() {
       const lastAt = count ? notes[count - 1].at : -10;
       phone.classList.toggle('vibrate', state.playing && time < scene.duration && time - lastAt < .48);
     }
-    audio.update(time, state.playing && time < scene.duration, state.black);
+    audio.update(rawTime, state.playing && !fullyFaded, state.black);
   } else audio.update(0, false, true);
   root.classList.toggle('manual-black', state.black);
   requestAnimationFrame(frame);

@@ -41,9 +41,9 @@ function render() {
   $('preview-wait').hidden = state.index !== -1 || state.black;
   $('elapsed').textContent = format(time); $('duration').textContent = format(selected?.duration || 0);
   $('progress').style.width = `${selected ? time / selected.duration * 100 : 0}%`;
-  $('status-text').textContent = state.black ? '手動黑場中' : !scene ? (state.index >= scenes.length ? '演出結束 · 黑場保持中' : '準備就緒') : time >= scene.duration ? (scene.fadeAt != null ? '黑場保持中 · 等待推進' : '畫面保持中 · 等待推進') : state.playing ? '動畫播放中' : '已暫停';
-  $('play').querySelector('strong').textContent = state.playing && time < (scene?.duration || 0) ? '暫停' : '播放';
-  $('play').querySelector('span').textContent = state.playing && time < (scene?.duration || 0) ? 'Ⅱ' : '▶';
+  $('status-text').textContent = state.black ? '手動黑場中' : !scene ? (state.index >= scenes.length ? '演出結束 · 黑場保持中' : '準備就緒') : !state.playing ? '已暫停' : time >= scene.duration ? (scene.fadeAt != null ? '黑場保持中 · 等待推進' : '環境動態持續 · 等待推進') : '動畫播放中';
+  $('play').querySelector('strong').textContent = scene && state.playing ? '暫停' : '播放';
+  $('play').querySelector('span').textContent = scene && state.playing ? 'Ⅱ' : '▶';
   $('black').classList.toggle('active', state.black); $('black').querySelector('strong').textContent = state.black ? '解除黑場' : '黑場';
   $('previous').disabled = state.index <= 0; $('next').disabled = state.index >= scenes.length;
   $('cue-act').textContent = selected?.act || ''; $('scene-description').textContent = selected?.description || ''; $('operator-cue').textContent = selected?.cue || '';
