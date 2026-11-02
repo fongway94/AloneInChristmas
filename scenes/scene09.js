@@ -1,4 +1,4 @@
-const bench = 'assets/images/bench-evening.png';
+const bench = 'assets/images/penang-bench.png';
 const base = { act: '第九幕：因為耶穌愛你', transitionIn: 1.5, audio: { music: null, effects: [], volume: .7 } };
 export default [
   { ...base, id: 'encouragement', type: 'room', title: '故事還沒有結束', subtitle: '男孩的鼓勵', duration: 14, background: bench, warmth: .42,

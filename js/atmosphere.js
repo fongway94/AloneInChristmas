@@ -4,7 +4,7 @@ const fraction = n => n - Math.floor(n);
 const seed = n => fraction(Math.sin(n * 127.1 + 19.19) * 43758.5453);
 
 function rain(ctx, time, side, intensity) {
-  const bounds = side === 'left' ? { x: 0, y: 0, w: .34, h: .56 } : { x: .79, y: 0, w: .21, h: .79 };
+  const bounds = side === 'left' ? { x: 0, y: 0, w: .43, h: .63 } : side === 'middle' ? { x: .47, y: .10, w: .34, h: .69 } : { x: .72, y: 0, w: .28, h: .79 };
   ctx.save(); ctx.beginPath(); ctx.rect(bounds.x * W, bounds.y * H, bounds.w * W, bounds.h * H); ctx.clip();
   ctx.lineCap = 'round';
   for (let i = 0; i < 48; i++) {
@@ -65,6 +65,7 @@ export function createAtmosphere(canvas, settings) {
     ctx.clearRect(0, 0, W, H);
     if (settings.preset === 'rain-right') rain(ctx, time, 'right', intensity);
     else if (settings.preset === 'rain-left') rain(ctx, time, 'left', intensity);
+    else if (settings.preset === 'rain-middle') rain(ctx, time, 'middle', intensity);
     else if (settings.preset === 'street' || settings.preset === 'bench') lights(ctx, time, settings.preset, intensity);
     else if (settings.preset === 'fireworks') fireworks(ctx, time, intensity);
   }};

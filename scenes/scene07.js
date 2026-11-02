@@ -1,4 +1,4 @@
-const bench = 'assets/images/bench-evening.png';
+const bench = 'assets/images/penang-bench.png';
 const base = { act: '第七幕：長椅上的禱告', transitionIn: 1.5, audio: { music: null, effects: [], volume: .7 } };
 export default [
   { ...base, id: 'bench-meeting', type: 'room', title: '長椅上的相遇', subtitle: '男孩已坐在一旁', duration: 12, background: bench, warmth: .1,

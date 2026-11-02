@@ -1,4 +1,4 @@
-const street = 'assets/images/christmas-street.png';
+const street = 'assets/images/penang-street.png';
 const base = { act: '第六幕：人群中的孤獨', transitionIn: 1.5, audio: { music: null, effects: [], volume: .7 } };
 export default [
   { ...base, id: 'crowd-friends', type: 'room', title: '朋友們', subtitle: '拍照與交換禮物', duration: 12, background: street, warmth: .12,
