@@ -1,8 +1,8 @@
 import { scenes } from '../scenes/index.js';
 export { scenes };
-const KEY = 'alone-in-christmas-state-v4';
-const CHANNEL = 'alone-in-christmas-v4';
-const initial = () => ({ index: -1, elapsed: 0, playing: false, black: false, updatedAt: Date.now(), revision: 0 });
+const KEY = 'alone-in-christmas-state-v6';
+const CHANNEL = 'alone-in-christmas-v6';
+const initial = () => ({ index: -1, elapsed: 0, playing: false, black: false, muted: false, volume: 1, updatedAt: Date.now(), revision: 0 });
 export function elapsed(state, now = Date.now()) {
   return Math.max(0, state.elapsed + (state.playing ? (now - state.updatedAt) / 1000 : 0));
 }
@@ -30,5 +30,7 @@ export class SceneManager {
   previous() { if (this.state.index > 0) this.go(this.state.index - 1); }
   restart() { if (this.state.index >= 0 && this.state.index < scenes.length) this.go(this.state.index); }
   togglePlay() { if (this.state.index >= 0 && this.state.index < scenes.length) this.update({ playing: !this.state.playing }); }
+  toggleMute() { this.update({ muted: !this.state.muted }); }
+  setVolume(value) { this.update({ volume: Math.max(0, Math.min(1, value)) }); }
   toggleBlack() { this.update({ black: !this.state.black }); }
 }

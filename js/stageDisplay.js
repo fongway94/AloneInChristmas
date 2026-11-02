@@ -20,8 +20,8 @@ function build(scene) {
   const motionCanvas = document.createElement('canvas'); motionCanvas.className = 'motion-canvas'; motionCanvas.setAttribute('aria-hidden', 'true'); layer.append(motionCanvas);
   const motion = createAtmosphere(motionCanvas, scene.motion);
   let phone = null; const cards = [];
-  if (scene.type === 'phone' || scene.type === 'social') {
-    phone = document.createElement('div'); phone.className = 'phone';
+  if (['phone', 'social', 'draft', 'chat', 'call'].includes(scene.type)) {
+    phone = document.createElement('div'); phone.className = `phone phone-${scene.type}`;
     phone.innerHTML = `<div class="phone-edge"><div class="screen"><div class="wallpaper"></div><div class="status"><span></span><span class="status-icons"><span>◢</span><span>◕</span><span class="battery"></span></span></div><div class="island"></div><div class="lock"><div class="lock-icon">⌁</div><div class="date"></div><div class="clock"></div></div><div class="notifications"></div><div class="phone-bottom"><span class="bottom-button">◉</span><span class="bottom-button camera">◉</span></div><div class="home-bar"></div></div></div>`;
     phone.querySelector('.status > span').textContent = scene.clock; phone.querySelector('.date').textContent = scene.date; phone.querySelector('.clock').textContent = scene.clock;
     if (scene.type === 'social') {
@@ -30,6 +30,33 @@ function build(scene) {
       const image = document.createElement('img'); image.src = scene.photo; image.alt = '';
       const caption = document.createElement('div'); caption.className = 'social-caption'; caption.textContent = '和喜歡的人，一起迎接聖誕。';
       post.append(header, image, caption); phone.querySelector('.screen').append(post);
+    }
+    if (scene.type === 'draft') {
+      const draftView = document.createElement('div'); draftView.className = 'draft-view';
+      draftView.innerHTML = '<div class="phone-view-header">‹　朋友</div><div class="draft-date">今天</div><div class="draft-input"><span class="draft-text"></span><span class="draft-cursor"></span></div>';
+      phone.querySelector('.screen').append(draftView);
+    }
+    if (scene.type === 'chat') {
+      const chatView = document.createElement('div'); chatView.className = 'chat-view';
+      const header = document.createElement('div'); header.className = 'phone-view-header'; header.textContent = `‹　${scene.chatTitle}`;
+      const app = document.createElement('small'); app.className = 'chat-app'; app.textContent = 'WhatsApp'; header.append(app); chatView.append(header);
+      const feed = document.createElement('div'); feed.className = 'chat-feed';
+      scene.messages.forEach(item => {
+        const bubble = document.createElement('div'); bubble.className = 'chat-bubble';
+        const sender = document.createElement('strong'); sender.textContent = item.sender;
+        const text = document.createElement('span'); text.textContent = item.message;
+        bubble.append(sender, text); feed.append(bubble);
+      });
+      chatView.append(feed); const input = document.createElement('div'); input.className = 'chat-input'; input.textContent = '訊息'; chatView.append(input);
+      phone.querySelector('.screen').append(chatView);
+    }
+    if (scene.type === 'call') {
+      const call = document.createElement('div'); call.className = 'call-view';
+      const label = document.createElement('div'); label.className = 'call-status'; label.textContent = '來電';
+      const caller = document.createElement('div'); caller.className = 'call-name'; caller.textContent = scene.caller;
+      const hint = document.createElement('div'); hint.className = 'call-hint'; hint.textContent = '電話響起';
+      const accept = document.createElement('div'); accept.className = 'call-accept'; accept.textContent = '☎';
+      call.append(label, caller, hint, accept); phone.querySelector('.screen').append(call);
     }
     (scene.notifications || []).forEach(item => {
       const card = document.createElement('div'); card.className = 'notification';
@@ -72,6 +99,13 @@ function frame() {
       const notes = scene.notifications || [];
       const count = notes.filter(n => time >= n.at).length;
       phone.classList.toggle('lit', time >= 1); phone.classList.toggle('show-social', scene.type === 'social' && time >= 1.8);
+      phone.classList.toggle('show-interface', time >= 1.4);
+      if (scene.type === 'chat') phone.querySelectorAll('.chat-bubble').forEach((bubble, i) => bubble.classList.toggle('visible', time >= scene.messages[i].at));
+      if (scene.type === 'draft') {
+        const chars = Array.from(scene.draft), typed = Math.min(chars.length, Math.max(0, Math.floor((time - 2) * 4)));
+        const deleted = Math.max(0, Math.floor((time - 8) * 5));
+        phone.querySelector('.draft-text').textContent = chars.slice(0, Math.max(0, typed - deleted)).join('');
+      }
       cards.forEach((card, i) => {
         const age = count - 1 - i; card.classList.toggle('visible', age >= 0 && age < 4);
         card.style.setProperty('--order', Math.max(0, age)); card.style.zIndex = String(i + 1);
@@ -79,7 +113,7 @@ function frame() {
       const lastAt = count ? notes[count - 1].at : -10;
       phone.classList.toggle('vibrate', state.playing && time < scene.duration && time - lastAt < .48);
     }
-    audio.update(rawTime, state.playing && !fullyFaded, state.black);
+    audio.update(rawTime, state.playing && !fullyFaded, state.black || state.muted, state.volume ?? 1);
   } else audio.update(0, false, true);
   root.classList.toggle('manual-black', state.black);
   requestAnimationFrame(frame);

@@ -21,6 +21,8 @@ $('previous').addEventListener('click', () => manager.previous());
 $('restart').addEventListener('click', () => manager.restart());
 $('play').addEventListener('click', () => manager.togglePlay());
 $('black').addEventListener('click', () => manager.toggleBlack());
+$('audio-toggle').addEventListener('click', () => manager.toggleMute());
+$('audio-volume').addEventListener('input', event => manager.setVolume(Number(event.target.value)));
 $('open-stage').addEventListener('click', () => { const win = window.open('index.html', 'christmas-stage'); if (win) win.focus(); else alert('無法開啟舞台視窗，請允許瀏覽器開啟彈出視窗後重試。'); });
 window.addEventListener('keydown', event => {
   if (event.repeat || event.altKey || event.ctrlKey || event.metaKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
@@ -44,6 +46,7 @@ function render() {
   $('status-text').textContent = state.black ? '手動黑場中' : !scene ? (state.index >= scenes.length ? '演出結束 · 黑場保持中' : '準備就緒') : !state.playing ? '已暫停' : time >= scene.duration ? (scene.fadeAt != null ? '黑場保持中 · 等待推進' : '環境動態持續 · 等待推進') : '動畫播放中';
   $('play').querySelector('strong').textContent = scene && state.playing ? '暫停' : '播放';
   $('play').querySelector('span').textContent = scene && state.playing ? 'Ⅱ' : '▶';
+  $('audio-toggle').textContent = state.muted ? '預錄聲音：靜音' : '預錄聲音：開啟'; $('audio-volume').value = state.volume ?? 1;
   $('black').classList.toggle('active', state.black); $('black').querySelector('strong').textContent = state.black ? '解除黑場' : '黑場';
   $('previous').disabled = state.index <= 0; $('next').disabled = state.index >= scenes.length;
   $('cue-act').textContent = selected?.act || ''; $('scene-description').textContent = selected?.description || ''; $('operator-cue').textContent = selected?.cue || '';

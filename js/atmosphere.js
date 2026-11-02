@@ -35,6 +35,27 @@ function lights(ctx, time, preset, intensity) {
   }
 }
 
+// 煙花只在窗外天空綻放；無快速閃光，不遮擋舞台下方。
+function fireworks(ctx, time, intensity) {
+  const bursts = [[.38,.20,0],[.61,.15,2.8],[.48,.27,5.9]];
+  for (let b = 0; b < bursts.length; b++) {
+    const [x, y, offset] = bursts[b];
+    const phase = ((time - offset) % 11 + 11) % 11;
+    if (phase > 3.2 || time < offset) continue;
+    const spread = Math.min(1, phase / 1.6);
+    const opacity = Math.min(1, phase / .35) * Math.max(0, 1 - phase / 3.2) * intensity;
+    for (let i = 0; i < 44; i++) {
+      const angle = (Math.PI * 2 * i) / 44 + seed(i + b * 50) * .09;
+      const distance = (35 + seed(i + 60) * 37) * spread;
+      const fall = phase * phase * 2.4;
+      const px = x * W + Math.cos(angle) * distance, py = y * H + Math.sin(angle) * distance + fall;
+      ctx.strokeStyle = `rgba(255, ${Math.round(185 + 40 * seed(i + b))}, 133, ${opacity * .8})`;
+      ctx.lineWidth = .8 + seed(i + 80) * .9;
+      ctx.beginPath(); ctx.moveTo(px - Math.cos(angle) * 5 * spread, py - Math.sin(angle) * 5 * spread); ctx.lineTo(px, py); ctx.stroke();
+    }
+  }
+}
+
 export function createAtmosphere(canvas, settings) {
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -45,5 +66,6 @@ export function createAtmosphere(canvas, settings) {
     if (settings.preset === 'rain-right') rain(ctx, time, 'right', intensity);
     else if (settings.preset === 'rain-left') rain(ctx, time, 'left', intensity);
     else if (settings.preset === 'street' || settings.preset === 'bench') lights(ctx, time, settings.preset, intensity);
+    else if (settings.preset === 'fireworks') fireworks(ctx, time, intensity);
   }};
 }

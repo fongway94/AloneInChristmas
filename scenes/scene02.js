@@ -1,16 +1,16 @@
-// 第二幕：聖誕夜。每個提示點都等待操作員配合演員推進。
 const room = 'assets/images/bedroom-cold.png';
-const street = 'assets/images/christmas-street.png';
-const common = { act: '第二幕', transitionIn: 1.5, audio: { music: null, effects: [], volume: 0.7 } };
+const base = { act: '第二幕：現實', transitionIn: 1.4, audio: { music: null, effects: [], volume: .7 } };
 export default [
-  { ...common, id: 'christmas-invitation', type: 'phone', title: '沒有回覆的邀請', subtitle: '朋友群組的訊息', duration: 12, background: room, clock: '19:28', date: '12月24日 星期二',
-    description: '女孩收到朋友群組的聖誕邀請，但沒有回覆。', cue: '等女孩看完訊息、放下手機後再推進。音效建議：輕微訊息聲。',
-    notifications: [{ at: 2, sender: '朋友群組', message: '今晚一起過聖誕嗎？大家都在等妳！', icon: '信', color: 'sage' }] },
-  { ...common, id: 'leave-home', type: 'room', title: '一個人出門', subtitle: '聖誕夜的房間', duration: 10, background: room,
-    description: '窗外傳來節慶聲音，女孩決定獨自出去走走。', cue: '待女孩起身準備出門後，切到街景。音效建議：遠處人聲、聖誕音樂和煙火。' },
-  { ...common, id: 'christmas-crowd', type: 'room', title: '熱鬧的街頭', subtitle: '別人的聖誕夜', duration: 15, background: street, warmth: 0.12,
-    description: '朋友拍照、交換禮物；情侶和一家人開心慶祝。女孩獨自穿過人群。', cue: '配角開始互動後，讓女孩穿過人群。使用實際演員營造熱鬧，背景不出現人像。' },
-  { ...common, id: 'alone-in-crowd', type: 'room', title: '人群中的孤獨', subtitle: '熱鬧之中的一個人', duration: 14, background: street,
-    caption: '有時候，最深的孤獨，不是身邊沒有人，而是在人群之中，仍然覺得自己孤單。', captionAt: 2,
-    description: '其他演員的動作逐漸放慢，女孩慢慢走向舞台中央。', cue: '等配角放慢動作、女孩站定並完成情緒表演後再推進。音效漸弱。' }
+  { ...base, id: 'alarm-work', type: 'room', title: '新的一天', subtitle: '鬧鐘響起', duration: 10, background: room,
+    description: '鬧鐘響起，女孩急忙穿上外套，開始一天的工作。', cue: '音效待補：鬧鐘。等女孩穿上外套後再推進。' },
+  { ...base, id: 'work-pressure', type: 'phone', title: '電話與工作訊息', subtitle: '忙碌的一天', duration: 23, background: room, clock: '8:30', date: '12月24日 星期二',
+    description: '電話、工作訊息接連而來，她不停接聽、記錄。', cue: '訊息自動逐條出現；演員配合接聽和記錄。音效待補：電話及訊息聲。', notifications: [
+      { at: 2.5, sender: '工作通知', message: '早安，今天的報告請盡快交給我。', icon: '工', color: 'slate' },
+      { at: 7, sender: '主管', message: '客戶還在等回覆，麻煩妳再跟進一下。', icon: '信', color: 'sage' },
+      { at: 11, sender: '工作通知', message: '會議時間提前了，請記得準時出席。', icon: '工', color: 'slate' },
+      { at: 14.5, sender: '主管', message: '這份資料需要再修改，今天可以完成嗎？', icon: '信', color: 'sage' },
+      { at: 17, sender: '工作通知', message: '還有幾件急事，請盡快查看。', icon: '工', color: 'slate' },
+      { at: 19, sender: '主管', message: '看到訊息後，請馬上回覆我。', icon: '信', color: 'sage' }] },
+  { ...base, id: 'bills', type: 'room', title: '帳單與錢包', subtitle: '回家後的壓力', duration: 15, background: 'assets/images/bills-table.png', caption: '生活不會因為我累了，就停下來。', captionAt: 3,
+    description: '女孩拆開帳單，翻看錢包、低頭計算，疲憊地揉著額頭。', cue: '讓演員完整完成拆帳單、查看錢包與計算的動作，再推進。' }
 ];

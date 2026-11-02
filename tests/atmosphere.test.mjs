@@ -11,12 +11,12 @@ function fakeCanvas() {
   };
   return { ops, getContext(type) { assert.equal(type, '2d'); return ctx; } };
 }
-for (const preset of ['rain-left', 'rain-right', 'street', 'bench']) {
+for (const preset of ['rain-left', 'rain-right', 'street', 'bench', 'fireworks']) {
   const canvas = fakeCanvas(), animation = createAtmosphere(canvas, { preset });
   animation.draw(3); const first = JSON.stringify(canvas.ops);
   canvas.ops.length = 0; animation.draw(3); assert.equal(JSON.stringify(canvas.ops), first, `${preset}: 同一時間必須同步`);
   canvas.ops.length = 0; animation.draw(9); assert.notEqual(JSON.stringify(canvas.ops), first, `${preset}: 必須隨時間變化`);
   assert.equal(canvas.width, 960); assert.equal(canvas.height, 540);
 }
-assert.ok(scenes.every(scene => ['rain-left', 'rain-right', 'street', 'bench'].includes(scene.motion.preset)));
-console.log('四種環境動態、跨畫面同步與全部場景設定測試通過。');
+assert.ok(scenes.every(scene => ['rain-left', 'rain-right', 'street', 'bench', 'fireworks'].includes(scene.motion.preset)));
+console.log('五種環境動態、跨畫面同步與全部場景設定測試通過。');
