@@ -1,8 +1,8 @@
-import { scenes } from '../scenes/index.js?v=audio2';
+import { scenes } from '../scenes/index.js?v=audio3';
 export { scenes };
 const KEY = 'alone-in-christmas-state-v6';
 const CHANNEL = 'alone-in-christmas-v6';
-const initial = () => ({ index: -1, elapsed: 0, playing: false, black: false, muted: false, volume: 1, musicVolume: 1, effectsVolume: 1, voiceVolume: 1, updatedAt: Date.now(), revision: 0 });
+const initial = () => ({ index: -1, elapsed: 0, playing: false, black: false, muted: false, volume: 1, musicVolume: 1, effectsVolume: 1, voiceVolume: 1, audioOutput: 'stage', updatedAt: Date.now(), revision: 0 });
 export function elapsed(state, now = Date.now()) {
   return Math.max(0, state.elapsed + (state.playing ? (now - state.updatedAt) / 1000 : 0));
 }
@@ -36,5 +36,6 @@ export class SceneManager {
     if (!['music', 'effects', 'voice'].includes(group)) return;
     this.update({ [group + 'Volume']: Math.max(0, Math.min(1, Number(value) || 0)) });
   }
+  setAudioOutput(output) { if (output === 'stage' || output === 'operator') this.update({ audioOutput: output }); }
   toggleBlack() { this.update({ black: !this.state.black }); }
 }

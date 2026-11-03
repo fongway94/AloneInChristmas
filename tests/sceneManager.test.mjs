@@ -41,6 +41,7 @@ now += 5500; assert.equal(elapsed(stage.state), 5.5);
 operator.togglePlay(); assert.equal(stage.state.playing, false); now += 10000; assert.equal(elapsed(stage.state), 5.5);
 operator.togglePlay(); now += 1000; assert.equal(elapsed(stage.state), 6.5);
 operator.toggleBlack(); assert.equal(stage.state.black, true); operator.toggleBlack(); assert.equal(stage.state.black, false);
+operator.setAudioOutput('operator'); assert.equal(stage.state.audioOutput, 'operator'); operator.setAudioOutput('stage'); assert.equal(stage.state.audioOutput, 'stage');
 operator.setGroupVolume('music', .3); assert.equal(stage.state.musicVolume, .3); operator.setGroupVolume('voice', 0); assert.equal(stage.state.voiceVolume, 0);
 operator.toggleMute(); assert.equal(stage.state.muted, true); operator.setVolume(.5); assert.equal(stage.state.volume, .5); operator.toggleMute();
 operator.restart(); assert.equal(elapsed(stage.state), 0);

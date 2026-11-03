@@ -1,20 +1,19 @@
-import { SceneManager, scenes, elapsed } from './sceneManager.js?v=audio2';
-import { AudioManager } from './audioManager.js?v=audio2';
+import { SceneManager, scenes, elapsed } from './sceneManager.js?v=audio3';
+import { createAudioManager } from './createAudioManager.js?v=audio3';
 import { createAtmosphere } from './atmosphere.js';
 import { notificationClock, socialPosition } from './phoneTimeline.js';
 const manager = new SceneManager();
 const preview = new URLSearchParams(location.search).has('preview');
-const audio = new AudioManager(preview);
-// 提前下载短音效，避免较慢的手机网络错过极短的提示音。
-// 开场前给它们一点加载时间；预览不加载或播放声音。
+const audio = createAudioManager(preview);
+// 短音效及人声可提前解码，降低手机网络导致错过提示点的风险。
 if (!preview) {
-  const effects = new Set(scenes.flatMap(scene => scene.audio?.effects || [])
-    .filter(track => track.src?.startsWith('assets/audio/sfx/')).map(track => track.src));
-  for (const src of effects) fetch(src, { cache: 'force-cache' }).then(response => {
-    if (!response.ok) throw new Error(`音效下载失败：${src}`);
-    return response.arrayBuffer();
-  }).catch(() => {}); // 正常音轨仍会自行请求，离线或网络错误不会阻止画面。
+  const sources = scenes.flatMap(scene => scene.audio?.effects || []).map(track => track.src).filter(Boolean);
+  if (audio.preload) audio.preload(sources);
+  else for (const src of new Set(sources)) fetch(src, { cache: 'force-cache' }).then(r => r.arrayBuffer()).catch(() => {});
 }
+// 把舞台音频状态回传操作台；预览窗口不广播，避免误报。
+let soundChannel = null, lastSoundReport = 0;
+if (!preview) try { soundChannel = new BroadcastChannel('alone-in-christmas-audio-status'); } catch (_) {}
 // 提前载入图片，降低现场切换时等待解码的机率。
 const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.overlayBackground, ...(scene.posts || []).map(post => post.photo)]).filter(Boolean))].map(src => { const image = new Image(); image.src = src; return image; });
 const root = document.querySelector('#stage');
@@ -148,7 +147,7 @@ function build(scene) {
   root.append(layer);
   return { layer, phone, cards, caption, motion, lightReveal, motionFrame: null };
 }
-manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); } });
+manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); } if (!value.playing || value.black || value.muted || value.audioOutput === 'operator') audio.update(0, false, true); });
 function frame() {
   const scene = scenes[state.index];
   if (scene && view) {
@@ -192,8 +191,11 @@ function frame() {
       const lastAt = count ? notes[count - 1].at : -10;
       phone.classList.toggle('vibrate', state.playing && time < scene.duration && time - lastAt < .48);
     }
-    audio.update(rawTime, state.playing && !fullyFaded, state.black || state.muted, state.volume ?? 1, { music: state.musicVolume ?? 1, effects: state.effectsVolume ?? 1, voice: state.voiceVolume ?? 1 });
+    audio.update(rawTime, state.playing && !fullyFaded, state.black || state.muted || state.audioOutput === 'operator', state.volume ?? 1, { music: state.musicVolume ?? 1, effects: state.effectsVolume ?? 1, voice: state.voiceVolume ?? 1 });
   } else audio.update(0, false, true);
+  if (soundChannel && Date.now() - lastSoundReport > 1500) {
+    soundChannel.postMessage({ status: audio.status?.() || '请点击舞台画面启用声音', at: Date.now() }); lastSoundReport = Date.now();
+  }
   root.classList.toggle('manual-black', state.black);
   requestAnimationFrame(frame);
 }
@@ -201,6 +203,9 @@ requestAnimationFrame(frame);
 // 移动浏览器通常要求 play() 直接发生在舞台页面的触摸手势内。
 // 操作台预览始终静音；舞台画面不添加任何可见按钮或边框。
 if (!preview) window.addEventListener('pointerdown', () => {
+  if (state.audioOutput === 'operator') return;
+  // 在手势中恢复同一个 AudioContext；即使还在开场黑屏也可以先解锁。
+  audio.unlock?.();
   const scene = scenes[state.index];
   if (!scene) return;
   const time = elapsed(state);

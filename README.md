@@ -4,10 +4,10 @@
 
 ## 网页版操作
 
-1. 在演出电脑以同一浏览器开启 `operator.html`，点「打开舞台画面」，并允许弹出视窗。
-2. 将舞台视窗移到投影幕，点一下舞台视窗并按 F 全屏幕。回到操作台，按「下一个画面」开始。
+1. 在演出电脑开启 `operator.html`。要以舞台窗口输出时，点「打开舞台画面」并允许弹出视窗；要在同一页试听，可点击「在本操作台播放」。
+2. 如使用舞台窗口，将它移到投影幕，点一下舞台窗口并按 F 全屏幕。回到操作台，按「下一个画面」开始。
 3. 跟随操作台的演员提示手动推进；动画时间只是参考，不会自动跳到下一段。右方向键或空格键是下一个画面，左方向键是上一个，R 重播，B 黑场／解除，F 控制目前视窗全屏幕。
-4. 预录祷告及旁白分别在相应画面开始约两秒后播放。操作台可控制总音量、音乐、音效／环境声及预录人声；若由演员现场说祷告或旁白，可只把“预录人声”调为零。开始画面后，请在舞台页面直接点击或轻触一次，以允许手机浏览器播放声音；操作台内嵌预览始终静音。可先用操作台「试听手机提示音（本机）」检查音效及音量；测试按钮只播放一次提示音，实际场景声音仍由舞台页面播放。请在正式演出设备测试音讯，浏览器仍可能阻挡自动播放。重新播放会从该画面开头开始。手动黑场只遮住画面并暂停音讯，不会暂停时间；如需停住时间，请另按「暂停」。
+4. 预录祷告及旁白分别在相应画面开始约两秒后播放。操作台可控制总音量、音乐、音效／环境声及预录人声；若由演员现场说祷告或旁白，可只把“预录人声”调为零。声音可选择从舞台窗口输出，或点击「在本操作台播放」让本页独立输出（舞台音轨将静音，避免重复）。选择舞台输出时，请在舞台页面点击或轻触一次以允许浏览器播放声音；内嵌预览始终静音。选择本操作台输出时，请点击「在本操作台播放」解锁音频；可在操作台查看声音状态。手机试听时请保持该页面在前台，浏览器在后台可能暂停或延迟短音效。可先用操作台「试听提示音（本机）」检查音效及音量；测试按钮只播放一次提示音，实际场景声音由所选择的输出页面播放。请在正式演出设备测试音讯，浏览器仍可能阻挡自动播放。重新播放会从该画面开头开始。手动黑场只遮住画面并暂停音讯，不会暂停时间；如需停住时间，请另按「暂停」。
 5. 网页双视窗使用 BroadcastChannel 与 localStorage 后备同步；必须同一台电脑、相同网站来源及同一浏览器设定档。不能跨手机和电脑同步。
 
 祷告及旁白为经使用者试听选择的 AI 普通话声音：`assets/audio/prayer.mp3` 和 `assets/audio/testimony.mp3`；并不保证槟城口音，可依排练需要改用本地演员录音。网页已按 37 个画面配置背景音乐和适合剧情的提示音、电话、烟花及环境音，素材来源见 `docs/audio-sources.md`，逐画面音频表见 `docs/sound-cues.md`。人群和街道音是低音量的通用环境素材，不是槟城现场录音。第三幕家人来电对白仍未录制，台词与人声请导演确认。请先试听并根据现场设备和演员对白调整音量。
@@ -38,7 +38,7 @@
 
 ## 测试及限制
 
-执行 `node --experimental-default-type=module tests/sceneManager.test.mjs`、`node --experimental-default-type=module tests/atmosphere.test.mjs`、`node --experimental-default-type=module tests/phoneTimeline.test.mjs` 和 `node --experimental-default-type=module tests/audioManager.test.mjs`。仍须在演出设备实测 PowerPoint、双屏幕、中文字体、灯光走位、音讯自动播放与音量。网页预览是静音的，声音只在舞台视窗播放。
+执行 `node --experimental-default-type=module tests/sceneManager.test.mjs`、`node --experimental-default-type=module tests/atmosphere.test.mjs`、`node --experimental-default-type=module tests/phoneTimeline.test.mjs` 、`node --experimental-default-type=module tests/audioManager.test.mjs`、`tests/audioPlan.test.mjs`、`tests/soundAssets.test.mjs` 和 `tests/webAudioManager.test.mjs`。仍须在演出设备实测 PowerPoint、双屏幕、中文字体、灯光走位、音讯自动播放与音量。网页内嵌预览始终静音，声音在选定的舞台窗口或操作台输出，不会两边同时输出。
 
 网页内含 Noto Sans SC Variable（OFL-1.1），字型授权详见 `assets/fonts/noto-sans-sc/LICENSE`。PowerPoint 字型不随档案嵌入，请在演出电脑确认简体中文字型。中央字幕可能与演员走位重叠，请以实际投影排练位置。
 
