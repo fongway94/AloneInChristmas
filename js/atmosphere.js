@@ -56,6 +56,22 @@ function fireworks(ctx, time, intensity) {
   }
 }
 
+// 緩慢的水面光感與柔和光暈；不閃爍，也不影響文字閱讀。
+function endingLight(ctx, time, preset, intensity) {
+  if (preset === 'embrace') {
+    const alpha = (.07 + .025 * Math.sin(time * .4)) * intensity;
+    const g = ctx.createRadialGradient(W * .5, H * .16, 0, W * .5, H * .16, W * .24);
+    g.addColorStop(0, `rgba(255, 224, 177, ${alpha})`); g.addColorStop(1, 'rgba(255, 213, 160, 0)');
+    ctx.fillStyle = g; ctx.fillRect(W * .26, 0, W * .48, H * .5); return;
+  }
+  for (let i = 0; i < 12; i++) {
+    const x = W * (.27 + seed(i + 7) * .46), y = H * (.57 + seed(i + 71) * .16);
+    const alpha = (.015 + .018 * (1 + Math.sin(time * .3 + i))) * intensity;
+    ctx.strokeStyle = `rgba(231, 216, 190, ${alpha})`; ctx.lineWidth = .7;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 5 + seed(i + 9) * 13, y); ctx.stroke();
+  }
+}
+
 export function createAtmosphere(canvas, settings) {
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -68,5 +84,6 @@ export function createAtmosphere(canvas, settings) {
     else if (settings.preset === 'rain-middle') rain(ctx, time, 'middle', intensity);
     else if (settings.preset === 'street' || settings.preset === 'bench') lights(ctx, time, settings.preset, intensity);
     else if (settings.preset === 'fireworks') fireworks(ctx, time, intensity);
+    else if (settings.preset === 'sea' || settings.preset === 'embrace') endingLight(ctx, time, settings.preset, intensity);
   }};
 }

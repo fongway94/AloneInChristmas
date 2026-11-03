@@ -5,7 +5,7 @@ const manager = new SceneManager();
 const preview = new URLSearchParams(location.search).has('preview');
 const audio = new AudioManager(preview);
 // 提前載入圖片，降低現場切換時等待解碼的機率。
-const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.photo]).filter(Boolean))].map(src => { const image = new Image(); image.src = src; return image; });
+const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.overlayBackground, scene.photo]).filter(Boolean))].map(src => { const image = new Image(); image.src = src; return image; });
 const root = document.querySelector('#stage');
 let currentIndex = null, currentRun = null, view = null, state;
 function build(scene) {
@@ -15,6 +15,8 @@ function build(scene) {
   const layer = document.createElement('div'); layer.className = `scene-layer scene-${scene.type}`;
   const environment = document.createElement('div'); environment.className = 'environment'; environment.style.backgroundImage = `url("${scene.background}")`;
   layer.append(environment);
+  let lightReveal = null;
+  if (scene.overlayBackground) { lightReveal = document.createElement('div'); lightReveal.className = 'light-reveal'; lightReveal.style.backgroundImage = `url("${scene.overlayBackground}")`; layer.append(lightReveal); }
   const warmGlow = document.createElement('div'); warmGlow.className = 'warm-glow'; warmGlow.style.opacity = String(scene.warmth || 0); layer.append(warmGlow);
   const haze = document.createElement('div'); haze.className = 'atmosphere'; layer.append(haze);
   const motionCanvas = document.createElement('canvas'); motionCanvas.className = 'motion-canvas'; motionCanvas.setAttribute('aria-hidden', 'true'); layer.append(motionCanvas);
@@ -44,7 +46,13 @@ function build(scene) {
       scene.messages.forEach(item => {
         const bubble = document.createElement('div'); bubble.className = 'chat-bubble';
         const sender = document.createElement('strong'); sender.textContent = item.sender;
-        const text = document.createElement('span'); text.textContent = item.message;
+        const text = document.createElement('span');
+        // 以本地圖示呈現指定表情，避免演出電腦缺少彩色表情字型時顯示方框。
+        if (item.message.includes('🎄❤️')) {
+          const [before, after] = item.message.split('🎄❤️'); text.append(document.createTextNode(before));
+          [['assets/icons/tree.svg', '聖誕樹'], ['assets/icons/heart.svg', '愛心']].forEach(([src, alt]) => { const icon = document.createElement('img'); icon.className = 'emoji-icon'; icon.src = src; icon.alt = alt; text.append(icon); });
+          text.append(document.createTextNode(after || ''));
+        } else text.textContent = item.message;
         bubble.append(sender, text); feed.append(bubble);
       });
       chatView.append(feed); const input = document.createElement('div'); input.className = 'chat-input'; input.textContent = '訊息'; chatView.append(input);
@@ -70,10 +78,10 @@ function build(scene) {
     layer.append(phone);
   }
   let caption = null;
-  if (scene.caption) { caption = document.createElement('div'); caption.className = 'scene-caption'; caption.textContent = scene.caption; layer.append(caption); }
+  if (scene.caption) { caption = document.createElement('div'); caption.className = 'scene-caption'; caption.classList.toggle('short', Array.from(scene.caption).length <= 12); caption.textContent = scene.caption; layer.append(caption); }
   const fade = document.createElement('div'); fade.className = 'blackout'; layer.append(fade);
   root.append(layer);
-  return { layer, phone, cards, caption, motion, motionFrame: null };
+  return { layer, phone, cards, caption, motion, lightReveal, motionFrame: null };
 }
 manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); } });
 function frame() {
@@ -88,11 +96,14 @@ function frame() {
     }
     if (!state.black && !fullyFaded) {
       const drift = (1 - Math.cos(rawTime * Math.PI / 48)) / 2;
-      layer.style.setProperty('--room-scale', String(1.025 + drift * .04));
+      const embraceApproach = scene.motion.preset === 'embrace' ? .025 * (1 - Math.exp(-rawTime / 6)) : 0;
+      layer.style.setProperty('--room-scale', String(1.025 + drift * .04 + embraceApproach));
     }
     layer.style.setProperty('--darkness', String(scene.dim || 0));
     layer.style.setProperty('--fade', scene.fadeAt == null ? '0' : String(Math.min(1, Math.max(0, (time - scene.fadeAt) / scene.fadeDuration))));
-    layer.style.setProperty('--entrance', String(Math.min(1, time / scene.transitionIn)));
+    const entrance = Math.min(1, time / scene.transitionIn);
+    layer.style.setProperty('--entrance', String(entrance));
+    if (view.lightReveal) { const reveal = Math.max(0, Math.min(1, (time - (scene.lightAt || 0)) / (scene.lightDuration || 5))); view.lightReveal.style.opacity = String(entrance * reveal); }
     layer.classList.toggle('paused', !state.playing || state.black || fullyFaded);
     if (caption) caption.classList.toggle('visible', time >= scene.captionAt);
     if (phone) {
@@ -107,7 +118,7 @@ function frame() {
         phone.querySelector('.draft-text').textContent = chars.slice(0, Math.max(0, typed - deleted)).join('');
       }
       cards.forEach((card, i) => {
-        const age = count - 1 - i; card.classList.toggle('visible', age >= 0 && age < 4);
+        const age = count - 1 - i; card.classList.toggle('visible', age >= 0 && age < 2);
         card.style.setProperty('--order', Math.max(0, age)); card.style.zIndex = String(i + 1);
       });
       const lastAt = count ? notes[count - 1].at : -10;

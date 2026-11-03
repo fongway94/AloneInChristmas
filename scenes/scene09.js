@@ -11,10 +11,10 @@ export default [
     description: '男孩邀請女孩，大家微笑等待；她猶豫後輕輕點頭，露出久違的笑容。', cue: '留出猶豫、等待和點頭的時間；笑容不代表困難已經消失。' },
   { ...base, id: 'walk-together', type: 'room', title: '一起同行', subtitle: '眾人走向出口', duration: 15, background: bench, warmth: .62,
     description: '男孩走在女孩身旁，朋友圍繞著她，眾人一起走向舞台出口。', cue: '等所有演員離場，再進入結尾字幕。音樂待補：由溫柔轉為有盼望。' },
-  { ...base, id: 'ending-darkness', type: 'closing', title: '結尾字幕 ①', subtitle: '世界仍有黑暗', duration: 8, background: bench, warmth: .3, caption: '這個聖誕節，也許你的世界仍有黑暗……', captionAt: 1,
-    description: '第一句結尾字幕。', cue: '留出閱讀時間，再手動推進下一句。' },
-  { ...base, id: 'ending-light', type: 'closing', title: '結尾字幕 ②', subtitle: '有一道光', duration: 8, background: bench, warmth: .4, caption: '但有一道光，從未離開。', captionAt: 1,
-    description: '第二句結尾字幕。', cue: '停留片刻，再進入最後一句。' },
-  { ...base, id: 'ending-love', type: 'closing', title: '結尾字幕 ③', subtitle: '因為耶穌愛你', duration: 10, background: bench, warmth: .5, caption: '因為耶穌愛你。', captionAt: 1,
-    description: '最後一句字幕保持，讓觀眾安靜領受。', cue: '待音樂與演出結束後，按下一個畫面進入黑場。' }
+  { ...base, id: 'ending-darkness', type: 'closing', title: '結尾字幕 ①', subtitle: '世界仍有黑暗', duration: 8, background: 'assets/images/ending-dark-sea.png', motion: { preset: 'sea', intensity: .8 }, warmth: .05, caption: '這個聖誕節，也許你的世界仍有黑暗……', captionAt: 1,
+    description: '暗夜海面與第一句結尾字幕。', cue: '留出閱讀時間，再手動推進下一句。' },
+  { ...base, id: 'ending-light', type: 'closing', title: '結尾字幕 ②', subtitle: '有一道光', duration: 8, background: 'assets/images/ending-dark-sea.png', overlayBackground: 'assets/images/ending-light-sea.png', lightAt: .5, lightDuration: 5, motion: { preset: 'sea', intensity: 1 }, warmth: .08, caption: '但有一道光，從未離開。', captionAt: 1,
+    description: '光線逐漸穿過雲層，照亮海面。', cue: '停留片刻，再進入最後一句。' },
+  { ...base, id: 'ending-love', type: 'closing', title: '結尾字幕 ③', subtitle: '因為耶穌愛你', duration: 10, background: 'assets/images/ending-embrace.png', motion: { preset: 'embrace', intensity: .8 }, warmth: .12, caption: '因為耶穌愛你。', captionAt: 1,
+    description: '柔和光芒中的人物張開雙臂，以第一人稱視角擁抱觀眾；最後一句字幕保持。', cue: '待音樂與演出結束後，按下一個畫面進入黑場。' }
 ];

@@ -1,4 +1,4 @@
-const bench = 'assets/images/penang-bench.png';
+const bench = 'assets/images/penang-bench-hope.png';
 const base = { act: '第八幕：笑容背後的故事', transitionIn: 1.5, audio: { music: null, effects: [], volume: .7 } };
 export default [
   { ...base, id: 'jesus-loves-you', type: 'room', title: '因為耶穌愛你', subtitle: '女孩的疑惑', duration: 12, background: bench, warmth: .28,
