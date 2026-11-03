@@ -23,6 +23,7 @@ $('play').addEventListener('click', () => manager.togglePlay());
 $('black').addEventListener('click', () => manager.toggleBlack());
 $('audio-toggle').addEventListener('click', () => manager.toggleMute());
 $('audio-volume').addEventListener('input', event => manager.setVolume(Number(event.target.value)));
+for (const group of ['music', 'effects', 'voice']) $(group + '-volume').addEventListener('input', event => manager.setGroupVolume(group, event.target.value));
 $('open-stage').addEventListener('click', () => { const win = window.open('index.html', 'christmas-stage'); if (win) win.focus(); else alert('无法开启舞台视窗，请允许浏览器开启弹出视窗后重试。'); });
 window.addEventListener('keydown', event => {
   if (event.repeat || event.altKey || event.ctrlKey || event.metaKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
@@ -46,10 +47,10 @@ function render() {
   $('status-text').textContent = state.black ? '手动黑场中' : !scene ? (state.index >= scenes.length ? '演出结束 · 黑场保持中' : '准备就绪') : !state.playing ? '已暂停' : time >= scene.duration ? (scene.fadeAt != null ? '黑场保持中 · 等待推进' : '环境动态持续 · 等待推进') : '动画播放中';
   $('play').querySelector('strong').textContent = scene && state.playing ? '暂停' : '播放';
   $('play').querySelector('span').textContent = scene && state.playing ? 'Ⅱ' : '▶';
-  $('audio-toggle').textContent = state.muted ? '预录声音：静音' : '预录声音：开启'; $('audio-volume').value = state.volume ?? 1;
+  $('audio-toggle').textContent = state.muted ? '全部声音：静音' : '全部声音：开启'; $('audio-volume').value = state.volume ?? 1; for (const group of ['music', 'effects', 'voice']) $(group + '-volume').value = state[group + 'Volume'] ?? 1;
   $('black').classList.toggle('active', state.black); $('black').querySelector('strong').textContent = state.black ? '解除黑场' : '黑场';
   $('previous').disabled = state.index <= 0; $('next').disabled = state.index >= scenes.length;
-  $('cue-act').textContent = selected?.act || ''; $('scene-description').textContent = selected?.description || ''; $('operator-cue').textContent = selected?.cue || '';
+  $('cue-act').textContent = selected?.act || ''; $('scene-description').textContent = selected?.description || ''; $('operator-cue').textContent = selected?.cue || ''; $('audio-cue').textContent = selected?.audio?.summary || '';
   $('scene-length').textContent = `约 ${selected?.duration || 0} 秒`; $('cue-select').value = scene ? String(state.index) : '-1';
   document.querySelectorAll('.scene-item').forEach((el, i) => { el.style.opacity = state.index === i || (state.index === -1 && i === 0) ? '1' : '.55'; });
   requestAnimationFrame(render);

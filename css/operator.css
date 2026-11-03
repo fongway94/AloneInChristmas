@@ -6,3 +6,5 @@
 .audio-controls{display:flex;align-items:center;gap:10px;margin-top:14px}.audio-controls button{border:1px solid #405244;background:#263229;color:#d4e6ce;padding:8px 10px;border-radius:6px;font-size:11px}.audio-controls label{font-size:11px;color:#a2b49e}.audio-controls input{width:90px;accent-color:#b4cca8}.audio-hint{font-size:10px;color:#91a08f;line-height:1.7;margin:8px 0 0}
 
 .audio-hint a{color:#b6d0ad;text-decoration:underline}
+
+.audio-mix{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}.audio-mix label{display:flex;flex-direction:column;gap:5px;font-size:11px;color:#a2b49e}.audio-mix input{width:100%;accent-color:#b4cca8}.audio-cue{font-size:12px;color:#a8bda9;line-height:1.6;margin:8px 0 0}

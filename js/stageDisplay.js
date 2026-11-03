@@ -182,7 +182,7 @@ function frame() {
       const lastAt = count ? notes[count - 1].at : -10;
       phone.classList.toggle('vibrate', state.playing && time < scene.duration && time - lastAt < .48);
     }
-    audio.update(rawTime, state.playing && !fullyFaded, state.black || state.muted, state.volume ?? 1);
+    audio.update(rawTime, state.playing && !fullyFaded, state.black || state.muted, state.volume ?? 1, { music: state.musicVolume ?? 1, effects: state.effectsVolume ?? 1, voice: state.voiceVolume ?? 1 });
   } else audio.update(0, false, true);
   root.classList.toggle('manual-black', state.black);
   requestAnimationFrame(frame);

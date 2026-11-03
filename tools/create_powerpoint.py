@@ -237,9 +237,10 @@ def add_scene(scene, notification_count=None):
     if scene['type'] == 'chat': extra = f'\n群组讯息 {notification_count}／{len(scene["messages"])}：按下一页出现下一则。'
     if scene['type'] == 'social': extra = f'\n动态照片 {notification_count}／{len(scene["posts"])}：按下一页显示下一张。'
     if scene['type'] == 'draft': extra = '\n草稿示范：先输入，再按下一页显示删除后的空白。'
-    audio_sources = [item['src'] for item in scene.get('audio', {}).get('effects', []) if item.get('src')]
-    audio_note = ('\n预录档（未嵌入）：' + '、'.join(audio_sources) + '；请在 PowerPoint 中自行插入并设定播放。') if audio_sources else ''
-    notes(slide, f"{scene['act']}｜{scene['title']}\n{scene['description']}\n操作提示：{scene['cue']}{extra}{audio_note}\n手动推进；本提示版为静态画面，无内嵌音效。")
+    audio = scene.get('audio', {})
+    audio_sources = [item['src'] for item in [audio.get('music') or {}, *audio.get('ambience', []), *audio.get('effects', [])] if item.get('src')]
+    audio_note = ('\n音频提示：' + audio.get('summary', '') + '\n音频文件（未嵌入）：' + '、'.join(dict.fromkeys(audio_sources)) + '；请另行播放或自行插入。同一画面拆成多页时保持音乐，时间从该画面第一页计算，不要每页重触发。') if audio_sources else ''
+    notes(slide, f"{scene['act']}｜{scene['title']}\n{scene['description']}\n操作提示：{scene['cue']}{extra}{audio_note}\n手动推进；本提示版为静态画面，音频未嵌入。")
 
 # Start/end black are deliberate handoff points when inserting into the shared presentation.
 slide=prs.slides.add_slide(blank); shape(slide, 0, 0, 13.333333, 7.5, '000000'); fade(slide)
