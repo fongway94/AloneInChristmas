@@ -1,4 +1,4 @@
-import { SceneManager, scenes, elapsed } from './sceneManager.js';
+import { SceneManager, scenes, elapsed } from './sceneManager.js?v=audio2';
 const manager = new SceneManager();
 const $ = id => document.getElementById(id);
 const pad = n => String(Math.floor(n)).padStart(2, '0');
@@ -24,6 +24,19 @@ $('black').addEventListener('click', () => manager.toggleBlack());
 $('audio-toggle').addEventListener('click', () => manager.toggleMute());
 $('audio-volume').addEventListener('input', event => manager.setVolume(Number(event.target.value)));
 for (const group of ['music', 'effects', 'voice']) $(group + '-volume').addEventListener('input', event => manager.setGroupVolume(group, event.target.value));
+// 只播放一次本机提示音，方便在手机上核对效果音量；演出音轨仍由舞台播放。
+let testSound;
+$('test-sfx').addEventListener('click', () => {
+  const status = $('test-sfx-status');
+  const level = state.muted ? 0 : (state.volume ?? 1) * (state.effectsVolume ?? 1) * .70;
+  if (level <= 0) { status.textContent = '请先解除静音并调高总音量和音效音量。'; return; }
+  if (!testSound) { testSound = new Audio('assets/audio/sfx/message-v2.wav'); testSound.preload = 'auto'; }
+  testSound.pause();
+  try { testSound.currentTime = 0; } catch (_) {}
+  testSound.volume = Math.min(1, level); status.textContent = '正在播放，请确认是否听到提示音。';
+  try { testSound.play().catch(() => { status.textContent = '浏览器未能播放，请检查媒体音量和网站声音权限。'; }); }
+  catch (_) { status.textContent = '浏览器未能播放，请检查媒体音量和网站声音权限。'; }
+});
 $('open-stage').addEventListener('click', () => { const win = window.open('index.html', 'christmas-stage'); if (win) win.focus(); else alert('无法开启舞台视窗，请允许浏览器开启弹出视窗后重试。'); });
 window.addEventListener('keydown', event => {
   if (event.repeat || event.altKey || event.ctrlKey || event.metaKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;

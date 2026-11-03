@@ -14,6 +14,6 @@
 
 ## 音效
 
-- `sfx/message.wav`、`phone-ring.wav`、`alarm.wav`、`firework.wav`：Wyzowl [SFX Kit](https://github.com/wyzowl/sfx-kit/tree/92780e7ab0cdfb557497a988089c47f46e8c7412)，**CC0 1.0**，分别对应 `notification-message-in-soft`、`phone-ring-modern`、`time-alarm`、`celebration-fireworks`。授权文本保存在 `assets/audio/sfx/LICENSE-CC0.txt`。它们是设计音效，而非实际 WhatsApp 官方铃声或槟城烟花录音。
+- `sfx/message-v2.wav`、`phone-ring-v2.wav`、`alarm-v2.wav`、`firework-v2.wav`：Wyzowl [SFX Kit](https://github.com/wyzowl/sfx-kit/tree/92780e7ab0cdfb557497a988089c47f46e8c7412)，**CC0 1.0**，分别对应 `notification-message-in-soft`、`phone-ring-modern`、`time-alarm`、`celebration-fireworks`。授权文本保存在 `assets/audio/sfx/LICENSE-CC0.txt`。本项目转成兼容手机的 16 位 PCM WAV，并适度提高素材电平；它们是设计音效，而非实际 WhatsApp 官方铃声或槟城烟花录音。
 
 `assets/audio/prayer.mp3`、`testimony.mp3` 为此前用户试听选择的 AI 普通话预录；不是上述第三方 CC0 素材。第三幕家人来电对白尚未录制。

@@ -15,8 +15,8 @@ const musicNames = { piano: '轻柔钢琴', prayer: '温柔祷告音乐', hope: 
 const ambienceNames = { rain: '雨声', street: '街道环境', crowd: '远处人群', ocean: '海浪' };
 const effectNames = { message: '手机讯息', alarm: '闹钟', ring: '电话铃声', firework: '烟花' };
 const effects = {
-  message: 'assets/audio/sfx/message.wav', alarm: 'assets/audio/sfx/alarm.wav',
-  ring: 'assets/audio/sfx/phone-ring.wav', firework: 'assets/audio/sfx/firework.wav'
+  message: 'assets/audio/sfx/message-v2.wav', alarm: 'assets/audio/sfx/alarm-v2.wav',
+  ring: 'assets/audio/sfx/phone-ring-v2.wav', firework: 'assets/audio/sfx/firework-v2.wav'
 };
 // id: [音乐, 音乐音量, [[环境音, 音量], ...]]。对话和人声画面刻意降低音乐。
 const plan = {
@@ -68,14 +68,14 @@ export function withAudio(scene) {
   // 第三幕淡至黑场时音乐及雨声一起淡出，黑场保持静默。
   if (scene.fadeAt != null) for (const track of [music, ...ambience]) { track.end = scene.fadeAt + scene.fadeDuration; track.fadeOut = scene.fadeDuration; }
   const result = { volume: 1, music, ambience, effects: (scene.audio?.effects || []).map(item => ({ ...item, name: scene.id === 'prayer' ? '预录祷告' : '预录旁白', kind: 'voice' })) };
-  if (scene.id === 'alarm-work') result.effects.push(fx('alarm', .5, .22));
-  if (scene.id === 'work-pressure') result.effects.push(...scene.notifications.map(n => fx('message', n.at, .22)));
-  if (scene.id === 'family-call') result.effects.push(fx('ring', 1.2, .20));
-  if (scene.id === 'room-dark') result.effects.push(fx('message', 2, .22));
-  if (scene.id === 'friends-whatsapp') result.effects.push(...scene.messages.map(m => fx('message', m.at, .22)));
-  if (scene.id === 'wake-to-celebration') result.effects.push(fx('firework', 1, .18));
-  if (scene.id === 'window-fireworks') result.effects.push(...[0, 1.8, 4.9].map(t => fx('firework', t, .13, { repeatEvery: 11 })));
-  if (scene.id === 'play-time') result.effects.push(fx('message', 2, .19));
+  if (scene.id === 'alarm-work') result.effects.push(fx('alarm', .5, .60));
+  if (scene.id === 'work-pressure') result.effects.push(...scene.notifications.map(n => fx('message', n.at, .70)));
+  if (scene.id === 'family-call') result.effects.push(fx('ring', 1.2, .60));
+  if (scene.id === 'room-dark') result.effects.push(fx('message', 2, .70));
+  if (scene.id === 'friends-whatsapp') result.effects.push(...scene.messages.map(m => fx('message', m.at, .70)));
+  if (scene.id === 'wake-to-celebration') result.effects.push(fx('firework', 1, .45));
+  if (scene.id === 'window-fireworks') result.effects.push(...[0, 1.8, 4.9].map(t => fx('firework', t, .50, { repeatEvery: 11 })));
+  if (scene.id === 'play-time') result.effects.push(fx('message', 2, .70));
   const byName = new Map();
   for (const item of result.effects) {
     const name = item.name + (item.repeatEvery ? `（每 ${item.repeatEvery} 秒重复）` : '');

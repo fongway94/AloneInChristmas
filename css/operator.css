@@ -8,3 +8,5 @@
 .audio-hint a{color:#b6d0ad;text-decoration:underline}
 
 .audio-mix{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}.audio-mix label{display:flex;flex-direction:column;gap:5px;font-size:11px;color:#a2b49e}.audio-mix input{width:100%;accent-color:#b4cca8}.audio-cue{font-size:12px;color:#a8bda9;line-height:1.6;margin:8px 0 0}
+
+.audio-test{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:12px}.audio-test button{border:1px solid #668062;background:#334b35;color:#ecf6e7;padding:9px 11px;border-radius:6px;font-size:11px}.audio-test button:hover{background:#405b40}.audio-test span{color:#b6c4b2;font-size:10px;line-height:1.5}

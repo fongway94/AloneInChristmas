@@ -1,4 +1,4 @@
-import { scenes } from '../scenes/index.js';
+import { scenes } from '../scenes/index.js?v=audio2';
 export { scenes };
 const KEY = 'alone-in-christmas-state-v6';
 const CHANNEL = 'alone-in-christmas-v6';

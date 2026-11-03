@@ -1,10 +1,20 @@
-import { SceneManager, scenes, elapsed } from './sceneManager.js';
-import { AudioManager } from './audioManager.js';
+import { SceneManager, scenes, elapsed } from './sceneManager.js?v=audio2';
+import { AudioManager } from './audioManager.js?v=audio2';
 import { createAtmosphere } from './atmosphere.js';
 import { notificationClock, socialPosition } from './phoneTimeline.js';
 const manager = new SceneManager();
 const preview = new URLSearchParams(location.search).has('preview');
 const audio = new AudioManager(preview);
+// 提前下载短音效，避免较慢的手机网络错过极短的提示音。
+// 开场前给它们一点加载时间；预览不加载或播放声音。
+if (!preview) {
+  const effects = new Set(scenes.flatMap(scene => scene.audio?.effects || [])
+    .filter(track => track.src?.startsWith('assets/audio/sfx/')).map(track => track.src));
+  for (const src of effects) fetch(src, { cache: 'force-cache' }).then(response => {
+    if (!response.ok) throw new Error(`音效下载失败：${src}`);
+    return response.arrayBuffer();
+  }).catch(() => {}); // 正常音轨仍会自行请求，离线或网络错误不会阻止画面。
+}
 // 提前载入图片，降低现场切换时等待解码的机率。
 const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.overlayBackground, ...(scene.posts || []).map(post => post.photo)]).filter(Boolean))].map(src => { const image = new Image(); image.src = src; return image; });
 const root = document.querySelector('#stage');

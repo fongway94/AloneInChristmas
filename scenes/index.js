@@ -7,7 +7,7 @@ import actSix from './scene06.js';
 import actSeven from './scene07.js';
 import actEight from './scene08.js';
 import actNine from './scene09.js';
-import { withAudio } from './audioPlan.js';
+import { withAudio } from './audioPlan.js?v=audio2';
 const all = [...actOne, ...actTwo, ...actThree, ...actFour, ...actFive, ...actSix, ...actSeven, ...actEight, ...actNine];
 function defaultMotion(scene) {
   if (scene.background.includes('penang-bills')) return { preset: 'rain-left', intensity: .85 };
