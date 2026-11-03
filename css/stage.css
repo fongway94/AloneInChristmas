@@ -26,3 +26,27 @@
 .social-actions{font-size:2.8cqh;font-weight:600;line-height:1;padding:1.2cqh 1.8cqh .2cqh}
 .social-caption{font-size:2.5cqh;line-height:1.35;padding:.7cqh 1.8cqh}
 .scene-social .phone-bottom{display:none}
+/* Instagram 风格的剧用动态界面；照片仍由共享时间轴连续上滑。 */
+.social-post{background:#fff;color:#111}
+.social-header{height:6.6cqh;padding:.8cqh 1.7cqh;display:flex;align-items:center;gap:.4cqh;border-bottom:0}
+.ig-brand{font-family:'Grand Hotel',cursive;font-size:4.2cqh;line-height:1;font-weight:400;white-space:nowrap}
+.ig-icon{width:2.9cqh;height:2.9cqh;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.ig-icon svg{width:100%;height:100%;display:block}.social-header>.ig-icon{width:1.65cqh;height:1.65cqh}
+.ig-header-actions{margin-left:auto;display:flex;align-items:center;gap:1.6cqh}
+.ig-header-actions .ig-icon{width:3cqh;height:3cqh}
+.ig-stories{height:10cqh;display:flex;align-items:flex-start;gap:2.1cqh;padding:.4cqh 1.7cqh .8cqh;border-bottom:.1cqh solid #e6e6e6;flex:none}
+.ig-story{min-width:5.3cqh;display:flex;flex-direction:column;align-items:center;gap:.4cqh}
+.ig-avatar{width:5.4cqh;height:5.4cqh;padding:.22cqh;flex:none;border-radius:50%;display:inline-flex;background:linear-gradient(35deg,#f9ce34,#ee2a7b,#6228d7)}
+.social-post .ig-avatar img{width:100%;height:100%;border-radius:50%;border:.2cqh solid white;object-fit:cover;display:block}
+.ig-story-label{font-size:1.55cqh;line-height:1.2;white-space:nowrap;max-width:6cqh;overflow:hidden;text-overflow:ellipsis}
+.social-viewport{min-height:0}.social-card{background:white}
+.social-author{height:6.1cqh;display:flex;align-items:center;gap:1cqh;padding:.45cqh 1.5cqh;font-size:2cqh;color:#111}
+.social-author .ig-avatar{width:4.5cqh;height:4.5cqh}.ig-more{margin-left:auto;font-size:2.8cqh;line-height:1;font-weight:700;letter-spacing:.08em}
+.social-post .social-card .ig-photo{width:100%;height:55%;object-fit:cover;display:block;flex:none}
+.social-actions{display:flex;align-items:center;gap:1.3cqh;padding:1cqh 1.5cqh .3cqh;line-height:1}
+.social-actions .ig-icon{width:3.15cqh;height:3.15cqh}.ig-save{margin-left:auto}
+.ig-likes{font-size:1.8cqh;font-weight:700;padding:.2cqh 1.5cqh 0;line-height:1.25}
+.social-caption{font-size:2.15cqh;line-height:1.3;padding:.35cqh 1.5cqh;color:#111}.social-caption strong{font-weight:700}
+.ig-nav{height:5.5cqh;flex:none;border-top:.1cqh solid #ededed;display:flex;justify-content:space-around;align-items:center;padding:.3cqh 0}
+.ig-nav .ig-icon{width:2.8cqh;height:2.8cqh}.ig-nav .ig-icon:first-child svg{fill:#111;color:#111}
+.ig-age{font-size:1.5cqh;line-height:1.2;color:#737373;padding:.25cqh 1.5cqh 0}

@@ -21,7 +21,7 @@
 ## 演出与素材
 
 - 女孩直接在长椅坐下，男孩原本坐在旁边；**不再有相撞情节**。街景不画人群或长椅，以免与演员冲突；请用配角与实体长椅呈现。
-- 第一幕手机以社交动态形式依次上滑三张朋友与家人的聚会照片；网页自动滚动，PPT 手动逐页切换。第二幕手机时间从 08:30 推移到 18:00，每则工作讯息保留自己的接收时间，表现一天的忙碌。第一幕手机日期为 12 月 23 日，第二幕为 12 月 24 日。
+- 第一幕手机以 Instagram 风格的剧用模拟界面依次上滑三张朋友与家人的聚会照片；不连接真实 Instagram，也不会读取真实账号。网页自动滚动，PPT 手动逐页切换。第二幕手机时间从 08:30 推移到 18:00，每则工作讯息保留自己的接收时间，表现一天的忙碌。第一幕手机日期为 12 月 23 日，第二幕为 12 月 24 日。
 - WhatsApp 群组为剧用模拟画面，不连接真实聊天服务。朋友 A–D 的讯息与草稿文案可在场景档编辑。
 - 最后三句依次使用夜海、渐现的光束，以及象征耶稣以光芒面容拥抱观众的第一人称画面。网页使用图像淡入、光感与缓慢推近，并非真人影片或手臂动作影片；PPT 为静态画面。
 - 房间、街景、回忆是依槟城公寓、热带雨景及乔治市店屋氛围生成的想像场景，并非特定真实街道的照片；叠加雨丝、灯光、烟花、镜头、通知及字幕动画，并非实拍影片。主要环境采角色所在位置的视角，不投影主角或男孩的身影；朋友聚会照片仍保留人物，因为那是女孩手机里看到的照片。
@@ -41,3 +41,5 @@
 执行 `node --experimental-default-type=module tests/sceneManager.test.mjs`、`node --experimental-default-type=module tests/atmosphere.test.mjs`、`node --experimental-default-type=module tests/phoneTimeline.test.mjs` 和 `node --experimental-default-type=module tests/audioManager.test.mjs`。仍须在演出设备实测 PowerPoint、双屏幕、中文字体、灯光走位、音讯自动播放与音量。网页预览是静音的，声音只在舞台视窗播放。
 
 网页内含 Noto Sans SC Variable（OFL-1.1），字型授权详见 `assets/fonts/noto-sans-sc/LICENSE`。PowerPoint 字型不随档案嵌入，请在演出电脑确认简体中文字型。中央字幕可能与演员走位重叠，请以实际投影排练位置。
+
+Instagram 字样使用 Grand Hotel 字体（OFL-1.1），授权详见 `assets/fonts/grand-hotel/LICENSE`。

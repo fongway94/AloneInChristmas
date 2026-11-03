@@ -5,7 +5,7 @@ import subprocess
 import io
 import math
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 from pptx import Presentation
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
@@ -73,6 +73,54 @@ def add_emoji(slide, x, y):
     buf=io.BytesIO(); im.save(buf,format='PNG'); buf.seek(0)
     slide.shapes.add_picture(buf, Inches(x), Inches(y), Inches(.65), Inches(.325))
 
+def add_social_avatar(slide, path, x, y, size):
+    # 圆形缩略图和渐变色故事圈；不依赖演出机上的表情字体。
+    n = 180
+    im = Image.new('RGBA', (n, n), (0, 0, 0, 0)); draw = ImageDraw.Draw(im)
+    draw.ellipse((1, 1, n-2, n-2), fill='#df4474')
+    draw.arc((2, 2, n-3, n-3), 30, 165, fill='#f6aa41', width=6)
+    draw.ellipse((8, 8, n-9, n-9), fill='white')
+    with Image.open(path) as photo:
+        thumb = ImageOps.fit(photo.convert('RGB'), (n-22, n-22))
+    mask = Image.new('L', (n-22, n-22)); ImageDraw.Draw(mask).ellipse((0, 0, n-23, n-23), fill=255)
+    im.paste(thumb, (11, 11), mask)
+    buf = io.BytesIO(); im.save(buf, format='PNG'); buf.seek(0)
+    slide.shapes.add_picture(buf, Inches(x), Inches(y), Inches(size), Inches(size))
+
+def add_instagram_wordmark(slide, x, y):
+    font = ImageFont.truetype(str(ROOT / 'assets/fonts/grand-hotel/GrandHotel-Regular.ttf'), 100)
+    im = Image.new('RGBA', (460, 130)); ImageDraw.Draw(im).text((0, -10), 'Instagram', font=font, fill='#121212')
+    bounds = im.getbbox(); im = im.crop(bounds)
+    buf = io.BytesIO(); im.save(buf, format='PNG'); buf.seek(0)
+    slide.shapes.add_picture(buf, Inches(x), Inches(y), Inches(1.2), Inches(.32))
+
+def add_social_symbols(slide, x, y, w, names):
+    # 原创线条图示，作为图片插入；帖文和字幕仍为可编辑文字。
+    unit = 80; height = min(.35, w / len(names)); total = round(unit * w / height)
+    im = Image.new('RGBA', (total, unit), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    for i, name in enumerate(names):
+        a = round((i + .5) * total / len(names) - unit / 2); c = '#151515'; lw = 4
+        if name == 'heart':
+            d.line([(a+11,27),(a+11,21),(a+15,16),(a+23,14),(a+29,17),(a+35,23),(a+41,17),(a+47,14),(a+55,16),(a+59,21),(a+59,27),(a+56,33),(a+35,54),(a+14,33),(a+11,27)], fill=c, width=lw, joint='curve')
+        elif name == 'comment':
+            d.ellipse((a+10,12,a+60,53), outline=c, width=lw); d.line([(a+20,49),(a+17,59),(a+30,53)], fill=c, width=lw)
+        elif name == 'send':
+            d.line([(a+10,25),(a+63,12),(a+43,60),(a+33,40),(a+10,25),(a+63,12),(a+33,40)], fill=c, width=lw, joint='curve')
+        elif name == 'bookmark':
+            d.line([(a+18,12),(a+53,12),(a+53,60),(a+35,49),(a+18,60),(a+18,12)], fill=c, width=lw, joint='curve')
+        elif name == 'home':
+            d.polygon([(a+8,33),(a+35,12),(a+62,33),(a+55,33),(a+55,58),(a+41,58),(a+41,42),(a+29,42),(a+29,58),(a+15,58),(a+15,33)], fill=c)
+        elif name == 'search':
+            d.ellipse((a+10,10,a+47,47), outline=c, width=lw); d.line([(a+43,43),(a+58,58)], fill=c, width=lw)
+        elif name == 'add':
+            d.rounded_rectangle((a+12,12,a+58,58), radius=7, outline=c, width=lw); d.line([(a+35,21),(a+35,49)],fill=c,width=lw);d.line([(a+21,35),(a+49,35)],fill=c,width=lw)
+        elif name == 'reels':
+            d.rounded_rectangle((a+12,12,a+58,58), radius=7, outline=c, width=lw);d.line([(a+12,26),(a+58,26)],fill=c,width=lw);d.polygon([(a+30,33),(a+30,50),(a+45,41)],outline=c,width=lw)
+        elif name == 'profile':
+            d.ellipse((a+24,12,a+46,34),outline=c,width=lw);d.arc((a+14,33,a+56,68),180,360,fill=c,width=lw)
+    buf=io.BytesIO(); im.save(buf,format='PNG'); buf.seek(0)
+    slide.shapes.add_picture(buf, Inches(x), Inches(y), Inches(w), Inches(min(.35, w / len(names))))
+
 def add_phone(slide, scene, count=None):
     # 投影优先：放大手机与文字，逐条显示时最多保留最近两则。
     x, y, w, h = 4.18, .18, 4.98, 7.12
@@ -86,12 +134,22 @@ def add_phone(slide, scene, count=None):
     textbox(slide, '◢  ◕  ▰', 8.13, .41, .68, .25, 11, align=PP_ALIGN.RIGHT)
     if scene['type'] == 'social':
         post = scene['posts'][(count or 1) - 1]
-        shape(slide, 4.46, .88, 4.42, 5.85, 'FAFAFA', True)
-        textbox(slide, '动态', 4.65, 1.02, 4.03, .40, 23, '1B2224', bold=True)
-        textbox(slide, post['author'], 4.65, 1.48, 4.02, .34, 18, '1B2224', bold=True)
-        picture_cover(slide, ROOT / post['photo'], 4.48, 1.91, 4.38, 3.35)
-        textbox(slide, '赞    评论    分享', 4.65, 5.33, 4.02, .32, 17, '1B2224')
-        textbox(slide, post['caption'], 4.65, 5.72, 4.02, .65, 21, '1B2224')
+        shape(slide, 4.46, .88, 4.42, 6.06, 'FFFFFF', True)
+        add_instagram_wordmark(slide, 4.63, 1.02)
+        add_social_symbols(slide, 7.97, 1.01, .70, ['heart', 'comment'])
+        for i, story in enumerate(scene['posts']):
+            ax = 4.65 + i * .68
+            add_social_avatar(slide, ROOT / story['photo'], ax, 1.42, .46)
+            textbox(slide, story['author'], ax-.08, 1.90, .62, .24, 10, '1B2224', align=PP_ALIGN.CENTER)
+        add_social_avatar(slide, ROOT / post['photo'], 4.63, 2.18, .40)
+        textbox(slide, post['author'], 5.10, 2.18, 2.30, .40, 17, '111111', bold=True)
+        textbox(slide, '···', 8.06, 2.18, .56, .35, 20, '111111', align=PP_ALIGN.RIGHT, bold=True)
+        picture_cover(slide, ROOT / post['photo'], 4.48, 2.65, 4.38, 2.72)
+        add_social_symbols(slide, 4.62, 5.41, 1.18, ['heart', 'comment', 'send'])
+        add_social_symbols(slide, 8.22, 5.41, .39, ['bookmark'])
+        textbox(slide, post.get('likes', '其他人赞过'), 4.65, 5.83, 3.90, .29, 14, '111111', bold=True)
+        textbox(slide, post['author'] + '  ' + post['caption'], 4.65, 6.13, 4.02, .42, 17, '111111')
+        add_social_symbols(slide, 4.76, 6.57, 3.81, ['home', 'search', 'add', 'reels', 'profile'])
     elif scene['type'] == 'draft':
         shape(slide, 4.46, .88, 4.42, 5.85, 'E7ECE8', True)
         textbox(slide, '‹　朋友', 4.65, 1.02, 4, .46, 22, '1B2928', bold=True)

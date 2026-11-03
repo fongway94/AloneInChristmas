@@ -9,6 +9,31 @@ const audio = new AudioManager(preview);
 const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.overlayBackground, ...(scene.posts || []).map(post => post.photo)]).filter(Boolean))].map(src => { const image = new Image(); image.src = src; return image; });
 const root = document.querySelector('#stage');
 let currentIndex = null, currentRun = null, view = null, state;
+// 所有图标均为本地线条图形，界面是演出模拟，不连接任何社交平台。
+const socialIcons = {
+  heart: '<path d="M20.8 4.8a5.4 5.4 0 0 0-7.6 0L12 6l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.6a5.4 5.4 0 0 0 0-7.6Z"/>',
+  message: '<path d="M21 11.5c0 4.7-4 8.5-9 8.5-1 0-2-.2-2.9-.5L5 21l.5-3.5A8.1 8.1 0 0 1 3 11.5C3 6.8 7 3 12 3s9 3.8 9 8.5Z"/><path d="m8 13 3.2-3.2 2.1 2 2.7-2.1"/>',
+  comment: '<path d="M21 11.5c0 4.7-4 8.5-9 8.5-1.2 0-2.2-.2-3.2-.6L4.4 21l.7-4A8 8 0 0 1 3 11.5C3 6.8 7 3 12 3s9 3.8 9 8.5Z"/>',
+  send: '<path d="m22 3-8.5 18-3-7-7-3L22 3Z"/><path d="m10.5 14 5-5"/>',
+  bookmark: '<path d="M5 3h14v18l-7-4-7 4V3Z"/>',
+  home: '<path d="m3 10 9-7 9 7v10h-6v-6H9v6H3V10Z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/>',
+  add: '<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/>',
+  reels: '<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M8 5l3 5m3-5 3 5m-7 3 5 2.5-5 2.5v-5Z"/>',
+  profile: '<circle cx="12" cy="8" r="3.5"/><path d="M5 21c.4-4.2 2.8-6.3 7-6.3s6.6 2.1 7 6.3"/>',
+  chevron: '<path d="m6 9 6 6 6-6"/>'
+};
+function socialIcon(name) {
+  const span = document.createElement('span'); span.className = 'ig-icon'; span.setAttribute('aria-hidden', 'true');
+  span.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${socialIcons[name]}</svg>`;
+  return span;
+}
+function socialAvatar(photo, label) {
+  const ring = document.createElement('span'); ring.className = 'ig-avatar';
+  const image = document.createElement('img'); image.src = photo; image.alt = ''; ring.append(image);
+  ring.setAttribute('aria-label', label); return ring;
+}
+
 function build(scene) {
   const previous = root.querySelector('.scene-layer:not(.leaving)');
   if (previous) { previous.classList.add('leaving'); setTimeout(() => previous.remove(), 1500); }
@@ -29,18 +54,39 @@ function build(scene) {
     phone.querySelector('.status > span').textContent = scene.clock; phone.querySelector('.date').textContent = scene.date; phone.querySelector('.clock').textContent = scene.clock;
     if (scene.type === 'social') {
       const social = document.createElement('div'); social.className = 'social-post';
-      const header = document.createElement('div'); header.className = 'social-header'; header.textContent = '动态';
+      const header = document.createElement('div'); header.className = 'social-header';
+      const brand = document.createElement('span'); brand.className = 'ig-brand'; brand.textContent = 'Instagram';
+      const headerActions = document.createElement('span'); headerActions.className = 'ig-header-actions';
+      headerActions.append(socialIcon('heart'), socialIcon('message')); header.append(brand, socialIcon('chevron'), headerActions);
+      const stories = document.createElement('div'); stories.className = 'ig-stories';
+      scene.posts.forEach(item => {
+        const story = document.createElement('div'); story.className = 'ig-story';
+        const label = document.createElement('span'); label.className = 'ig-story-label'; label.textContent = item.author;
+        story.append(socialAvatar(item.photo, item.author), label); stories.append(story);
+      });
       const viewport = document.createElement('div'); viewport.className = 'social-viewport';
       const feed = document.createElement('div'); feed.className = 'social-feed';
       scene.posts.forEach(item => {
         const post = document.createElement('article'); post.className = 'social-card';
-        const author = document.createElement('div'); author.className = 'social-author'; author.textContent = '●  ' + item.author;
-        const image = document.createElement('img'); image.src = item.photo; image.alt = item.author + '的聚会照片';
-        const actions = document.createElement('div'); actions.className = 'social-actions'; actions.textContent = '♡   ◯   ↗';
-        const caption = document.createElement('div'); caption.className = 'social-caption'; caption.textContent = item.caption;
-        post.append(author, image, actions, caption); feed.append(post);
+        const author = document.createElement('div'); author.className = 'social-author';
+        const authorName = document.createElement('strong'); authorName.textContent = item.author;
+        const more = document.createElement('span'); more.className = 'ig-more'; more.textContent = '···'; more.setAttribute('aria-hidden', 'true');
+        author.append(socialAvatar(item.photo, item.author), authorName, more);
+        const image = document.createElement('img'); image.className = 'ig-photo'; image.src = item.photo; image.alt = item.author + '的聚会照片';
+        const actions = document.createElement('div'); actions.className = 'social-actions';
+        actions.append(socialIcon('heart'), socialIcon('comment'), socialIcon('send'));
+        const bookmark = socialIcon('bookmark'); bookmark.classList.add('ig-save'); actions.append(bookmark);
+        const likes = document.createElement('div'); likes.className = 'ig-likes'; likes.textContent = item.likes || '其他人赞过';
+        const caption = document.createElement('div'); caption.className = 'social-caption';
+        const captionAuthor = document.createElement('strong'); captionAuthor.textContent = item.author;
+        caption.append(captionAuthor, document.createTextNode('  ' + item.caption));
+        const age = document.createElement('div'); age.className = 'ig-age'; age.textContent = item.age || '';
+        post.append(author, image, actions, likes, caption, age); feed.append(post);
       });
-      viewport.append(feed); social.append(header, viewport); phone.querySelector('.screen').append(social);
+      viewport.append(feed);
+      const nav = document.createElement('div'); nav.className = 'ig-nav'; nav.setAttribute('aria-hidden', 'true');
+      ['home', 'search', 'add', 'reels', 'profile'].forEach(icon => nav.append(socialIcon(icon)));
+      social.append(header, stories, viewport, nav); phone.querySelector('.screen').append(social);
     }
     if (scene.type === 'draft') {
       const draftView = document.createElement('div'); draftView.className = 'draft-view';
