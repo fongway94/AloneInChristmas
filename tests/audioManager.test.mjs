@@ -17,4 +17,4 @@ manager.update(6, true, true); assert.equal(a.paused, true);
 manager.update(21, true, false); assert.equal(a.paused, true);
 manager.stop(); assert.equal(manager.tracks.length, 0);
 const preview = new AudioManager(true); preview.load({audio: {effects: [{src:'x.mp3'}]}}); assert.equal(preview.tracks.length, 0);
-console.log('預錄音訊的開始、靜音、暫停、音量及結束測試通過。');
+console.log('预录音讯的开始、静音、暂停、音量及结束测试通过。');

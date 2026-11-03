@@ -1,11 +1,12 @@
 import { SceneManager, scenes, elapsed } from './sceneManager.js';
 import { AudioManager } from './audioManager.js';
 import { createAtmosphere } from './atmosphere.js';
+import { notificationClock, socialPosition } from './phoneTimeline.js';
 const manager = new SceneManager();
 const preview = new URLSearchParams(location.search).has('preview');
 const audio = new AudioManager(preview);
-// 提前載入圖片，降低現場切換時等待解碼的機率。
-const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.overlayBackground, scene.photo]).filter(Boolean))].map(src => { const image = new Image(); image.src = src; return image; });
+// 提前载入图片，降低现场切换时等待解码的机率。
+const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.overlayBackground, ...(scene.posts || []).map(post => post.photo)]).filter(Boolean))].map(src => { const image = new Image(); image.src = src; return image; });
 const root = document.querySelector('#stage');
 let currentIndex = null, currentRun = null, view = null, state;
 function build(scene) {
@@ -27,11 +28,19 @@ function build(scene) {
     phone.innerHTML = `<div class="phone-edge"><div class="screen"><div class="wallpaper"></div><div class="status"><span></span><span class="status-icons"><span>◢</span><span>◕</span><span class="battery"></span></span></div><div class="island"></div><div class="lock"><div class="lock-icon">⌁</div><div class="date"></div><div class="clock"></div></div><div class="notifications"></div><div class="phone-bottom"><span class="bottom-button">◉</span><span class="bottom-button camera">◉</span></div><div class="home-bar"></div></div></div>`;
     phone.querySelector('.status > span').textContent = scene.clock; phone.querySelector('.date').textContent = scene.date; phone.querySelector('.clock').textContent = scene.clock;
     if (scene.type === 'social') {
-      const post = document.createElement('div'); post.className = 'social-post';
-      const header = document.createElement('div'); header.className = 'social-header'; header.textContent = '朋友的近況';
-      const image = document.createElement('img'); image.src = scene.photo; image.alt = '';
-      const caption = document.createElement('div'); caption.className = 'social-caption'; caption.textContent = '和喜歡的人，一起迎接聖誕。';
-      post.append(header, image, caption); phone.querySelector('.screen').append(post);
+      const social = document.createElement('div'); social.className = 'social-post';
+      const header = document.createElement('div'); header.className = 'social-header'; header.textContent = '动态';
+      const viewport = document.createElement('div'); viewport.className = 'social-viewport';
+      const feed = document.createElement('div'); feed.className = 'social-feed';
+      scene.posts.forEach(item => {
+        const post = document.createElement('article'); post.className = 'social-card';
+        const author = document.createElement('div'); author.className = 'social-author'; author.textContent = '●  ' + item.author;
+        const image = document.createElement('img'); image.src = item.photo; image.alt = item.author + '的聚会照片';
+        const actions = document.createElement('div'); actions.className = 'social-actions'; actions.textContent = '♡   ◯   ↗';
+        const caption = document.createElement('div'); caption.className = 'social-caption'; caption.textContent = item.caption;
+        post.append(author, image, actions, caption); feed.append(post);
+      });
+      viewport.append(feed); social.append(header, viewport); phone.querySelector('.screen').append(social);
     }
     if (scene.type === 'draft') {
       const draftView = document.createElement('div'); draftView.className = 'draft-view';
@@ -47,22 +56,22 @@ function build(scene) {
         const bubble = document.createElement('div'); bubble.className = 'chat-bubble';
         const sender = document.createElement('strong'); sender.textContent = item.sender;
         const text = document.createElement('span');
-        // 以本地圖示呈現指定表情，避免演出電腦缺少彩色表情字型時顯示方框。
+        // 以本地图示呈现指定表情，避免演出电脑缺少彩色表情字型时显示方框。
         if (item.message.includes('🎄❤️')) {
           const [before, after] = item.message.split('🎄❤️'); text.append(document.createTextNode(before));
-          [['assets/icons/tree.svg', '聖誕樹'], ['assets/icons/heart.svg', '愛心']].forEach(([src, alt]) => { const icon = document.createElement('img'); icon.className = 'emoji-icon'; icon.src = src; icon.alt = alt; text.append(icon); });
+          [['assets/icons/tree.svg', '圣诞树'], ['assets/icons/heart.svg', '爱心']].forEach(([src, alt]) => { const icon = document.createElement('img'); icon.className = 'emoji-icon'; icon.src = src; icon.alt = alt; text.append(icon); });
           text.append(document.createTextNode(after || ''));
         } else text.textContent = item.message;
         bubble.append(sender, text); feed.append(bubble);
       });
-      chatView.append(feed); const input = document.createElement('div'); input.className = 'chat-input'; input.textContent = '訊息'; chatView.append(input);
+      chatView.append(feed); const input = document.createElement('div'); input.className = 'chat-input'; input.textContent = '讯息'; chatView.append(input);
       phone.querySelector('.screen').append(chatView);
     }
     if (scene.type === 'call') {
       const call = document.createElement('div'); call.className = 'call-view';
-      const label = document.createElement('div'); label.className = 'call-status'; label.textContent = '來電';
+      const label = document.createElement('div'); label.className = 'call-status'; label.textContent = '来电';
       const caller = document.createElement('div'); caller.className = 'call-name'; caller.textContent = scene.caller;
-      const hint = document.createElement('div'); hint.className = 'call-hint'; hint.textContent = '電話響起';
+      const hint = document.createElement('div'); hint.className = 'call-hint'; hint.textContent = '电话响起';
       const accept = document.createElement('div'); accept.className = 'call-accept'; accept.textContent = '☎';
       call.append(label, caller, hint, accept); phone.querySelector('.screen').append(call);
     }
@@ -71,7 +80,7 @@ function build(scene) {
       const head = document.createElement('div'); head.className = 'notification-head';
       const icon = document.createElement('span'); icon.className = `app-icon ${item.color || 'sage'}`; icon.textContent = item.icon || '信';
       const sender = document.createElement('strong'); sender.textContent = item.sender;
-      const now = document.createElement('span'); now.className = 'notification-time'; now.textContent = '現在';
+      const now = document.createElement('span'); now.className = 'notification-time'; now.textContent = item.receivedAt || '现在';
       const message = document.createElement('div'); message.className = 'message'; message.textContent = item.message;
       head.append(icon, sender, now); card.append(head, message); phone.querySelector('.notifications').append(card); cards.push(card);
     });
@@ -89,7 +98,7 @@ function frame() {
   if (scene && view) {
     const rawTime = elapsed(state), time = Math.min(rawTime, scene.duration), { layer, phone, cards, caption, motion } = view;
     const fullyFaded = scene.fadeAt != null && time >= scene.fadeAt + scene.fadeDuration;
-    // 背景持續微動直到操作員推進；暫停時以同一個時間點凍結。
+    // 背景持续微动直到操作员推进；暂停时以同一个时间点冻结。
     const motionFrame = Math.floor(rawTime * 24);
     if (!state.black && !fullyFaded && view.motionFrame !== motionFrame) {
       motion.draw(rawTime); view.motionFrame = motionFrame;
@@ -109,7 +118,10 @@ function frame() {
     if (phone) {
       const notes = scene.notifications || [];
       const count = notes.filter(n => time >= n.at).length;
-      phone.classList.toggle('lit', time >= 1); phone.classList.toggle('show-social', scene.type === 'social' && time >= 1.8);
+      const clock = notificationClock(scene.clock, notes, time);
+      phone.querySelector('.status > span').textContent = clock; phone.querySelector('.clock').textContent = clock;
+      if (scene.type === 'social') phone.querySelector('.social-feed').style.transform = `translateY(${-100 * socialPosition(scene.posts, time)}%)`;
+      phone.classList.toggle('lit', time >= 1); phone.classList.toggle('show-social', scene.type === 'social' && time >= (scene.posts[0]?.at ?? 1.8));
       phone.classList.toggle('show-interface', time >= 1.4);
       if (scene.type === 'chat') phone.querySelectorAll('.chat-bubble').forEach((bubble, i) => bubble.classList.toggle('visible', time >= scene.messages[i].at));
       if (scene.type === 'draft') {

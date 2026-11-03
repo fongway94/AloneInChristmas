@@ -1,16 +1,16 @@
 const room = 'assets/images/penang-bedroom.png';
-const base = { act: '第二幕：現實', transitionIn: 1.4, audio: { music: null, effects: [], volume: .7 } };
+const base = { act: '第二幕：现实', transitionIn: 1.4, audio: { music: null, effects: [], volume: .7 } };
 export default [
-  { ...base, id: 'alarm-work', type: 'room', title: '新的一天', subtitle: '鬧鐘響起', duration: 10, background: room,
-    description: '鬧鐘響起，女孩急忙穿上外套，開始一天的工作。', cue: '音效待補：鬧鐘。等女孩穿上外套後再推進。' },
-  { ...base, id: 'work-pressure', type: 'phone', title: '電話與工作訊息', subtitle: '忙碌的一天', duration: 23, background: room, clock: '8:30', date: '12月24日',
-    description: '電話、工作訊息接連而來，她不停接聽、記錄。', cue: '訊息自動逐條出現；演員配合接聽和記錄。音效待補：電話及訊息聲。', notifications: [
-      { at: 2.5, sender: '工作通知', message: '早安，今天的報告請盡快交給我。', icon: '工', color: 'slate' },
-      { at: 7, sender: '主管', message: '客戶還在等回覆，麻煩妳再跟進一下。', icon: '信', color: 'sage' },
-      { at: 11, sender: '工作通知', message: '會議時間提前了，請記得準時出席。', icon: '工', color: 'slate' },
-      { at: 14.5, sender: '主管', message: '這份資料需要再修改，今天可以完成嗎？', icon: '信', color: 'sage' },
-      { at: 17, sender: '工作通知', message: '還有幾件急事，請盡快查看。', icon: '工', color: 'slate' },
-      { at: 19, sender: '主管', message: '看到訊息後，請馬上回覆我。', icon: '信', color: 'sage' }] },
-  { ...base, id: 'bills', type: 'room', title: '帳單與錢包', subtitle: '回家後的壓力', duration: 15, background: 'assets/images/penang-bills.png', caption: '生活不會因為我累了，就停下來。', captionAt: 3,
-    description: '女孩拆開帳單，翻看錢包、低頭計算，疲憊地揉著額頭。', cue: '讓演員完整完成拆帳單、查看錢包與計算的動作，再推進。' }
+  { ...base, id: 'alarm-work', type: 'room', title: '新的一天', subtitle: '闹钟响起', duration: 10, background: room,
+    description: '闹钟响起，女孩急忙穿上外套，开始一天的工作。', cue: '音效待补：闹钟。等女孩穿上外套后再推进。' },
+  { ...base, id: 'work-pressure', type: 'phone', title: '电话与工作讯息', subtitle: '忙碌的一天', duration: 23, background: room, clock: '08:30', date: '12月24日',
+    description: '电话、工作讯息接连而来，她不停接听、记录。', cue: '工作讯息与手机时间依次变化，表示一天过去；演员配合接听和记录。音效待补：电话及讯息声。', notifications: [
+      { at: 2.5, receivedAt: '08:35', sender: '工作通知', message: '早安，今天的报告请尽快交给我。', icon: '工', color: 'slate' },
+      { at: 7, receivedAt: '09:40', sender: '主管', message: '客户还在等回复，麻烦你再跟进一下。', icon: '信', color: 'sage' },
+      { at: 11, receivedAt: '11:15', sender: '工作通知', message: '会议时间提前了，请记得准时出席。', icon: '工', color: 'slate' },
+      { at: 14.5, receivedAt: '14:10', sender: '主管', message: '这份资料需要再修改，今天可以完成吗？', icon: '信', color: 'sage' },
+      { at: 17, receivedAt: '16:25', sender: '工作通知', message: '还有几件急事，请尽快查看。', icon: '工', color: 'slate' },
+      { at: 19, receivedAt: '18:00', sender: '主管', message: '看到讯息后，请马上回复我。', icon: '信', color: 'sage' }] },
+  { ...base, id: 'bills', type: 'room', title: '帐单与钱包', subtitle: '回家后的压力', duration: 15, background: 'assets/images/penang-bills.png', caption: '生活不会因为我累了，就停下来。', captionAt: 3,
+    description: '女孩拆开帐单，翻看钱包、低头计算，疲惫地揉着额头。', cue: '让演员完整完成拆帐单、查看钱包与计算的动作，再推进。' }
 ];

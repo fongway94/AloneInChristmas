@@ -1,4 +1,4 @@
-// 同步的低強度環境動態。時間由場景管理器提供，預覽與舞台不各自隨機生成。
+// 同步的低强度环境动态。时间由场景管理器提供，预览与舞台不各自随机生成。
 const W = 960, H = 540;
 const fraction = n => n - Math.floor(n);
 const seed = n => fraction(Math.sin(n * 127.1 + 19.19) * 43758.5453);
@@ -19,7 +19,7 @@ function rain(ctx, time, side, intensity) {
 }
 
 function lights(ctx, time, preset, intensity) {
-  // 光暈只落在原始街景的燈串、櫥窗與街燈附近，中央留給演員。
+  // 光晕只落在原始街景的灯串、橱窗与街灯附近，中央留给演员。
   const points = preset === 'bench'
     ? [[.73,.17,45],[.19,.14,25],[.35,.34,25],[.85,.29,32],[.08,.65,24],[.94,.62,24]]
     : [[.76,.16,45],[.07,.11,25],[.20,.23,25],[.37,.30,22],[.88,.32,27],[.35,.58,24]];
@@ -35,7 +35,7 @@ function lights(ctx, time, preset, intensity) {
   }
 }
 
-// 煙花只在窗外天空綻放；無快速閃光，不遮擋舞台下方。
+// 烟花只在窗外天空绽放；无快速闪光，不遮挡舞台下方。
 function fireworks(ctx, time, intensity) {
   const bursts = [[.38,.20,0],[.61,.15,2.8],[.48,.27,5.9]];
   for (let b = 0; b < bursts.length; b++) {
@@ -56,7 +56,7 @@ function fireworks(ctx, time, intensity) {
   }
 }
 
-// 緩慢的水面光感與柔和光暈；不閃爍，也不影響文字閱讀。
+// 缓慢的水面光感与柔和光晕；不闪烁，也不影响文字阅读。
 function endingLight(ctx, time, preset, intensity) {
   if (preset === 'embrace') {
     const alpha = (.07 + .025 * Math.sin(time * .4)) * intensity;

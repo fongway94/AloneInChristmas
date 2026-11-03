@@ -13,7 +13,7 @@ export class AudioManager {
       const a = track.audio, start = track.at || 0, end = track.end ?? Infinity;
       if (time < start || time >= end || black || !playing) { if (!a.paused) a.pause(); continue; }
       const target = time - start;
-      // 播放完成後不要反覆從頭播放；時間軸仍可在暫停／繼續時追上。
+      // 播放完成后不要反复从头播放；时间轴仍可在暂停／继续时追上。
       if (Number.isFinite(a.duration) && target >= a.duration) { if (!a.paused) a.pause(); continue; }
       if (!track.started || Math.abs(a.currentTime - target) > 1.5) { try { a.currentTime = target; } catch (_) {} track.started = true; }
       const fadeIn = track.fadeIn ? Math.min(1, target / track.fadeIn) : 1;

@@ -19,11 +19,12 @@ assert.ok(scenes.at(-2).lightAt > 0 && scenes.at(-2).lightAt + scenes.at(-2).lig
 assert.equal(scenes.at(-1).motion.preset, 'embrace');
 assert.ok(new Set(scenes.filter(s => /第六幕|第七幕|第八幕/.test(s.act)).map(s => s.background)).size >= 5);
 assert.equal(scenes.at(-1).background, 'assets/images/ending-embrace.png');
-assert.equal(scenes.find(s => s.id === 'friends-photos').photo, 'assets/images/penang-friends.png');
+assert.equal(scenes.find(s => s.id === 'friends-photos').posts.length, 3);
+assert.deepEqual(scenes.find(s => s.id === 'work-pressure').notifications.map(n => n.receivedAt), ['08:35', '09:40', '11:15', '14:10', '16:25', '18:00']);
 assert.equal(scenes.find(s => s.id === 'testimony-memory').motion.preset, 'rain-middle');
 assert.deepEqual(scenes.find(s => s.id === 'friends-whatsapp').messages.map(m => m.sender), ['朋友A', '朋友B', '朋友C', '朋友D']);
 assert.ok(!scenes.some(s => s.id === 'encounter'));
-assert.deepEqual(scenes.slice(-3).map(s => s.caption), ['這個聖誕節，也許你的世界仍有黑暗……', '但有一道光，從未離開。', '因為耶穌愛你。']);
+assert.deepEqual(scenes.slice(-3).map(s => s.caption), ['这个圣诞节，也许你的世界仍有黑暗……', '但有一道光，从未离开。', '因为耶稣爱你。']);
 assert.equal(scenes.find(s => s.id === 'prayer').audio.effects[0].src, 'assets/audio/prayer.mp3');
 assert.equal(new Set(scenes.map(s => s.id)).size, scenes.length);
 for (const scene of scenes) {
@@ -32,7 +33,7 @@ for (const scene of scenes) {
   assert.ok(!scene.notifications || scene.notifications.every((n, i, all) => n.at < scene.duration && (i === 0 || n.at >= all[i - 1].at)));
   assert.ok(!scene.messages || scene.messages.every((n, i, all) => n.at < scene.duration && (i === 0 || n.at >= all[i - 1].at)));
 }
-assert.match(scenes.at(-1).caption, /耶穌愛你/);
+assert.match(scenes.at(-1).caption, /耶稣爱你/);
 const operator = new SceneManager(), stage = new SceneManager();
 assert.equal(stage.state.index, -1);
 operator.next(); assert.equal(stage.state.index, 0); assert.equal(stage.state.playing, true);

@@ -1,12 +1,12 @@
-const bench = 'assets/images/penang-bench.png';
-const base = { act: '第七幕：長椅上的禱告', transitionIn: 1.5, audio: { music: null, effects: [], volume: .7 } };
+const bench = 'assets/images/penang-bench-local.png';
+const base = { act: '第七幕：长椅上的祷告', transitionIn: 1.5, audio: { music: null, effects: [], volume: .7 } };
 export default [
-  { ...base, id: 'bench-meeting', type: 'room', title: '長椅上的相遇', subtitle: '男孩已坐在一旁', duration: 12, background: bench, warmth: .1,
-    description: '女孩看見長椅，走過去坐下，望著遠方，沒有留意旁邊的男孩。', cue: '使用實體長椅，男孩先坐在一旁。等女孩坐下、望向遠方再推進。' },
-  { ...base, id: 'are-you-okay', type: 'room', title: '你還好嗎？', subtitle: '安靜的陪伴', duration: 12, background: bench, warmth: .14,
-    description: '男孩輕聲問「你還好嗎？」女孩搖頭、流淚；男孩沒有追問，只是陪伴她。', cue: '保留女孩搖頭、流淚與兩人沉默的時間；不要催促演員。' },
-  { ...base, id: 'permission-to-pray', type: 'room', title: '可以為你禱告嗎？', subtitle: '徵求同意', duration: 12, background: 'assets/images/penang-bench-prayer.png', warmth: .18,
-    description: '男孩詢問是否可以為她禱告；女孩驚訝、猶豫，最後輕輕點頭。', cue: '等女孩點頭，才推進到禱告。音樂待補：溫柔鋼琴。' },
-  { ...base, id: 'prayer', type: 'room', title: '為她禱告', subtitle: '預錄禱告', duration: 35, background: 'assets/images/penang-bench-prayer.png', warmth: .24, audio: { music: null, volume: 1, effects: [{ src: 'assets/audio/prayer.mp3', at: 2, end: 20.7, volume: 1 }] },
-    description: '男孩低頭、雙手合十，為女孩禱告。', cue: '預錄禱告：親愛的主耶穌，雖然我不知道她經歷了甚麼，但祢都知道。求祢安慰她受傷的心，擦乾她的眼淚。讓她知道，即使在最孤獨的時候，她也不是一個人。因為祢一直愛著她。奉主耶穌基督的名禱告，阿們。進入畫面後約兩秒播放預錄禱告；等禱告完成後再推進。如以演員現場禱告，請先靜音。' }
+  { ...base, id: 'bench-meeting', type: 'room', title: '长椅上的相遇', subtitle: '男孩已坐在一旁', duration: 12, background: bench, warmth: .1,
+    description: '女孩看见长椅，走过去坐下，望着远方，没有留意旁边的男孩。', cue: '使用实体长椅，男孩先坐在一旁。等女孩坐下、望向远方再推进。' },
+  { ...base, id: 'are-you-okay', type: 'room', title: '你还好吗？', subtitle: '安静的陪伴', duration: 12, background: bench, warmth: .14,
+    description: '男孩轻声问「你还好吗？」女孩摇头、流泪；男孩没有追问，只是陪伴她。', cue: '保留女孩摇头、流泪与两人沉默的时间；不要催促演员。' },
+  { ...base, id: 'permission-to-pray', type: 'room', title: '可以为你祷告吗？', subtitle: '征求同意', duration: 12, background: 'assets/images/penang-bench-prayer-local.png', warmth: .18,
+    description: '男孩询问是否可以为她祷告；女孩惊讶、犹豫，最后轻轻点头。', cue: '等女孩点头，才推进到祷告。音乐待补：温柔钢琴。' },
+  { ...base, id: 'prayer', type: 'room', title: '为她祷告', subtitle: '预录祷告', duration: 35, background: 'assets/images/penang-bench-prayer-local.png', warmth: .24, audio: { music: null, volume: 1, effects: [{ src: 'assets/audio/prayer.mp3', at: 2, end: 20.7, volume: 1 }] },
+    description: '男孩低头、双手合十，为女孩祷告。', cue: '预录祷告：亲爱的主耶稣，虽然我不知道她经历了甚么，但祢都知道。求祢安慰她受伤的心，擦干她的眼泪。让她知道，即使在最孤独的时候，她也不是一个人。因为祢一直爱着她。奉主耶稣基督的名祷告，阿们。进入画面后约两秒播放预录祷告；等祷告完成后再推进。如以演员现场祷告，请先静音。' }
 ];
