@@ -188,6 +188,16 @@ function frame() {
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+// 移动浏览器通常要求 play() 直接发生在舞台页面的触摸手势内。
+// 操作台预览始终静音；舞台画面不添加任何可见按钮或边框。
+if (!preview) window.addEventListener('pointerdown', () => {
+  const scene = scenes[state.index];
+  if (!scene) return;
+  const time = elapsed(state);
+  const fullyFaded = scene.fadeAt != null && time >= scene.fadeAt + scene.fadeDuration;
+  audio.update(time, state.playing && !fullyFaded, state.black || state.muted, state.volume ?? 1,
+    { music: state.musicVolume ?? 1, effects: state.effectsVolume ?? 1, voice: state.voiceVolume ?? 1 }, true);
+});
 if (!preview) window.addEventListener('keydown', event => {
   if (event.key.toLowerCase() === 'f') { event.preventDefault(); if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); }
 });

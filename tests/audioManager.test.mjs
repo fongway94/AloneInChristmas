@@ -42,7 +42,7 @@ repeated.load({id:'fireworks', audio:{effects:[{src:'firework.wav', at:2, repeat
 const boom = repeated.tracks[0].audio; boom.duration = 3.33;
 repeated.update(2.2, true, false); assert.equal(boom.playCount, 1);
 repeated.update(6, true, false); assert.equal(boom.paused, true);
-repeated.update(13.2, true, false); assert.equal(boom.playCount, 2); assert.ok(Math.abs(boom.currentTime - .2) < 1e-8);
+now += 11000; repeated.update(13.2, true, false); assert.equal(boom.playCount, 2); assert.ok(Math.abs(boom.currentTime - .2) < 1e-8);
 repeated.update(14, true, false, .5, { effects: 0 }); assert.equal(boom.volume, 0);
 repeated.stop(); Date.now = originalNow;
 console.log('连续音轨、淡化、分轨音量与循环触发测试通过。');
@@ -54,3 +54,20 @@ waiting.update(5,true,false); assert.equal(slow.paused,true); assert.equal(waiti
 slow.readyState=1; slow.seeking=true; waiting.update(5,true,false); assert.equal(waiting.tracks[0].started,false);
 slow.seeking=false; waiting.update(5,true,false); assert.equal(slow.currentTime,5); assert.equal(waiting.tracks[0].started,true); waiting.stop();
 console.log('媒体准备与定位保护测试通过。');
+
+// 触摸必须同步触发 play()，即使元数据尚未载入或自动播放刚被拒绝。
+const gesture = new AudioManager(); gesture.load({id:'mobile',audio:{music:{src:'music.mp3',volume:.2}}});
+const mobile = gesture.tracks[0].audio; mobile.readyState=0;
+gesture.update(1,true,false,1,{},true); assert.equal(mobile.playCount,1); assert.equal(mobile.paused,false);
+mobile.pause(); gesture.update(1,true,true,1,{},true); assert.equal(mobile.playCount,1, '黑场不可播放');
+gesture.update(1,false,false,1,{},true); assert.equal(mobile.playCount,1, '暂停不可播放');
+gesture.update(1,true,false,1,{},true); assert.equal(mobile.playCount,2, '手势可立即重试');
+gesture.stop();
+console.log('移动浏览器手势解锁、黑场和暂停测试通过。');
+
+const noRanges = new AudioManager(); noRanges.load({id:'no-range',audio:{music:{src:'music.mp3'}}});
+const stream = noRanges.tracks[0].audio; stream.seekable = {length:1,start:()=>0,end:()=>0};
+noRanges.update(8,true,false); assert.equal(stream.currentTime,0); assert.equal(stream.paused,false);
+stream.currentTime=1; noRanges.update(10,true,false); assert.equal(stream.currentTime,1, '不可定位时不能反复重置播放');
+noRanges.stop();
+console.log('不支持随机定位的服务器播放测试通过。');

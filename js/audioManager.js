@@ -33,7 +33,7 @@ export class AudioManager {
       } else { track.audio.pause(); track.audio.src = ''; }
     }
   }
-  update(time, playing, black, masterVolume = 1, levels = {}) {
+  update(time, playing, black, masterVolume = 1, levels = {}, userGesture = false) {
     // 不同音乐／环境音切换时短暂交叉淡化，避免切画面时突然中断。
     this.retiring = this.retiring.filter(track => {
       const remaining = Math.max(0, 1 - (Date.now() - track.startedAt) / track.duration);
@@ -54,8 +54,14 @@ export class AudioManager {
         else if (target >= a.duration) { if (!a.paused) a.pause(); continue; }
       }
       // 等媒体元数据就绪再定位；正在定位时勿逐帧重复设置，避免阻塞缓冲。
-      if (typeof a.readyState === 'number' && a.readyState < 1) continue;
-      if (!a.seeking && (!track.started || Math.abs(a.currentTime - target) > 1.5) && (!track.lastSeek || Date.now() - track.lastSeek > 1000)) {
+      if (!userGesture && typeof a.readyState === 'number' && a.readyState < 1) continue;
+      // 有些本机服务器不支持 HTTP Range；不要不断定位到无法定位的位置，
+      // 否则浏览器会反复从头缓冲，听起来像没有声音。
+      const seekable = a.seekable;
+      const canSeek = !seekable || Array.from({ length: seekable.length }, (_, i) => i)
+        .some(i => target >= seekable.start(i) && target <= seekable.end(i));
+      if (!track.started && !canSeek) track.started = true;
+      if (canSeek && !a.seeking && (!track.started || Math.abs(a.currentTime - target) > 1.5) && (!track.lastSeek || Date.now() - track.lastSeek > 1000)) {
         try { a.currentTime = target; track.lastSeek = Date.now(); track.started = true; } catch (_) {}
       }
       const fadeIn = track.fadeIn && !track.transitionAt ? Math.min(1, (time - start) / track.fadeIn) : 1;
@@ -69,7 +75,12 @@ export class AudioManager {
         if (p >= 1) track.transitionAt = null;
       }
       a.volume = Math.max(0, Math.min(1, targetVolume));
-      if (a.paused) a.play().catch(() => {}); // 浏览器可能要求先点击舞台窗口。
+      // 用户触摸时同步调用 play()，以通过移动浏览器的用户手势限制。
+      // 普通帧在被拒绝时最多每秒重试一次，不要每帧反复调用。
+      if (a.paused && (userGesture || !track.lastPlayAttempt || Date.now() - track.lastPlayAttempt >= 1000)) {
+        track.lastPlayAttempt = Date.now();
+        try { a.play()?.catch(() => {}); } catch (_) { /* 浏览器可能限制自动播放 */ }
+      }
     }
   }
   stop() {
