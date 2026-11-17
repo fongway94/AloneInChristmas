@@ -1,0 +1,55 @@
+import assert from 'node:assert/strict';
+// Minimal browser transport to exercise the localStorage fallback without BroadcastChannel.
+const listeners = {};
+globalThis.window = { addEventListener(type, fn) { (listeners[type] ||= []).push(fn); } };
+const store = new Map();
+globalThis.localStorage = {
+  getItem(key) { return store.get(key) ?? null; },
+  setItem(key, value) { store.set(key, value); for (const fn of listeners.storage || []) fn({ key, newValue: value }); }
+};
+globalThis.BroadcastChannel = undefined;
+let now = 1000000; Date.now = () => now;
+const { SceneManager, elapsed, scenes } = await import('../js/sceneManager.js');
+assert.equal(new Set(scenes.map(s => s.act)).size, 9);
+assert.equal(scenes.length, 37);
+assert.ok(scenes.slice(0, -3).every(s => s.background.startsWith('assets/images/penang-')));
+assert.equal(scenes.at(-2).overlayBackground, 'assets/images/ending-light-sea.png');
+assert.equal(scenes.at(-2).background, scenes.at(-3).background);
+assert.ok(scenes.at(-2).lightAt > 0 && scenes.at(-2).lightAt + scenes.at(-2).lightDuration <= scenes.at(-2).duration);
+assert.equal(scenes.at(-1).motion.preset, 'embrace');
+assert.ok(new Set(scenes.filter(s => /第六幕|第七幕|第八幕/.test(s.act)).map(s => s.background)).size >= 5);
+assert.equal(scenes.at(-1).background, 'assets/images/ending-embrace.png');
+assert.equal(scenes.find(s => s.id === 'friends-photos').posts.length, 3);
+assert.deepEqual(scenes.find(s => s.id === 'work-pressure').notifications.map(n => n.receivedAt), ['08:35', '09:40', '11:15', '14:10', '16:25', '18:00']);
+assert.equal(scenes.find(s => s.id === 'testimony-memory').motion.preset, 'rain-middle');
+assert.deepEqual(scenes.find(s => s.id === 'friends-whatsapp').messages.map(m => m.sender), ['朋友A', '朋友B', '朋友C', '朋友D']);
+assert.ok(!scenes.some(s => s.id === 'encounter'));
+assert.deepEqual(scenes.slice(-3).map(s => s.caption), ['这个圣诞节，也许你的世界仍有黑暗……', '但有一道光，从未离开。', '因为耶稣爱你。']);
+assert.equal(scenes.find(s => s.id === 'prayer').audio.effects[0].src, 'assets/audio/prayer.mp3');
+assert.equal(new Set(scenes.map(s => s.id)).size, scenes.length);
+for (const scene of scenes) {
+  assert.ok(scene.title && scene.description && scene.cue && scene.background && scene.duration > 0);
+  assert.ok(!scene.caption || scene.captionAt < scene.duration);
+  assert.ok(!scene.notifications || scene.notifications.every((n, i, all) => n.at < scene.duration && (i === 0 || n.at >= all[i - 1].at)));
+  assert.ok(!scene.messages || scene.messages.every((n, i, all) => n.at < scene.duration && (i === 0 || n.at >= all[i - 1].at)));
+}
+assert.match(scenes.at(-1).caption, /耶稣爱你/);
+const operator = new SceneManager(), stage = new SceneManager();
+assert.equal(stage.state.index, -1);
+operator.next(); assert.equal(stage.state.index, 0); assert.equal(stage.state.playing, true);
+now += 5500; assert.equal(elapsed(stage.state), 5.5);
+operator.togglePlay(); assert.equal(stage.state.playing, false); now += 10000; assert.equal(elapsed(stage.state), 5.5);
+operator.togglePlay(); now += 1000; assert.equal(elapsed(stage.state), 6.5);
+operator.toggleBlack(); assert.equal(stage.state.black, true); operator.toggleBlack(); assert.equal(stage.state.black, false);
+operator.setAudioOutput('operator'); assert.equal(stage.state.audioOutput, 'operator'); operator.setAudioOutput('stage'); assert.equal(stage.state.audioOutput, 'stage');
+operator.setGroupVolume('music', .3); assert.equal(stage.state.musicVolume, .3); operator.setGroupVolume('voice', 0); assert.equal(stage.state.voiceVolume, 0);
+operator.toggleMute(); assert.equal(stage.state.muted, true); operator.setVolume(.5); assert.equal(stage.state.volume, .5); operator.toggleMute();
+operator.restart(); assert.equal(elapsed(stage.state), 0);
+now += (scenes[0].duration + 10) * 1000; assert.equal(stage.state.index, 0); // completion never auto-advances
+operator.togglePlay(); const held = elapsed(stage.state); assert.equal(stage.state.playing, false); now += 10000; assert.equal(elapsed(stage.state), held);
+operator.togglePlay(); assert.equal(stage.state.playing, true);
+operator.next(); assert.equal(stage.state.index, 1);
+operator.go(scenes.length - 1); now += (scenes.at(-1).duration + 10) * 1000; assert.equal(stage.state.index, scenes.length - 1);
+operator.next(); assert.equal(stage.state.index, scenes.length); assert.equal(stage.state.playing, false);
+operator.previous(); assert.equal(stage.state.index, scenes.length - 1); assert.equal(elapsed(stage.state), 0);
+console.log('场景状态、暂停、重播、黑屏、结束保持及存储事件同步测试通过。');

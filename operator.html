@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-Hans"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101414"><title>演出控制台 · 一个人的圣诞</title><link rel="stylesheet" href="assets/fonts/noto-sans-sc/index.css"><link rel="stylesheet" href="css/operator.css"></head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">✳</div><div><div class="brand-title">一个人的圣诞</div><div class="brand-sub">舞台视觉系统</div></div></div>
+    <div class="sidebar-divider"></div>
+    <div class="side-label">演出项目</div>
+    <div class="project-card"><span class="project-icon">✦</span><span><strong>一个人的圣诞</strong><small>舞台背景演示</small></span><span class="project-chevron">⌄</span></div>
+    <div class="side-label scene-label">全部画面 <span id="scene-count">01</span></div>
+    <div id="scene-list" class="scene-list"></div>
+    <div class="sidebar-bottom"><div class="side-note-icon">✧</div><div><strong>演出提示</strong><p>每个画面播放后都会等待，<br>请配合演员手动推进。</p></div></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div class="breadcrumb">演出项目 <span>/</span> <strong>控制台</strong></div><div class="top-right"><span class="connection"><i></i> 本地同步已就绪</span><button id="open-stage" class="open-stage"><span>↗</span> 打开舞台画面</button></div></header>
+    <div class="content">
+      <div class="page-heading"><div><div class="eyebrow"><span></span> 演出控制台</div><h1>让故事，在光影中发生<span>。</span></h1><p>一切准备就绪。从这里，开始这场演出。</p></div><div class="heading-index"><span>目前画面</span><strong><span id="current-heading">00</span> <em>/</em> <span id="total-heading">07</span></strong></div></div>
+      <div class="dashboard">
+        <section class="monitor-panel panel">
+          <div class="panel-heading"><div><span class="section-kicker">舞台监看</span><h2>当前画面 <span class="live-tag"><i></i> 即时预览</span></h2></div><span class="monitor-ratio">16 : 9</span></div>
+          <div class="preview-wrap"><iframe id="preview" src="index.html?preview=1" title="舞台画面即时预览" tabindex="-1"></iframe><div id="preview-wait" class="preview-wait"><span class="wait-symbol">✳</span><span>舞台已就绪</span><small>点击「下一个画面」开始演出</small></div><div class="preview-corner">舞台画面</div></div>
+          <div class="monitor-footer"><div class="monitor-scene"><span class="scene-dot"></span><div><small>目前画面</small><strong id="current-title">等待开始</strong></div></div><div class="monitor-time"><span id="elapsed">00:00</span><span class="time-divider">/</span><span id="duration">00:40</span></div></div>
+          <div class="progress-track"><div id="progress"></div></div>
+          <div class="progress-labels"><span id="status-text">准备就绪</span><span>环境微动，等待手动推进</span></div>
+        </section>
+        <section class="control-panel panel"><div class="panel-heading"><div><span class="section-kicker">演出操作</span><h2>播放控制</h2></div><span class="control-icon">⌘</span></div><p class="control-description">请依照演员的动作推进，画面不会自动跳到下一段。</p>
+          <label class="cue-select-label" for="cue-select">快速选择画面</label><select id="cue-select" class="cue-select"><option value="-1">待命</option></select><div class="primary-controls"><button id="previous" class="control-button previous"><span class="button-icon">←</span><span>上一个画面<small>返回上一段</small></span><kbd>←</kbd></button><button id="next" class="control-button next"><span class="button-icon">→</span><span>下一个画面<small>开始 / 推进画面</small></span><kbd>→</kbd></button></div>
+          <div class="secondary-controls"><button id="play"><span>Ⅱ</span><strong>暂停</strong></button><button id="restart"><span>↺</span><strong>重新播放</strong></button><button id="black"><span>◐</span><strong>黑场</strong></button></div>
+          <div class="audio-controls"><button id="audio-toggle" type="button">全部声音：开启</button><label for="audio-volume">总音量</label><input id="audio-volume" type="range" min="0" max="1" step="0.05" value="1"></div><div class="audio-output"><div class="audio-output-title">演出声音输出</div><div class="audio-output-buttons"><button id="output-stage" type="button">舞台窗口</button><button id="output-operator" type="button">在本操作台播放</button></div><p id="output-status" aria-live="polite">请打开舞台窗口并点击画面启用声音。</p></div><div class="audio-mix"><label for="music-volume">音乐 <input id="music-volume" type="range" min="0" max="1" step="0.05" value="1"></label><label for="effects-volume">音效与环境 <input id="effects-volume" type="range" min="0" max="1" step="0.05" value="1"></label><label for="voice-volume">预录人声 <input id="voice-volume" type="range" min="0" max="1" step="0.05" value="1"></label></div><div class="audio-test"><button id="test-sfx" type="button">试听提示音（本机）</button><span id="test-sfx-status" aria-live="polite">先调低音量，再点击试听。</span></div><p class="audio-hint">音乐和音效随画面播放；祷告和旁白在对应画面播放。选舞台输出时请点击舞台画面；选本操作台输出时请点击上方按钮。内嵌预览本身始终静音。<br><a href="assets/audio/prayer.mp3" download>下载祷告录音</a> · <a href="assets/audio/testimony.mp3" download>下载旁白录音</a></p><div class="control-divider"></div><div class="shortcut-heading">快捷键 <span>按键提示</span></div><div class="shortcuts"><div><kbd>→</kbd><kbd>空格</kbd><span>下一个画面</span></div><div><kbd>←</kbd><span>上一个画面</span></div><div><kbd>B</kbd><span>黑场</span></div><div><kbd>R</kbd><span>重新播放</span></div><div><kbd>F</kbd><span>全屏幕当前视窗</span></div></div>
+          <div class="ppt-note"><a href="deliverables/stage-cues.pptx" download>下载 PowerPoint 提示版 ↓</a><small>静态逐页，录音须另行插入</small></div><div class="fullscreen-tip"><span>ⓘ</span><p>将舞台画面移至投影屏，点击该视窗并按 <b>F</b> 进入全屏幕。</p></div>
+        </section>
+      </div>
+      <section class="up-next"><div class="up-icon">✦</div><div><span><span id="cue-act">第一幕</span> · 演员与操作提示</span><p id="scene-description">女孩坐在床边，拿起手机。</p><p id="operator-cue" class="operator-cue"></p><p id="audio-cue" class="audio-cue"></p></div><div class="up-meta"><span>主要动画</span><strong id="scene-length">约 15 秒</strong></div></section>
+      <footer><span>一个人的圣诞 <i>·</i> 舞台视觉系统</span><span>为每一个值得被看见的瞬间</span></footer>
+    </div>
+  </main>
+</div><script type="module" src="js/operatorController.js?v=audio3"></script></body></html>
