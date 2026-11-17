@@ -20,43 +20,24 @@ const effects = {
 };
 // id: [音乐, 音乐音量, [[环境音, 音量], ...]]。对话和人声画面刻意降低音乐。
 const plan = {
-  'lonely-room': ['piano', .14, [['rain', .035]]],
-  'unsent-draft': ['piano', .14, [['rain', .035]]],
-  'friends-photos': ['piano', .14, [['rain', .035]]],
-  'alarm-work': ['piano', .12, [['rain', .025]]],
-  'work-pressure': ['piano', .11, [['rain', .025]]],
-  'bills': ['piano', .14, [['rain', .04]]],
-  'gather-bills': ['piano', .12, [['rain', .04]]],
-  'family-call': ['piano', .07, [['rain', .025]]],
-  'grief': ['piano', .10, [['rain', .04]]],
-  'who-can-i-lean-on': ['piano', .10, [['rain', .04]]],
-  'room-dark': ['piano', .10, [['rain', .025]]],
-  'friends-whatsapp': ['piano', .10, [['rain', .025]]],
-  'hide-away': ['piano', .12, [['rain', .035]]],
-  'wake-to-celebration': ['christmas', .10, [['street', .07], ['crowd', .05]]],
-  'window-fireworks': ['christmas', .14, [['street', .10], ['crowd', .08]]],
-  'get-ready-to-go': ['christmas', .11, [['street', .07], ['crowd', .04]]],
-  'crowd-friends': ['christmas', .15, [['street', .11], ['crowd', .10]]],
-  'crowd-couple': ['christmas', .15, [['street', .11], ['crowd', .10]]],
-  'crowd-family': ['christmas', .15, [['street', .11], ['crowd', .10]]],
-  'alone-in-crowd': ['christmas', .07, [['street', .07], ['crowd', .05]]],
-  'bench-meeting': ['prayer', .10, [['street', .035]]],
-  'are-you-okay': ['prayer', .08, [['street', .025]]],
-  'permission-to-pray': ['prayer', .08, [['street', .02]]],
-  'prayer': ['prayer', .055, [['street', .015]]],
+  'lonely-room': ['piano', .12, [['rain', .03]]],
+  'friends-photos': ['piano', .10, [['rain', .03]]],
+  'alarm-work': ['piano', .11, [['rain', .025]]],
+  'bills': ['piano', .12, [['rain', .035]]],
+  'family-call': ['piano', .06, [['rain', .02]]],
+  'grief': ['piano', .08, [['rain', .03]]],
+  'friends-whatsapp': ['piano', .09, [['rain', .025]]],
+  'hide-away': ['piano', .07, [['rain', .03]]],
+  'window-fireworks': ['christmas', .13, [['street', .09], ['crowd', .07]]],
+  'get-ready-to-go': ['christmas', .11, [['street', .06], ['crowd', .04]]],
+  'crowd-scene': ['christmas', .16, [['street', .12], ['crowd', .12]]],
+  'bench-meeting': ['prayer', .10, [['street', .03]]],
+  'prayer': ['prayer', .05, [['street', .015]]],
   'jesus-loves-you': ['prayer', .08, [['street', .02]]],
-  'testimony-begins': ['prayer', .08, [['street', .02]]],
-  'testimony-memory': ['piano', .06, [['rain', .02]]],
   'testimony-talk': ['prayer', .08, [['street', .02]]],
-  'unseen-story': ['prayer', .10, [['street', .02]]],
-  'encouragement': ['hope', .085, [['street', .02]]],
-  'play-time': ['hope', .085, [['street', .02]]],
-  'friends-arrive': ['hope', .09, [['street', .025]]],
-  'acceptance': ['hope', .10, [['street', .02]]],
-  'walk-together': ['hope', .13, [['street', .02]]],
-  'ending-darkness': ['hope', .12, [['ocean', .025]]],
-  'ending-light': ['hope', .14, [['ocean', .025]]],
-  'ending-love': ['hope', .16, [['ocean', .02]]]
+  'encouragement': ['hope', .09, [['street', .02]]],
+  'friends-arrive': ['hope', .11, [['street', .025]]],
+  'ending': ['hope', .16, [['ocean', .025]]]
 };
 function fx(name, at, volume, extra = {}) { return { src: effects[name], name: effectNames[name], at, volume, ...extra }; }
 export function withAudio(scene) {
@@ -65,8 +46,6 @@ export function withAudio(scene) {
   const [theme, volume, ambient] = entry;
   const music = { name: musicNames[theme], src: musicFiles[theme], continuity: `music-${theme}`, loop: true, fadeIn: 2, volume };
   const ambience = ambient.map(([name, gain]) => ({ name: ambienceNames[name], src: ambienceFiles[name], continuity: `ambience-${name}`, loop: true, fadeIn: 2, volume: gain }));
-  // 第三幕淡至黑场时音乐及雨声一起淡出，黑场保持静默。
-  if (scene.fadeAt != null) for (const track of [music, ...ambience]) { track.end = scene.fadeAt + scene.fadeDuration; track.fadeOut = scene.fadeDuration; }
   const result = { volume: 1, music, ambience, effects: (scene.audio?.effects || []).map(item => ({ ...item, name: scene.id === 'prayer' ? '预录祷告' : '预录旁白', kind: 'voice' })) };
   if (scene.id === 'alarm-work') result.effects.push(fx('alarm', .5, .60));
   if (scene.id === 'work-pressure') result.effects.push(...scene.notifications.map(n => fx('message', n.at, .70)));
