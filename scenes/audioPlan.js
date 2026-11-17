@@ -21,6 +21,7 @@ const effects = {
 // id: [音乐, 音乐音量, [[环境音, 音量], ...]]。对话和人声画面刻意降低音乐。
 const plan = {
   'lonely-room': ['piano', .12, [['rain', .03]]],
+  'unsent-draft': ['piano', .12, [['rain', .03]]],
   'friends-photos': ['piano', .10, [['rain', .03]]],
   'alarm-work': ['piano', .11, [['rain', .025]]],
   'bills': ['piano', .12, [['rain', .035]]],

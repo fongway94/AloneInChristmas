@@ -2,12 +2,18 @@
 const room = 'assets/images/penang-bedroom.png';
 const base = { act: '第一幕：孤独', transitionIn: 1.4, audio: { music: null, effects: [], volume: .7 } };
 export default [
-  { ...base, id: 'lonely-room', type: 'room', title: '想找人说话', subtitle: '独自坐在房间', duration: 14, background: room,
-    description: '女孩坐在房间，拿起手机，想找人说话。打了几个字，又逐一删除。',
+  { ...base, id: 'lonely-room', type: 'room', title: '想找人说话', subtitle: '独自坐在房间', duration: 10, background: room,
+    description: '女孩坐在房间，拿起手机，想找人说话。',
     cue: '等女孩拿起手机、准备输入讯息，再推进。',
     dialogues: [
       { at: 3, speaker: '悠兒', text: '最近有点难过，你有空聊聊吗？', note: '打字又删去' },
-      { at: 8, speaker: '悠兒', text: '算了。', note: '' }
+      { at: 7, speaker: '悠兒', text: '算了。', note: '' }
+    ] },
+  { ...base, id: 'unsent-draft', type: 'draft', title: '打了又删的讯息', subtitle: '没有送出的话', duration: 14, background: room, clock: '20:30', date: '12月23日', draft: '最近有点难过，你有空聊聊吗？',
+    description: '女孩打了几个字，又逐一删除。手机上的示范文字可修改。',
+    cue: '讯息会自动逐字输入、停顿、再逐字删除；让演员配合手机动作，完成后再推进。',
+    dialogues: [
+      { at: 4, speaker: '悠兒', text: '（手机屏幕上输入、删除、再输入）', note: '' }
     ] },
   { ...base, id: 'friends-photos', type: 'social', title: '别人的相聚', subtitle: '手机里的聚会照片', duration: 16, background: room, clock: '20:30', date: '12月23日', caption: '想找个人说说话，却不知道可以找谁。', captionAt: 4,
     posts: [
