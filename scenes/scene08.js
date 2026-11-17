@@ -10,9 +10,10 @@ export default [
       { at: 9, speaker: '👧 悠兒', text: '耶稣……爱我？', note: '疑惑' },
       { at: 11, speaker: '👦 方炜', text: '（点头）其实，我也曾经历过很难熬的日子。', note: '' }
     ] },
-  { ...base, id: 'testimony-talk', type: 'room', title: '不必独自面对', subtitle: '男孩的分享', duration: 20, background: bench, warmth: .38, caption: '你看见的笑容背后，也许藏着一段不为人知的故事。', captionAt: 6,
-    description: '男孩分享自己的生命见证：每个人都有不容易的时候；相信耶稣不代表没有困难，但不需要独自面对。女孩安静聆听。',
-    cue: 'PPT 配合呈现男孩过去困境画面。留足男孩完整分享与女孩聆听的时间。',
+  { ...base, id: 'testimony-talk', type: 'room', title: '不必独自面对', subtitle: '男孩的分享', duration: 22, background: bench, overlayBackground: 'assets/images/penang-memory.png', lightAt: 2, lightDuration: 4, warmth: .38, caption: '你看见的笑容背后，也许藏着一段不为人知的故事。', captionAt: 8,
+    description: '男孩分享自己的生命见证：每个人都有不容易的时候；相信耶稣不代表没有困难，但不需要独自面对。女孩安静聆听。背景显示他过去经历困境的画面。',
+    cue: 'PPT 配合呈现男孩过去困境画面。预录旁白播放约 15 秒。留足男孩完整分享与女孩聆听的时间。',
+    audio: { music: null, volume: 1, effects: [{ src: 'assets/audio/testimony.mp3', at: 2, end: 17.1, volume: 1 }] },
     dialogues: [
       { at: 3, speaker: '👦 方炜', text: '我以前也以为，只有自己这么痛苦。', note: '' },
       { at: 7, speaker: '👦 方炜', text: '后来才发现，原来每个人都有不容易的时候。', note: '' },
