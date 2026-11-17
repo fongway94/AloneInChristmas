@@ -2,6 +2,7 @@ import { SceneManager, scenes, elapsed } from './sceneManager.js?v=audio3';
 import { createAudioManager } from './createAudioManager.js?v=audio3';
 import { createAtmosphere } from './atmosphere.js';
 import { notificationClock, socialPosition } from './phoneTimeline.js';
+import { xmasSynth } from './xmasSynth.js?v=audio4';
 const manager = new SceneManager();
 const preview = new URLSearchParams(location.search).has('preview');
 const audio = createAudioManager(preview);
@@ -19,21 +20,21 @@ const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.o
 const root = document.querySelector('#stage');
 let currentIndex = null, currentRun = null, view = null, state;
 
-// 打字声：手机输入/删除时的轻微点击音
+// 打字声：iPhone 風格正弦波輕微點擊音
 let typingCtx = null;
 function playTypingClick() {
   if (!typingCtx) typingCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (typingCtx.state === 'suspended') typingCtx.resume().catch(() => {});
   const osc = typingCtx.createOscillator();
   const gain = typingCtx.createGain();
-  osc.type = 'square';
-  osc.frequency.setValueAtTime(900, typingCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(700, typingCtx.currentTime + 0.03);
-  gain.gain.setValueAtTime(0.02, typingCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, typingCtx.currentTime + 0.08);
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(1100, typingCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(900, typingCtx.currentTime + 0.04);
+  gain.gain.setValueAtTime(0.03, typingCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, typingCtx.currentTime + 0.05);
   osc.connect(gain).connect(typingCtx.destination);
   osc.start();
-  osc.stop(typingCtx.currentTime + 0.08);
+  osc.stop(typingCtx.currentTime + 0.05);
 }
 let lastDraftLen = 0;
 // 所有图标均为本地线条图形，界面是演出模拟，不连接任何社交平台。
@@ -166,7 +167,7 @@ function build(scene) {
   root.append(layer);
   return { layer, phone, cards, caption, motion, lightReveal, motionFrame: null };
 }
-manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); } if (!value.playing || value.black || value.muted || value.audioOutput === 'operator') audio.update(0, false, true); });
+manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); xmasSynth.stop(); if (scene.synthTune && value.playing && !value.black && !value.muted && value.audioOutput !== 'operator') xmasSynth.play(scene.synthTune, 0.12); } if (!value.playing || value.black || value.muted || value.audioOutput === 'operator') { audio.update(0, false, true); xmasSynth.setVolume(0); } else if (value.audioOutput !== 'operator' && scenes[value.index]?.synthTune) { xmasSynth.setVolume(0.12); } });
 function frame() {
   const scene = scenes[state.index];
   if (scene && view) {
@@ -227,6 +228,7 @@ if (!preview) window.addEventListener('pointerdown', () => {
   if (state.audioOutput === 'operator') return;
   // 在手势中恢复同一个 AudioContext；即使还在开场黑屏也可以先解锁。
   audio.unlock?.();
+  xmasSynth.init();
   const scene = scenes[state.index];
   if (!scene) return;
   const time = elapsed(state);
