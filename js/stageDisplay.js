@@ -144,8 +144,12 @@ function build(scene) {
   let caption = null;
   if (scene.caption) { caption = document.createElement('div'); caption.className = 'scene-caption'; caption.classList.toggle('short', Array.from(scene.caption).length <= 12); caption.textContent = scene.caption; layer.append(caption); }
   const fade = document.createElement('div'); fade.className = 'blackout'; layer.append(fade);
+
+  // 对白显示区（每个画面可配 dialogues，依时间点依次显示）
+  const dialogue = document.createElement('div'); dialogue.className = 'scene-dialogue'; layer.append(dialogue);
+
   root.append(layer);
-  return { layer, phone, cards, caption, motion, lightReveal, motionFrame: null };
+  return { layer, phone, cards, caption, dialogue, motion, lightReveal, motionFrame: null };
 }
 manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); } if (!value.playing || value.black || value.muted || value.audioOutput === 'operator') audio.update(0, false, true); });
 function frame() {
@@ -170,6 +174,21 @@ function frame() {
     if (view.lightReveal) { const reveal = Math.max(0, Math.min(1, (time - (scene.lightAt || 0)) / (scene.lightDuration || 5))); view.lightReveal.style.opacity = String(entrance * reveal); }
     layer.classList.toggle('paused', !state.playing || state.black || fullyFaded);
     if (caption) caption.classList.toggle('visible', time >= scene.captionAt);
+
+    // 对白依时间点显示
+    if (view.dialogue && scene.dialogues) {
+      const active = scene.dialogues.filter(d => time >= d.at && time < d.at + 7);
+      if (active.length > 0) {
+        const d = active[active.length - 1];
+        view.dialogue.innerHTML = `<div class="d-speaker">${d.speaker}${d.note ? ' <small>·' + d.note + '</small>' : ''}</div><div class="d-text">${d.text}</div>`;
+        view.dialogue.classList.add('visible');
+      } else {
+        view.dialogue.classList.remove('visible');
+      }
+    } else if (view.dialogue) {
+      view.dialogue.classList.remove('visible');
+    }
+
     if (phone) {
       const notes = scene.notifications || [];
       const count = notes.filter(n => time >= n.at).length;
