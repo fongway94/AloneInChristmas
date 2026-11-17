@@ -18,6 +18,24 @@ if (!preview) try { soundChannel = new BroadcastChannel('alone-in-christmas-audi
 const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.overlayBackground, ...(scene.posts || []).map(post => post.photo)]).filter(Boolean))].map(src => { const image = new Image(); image.src = src; return image; });
 const root = document.querySelector('#stage');
 let currentIndex = null, currentRun = null, view = null, state;
+
+// 打字声：手机输入/删除时的轻微点击音
+let typingCtx = null;
+function playTypingClick() {
+  if (!typingCtx) typingCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (typingCtx.state === 'suspended') typingCtx.resume().catch(() => {});
+  const osc = typingCtx.createOscillator();
+  const gain = typingCtx.createGain();
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(900, typingCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(700, typingCtx.currentTime + 0.03);
+  gain.gain.setValueAtTime(0.02, typingCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, typingCtx.currentTime + 0.08);
+  osc.connect(gain).connect(typingCtx.destination);
+  osc.start();
+  osc.stop(typingCtx.currentTime + 0.08);
+}
+let lastDraftLen = 0;
 // 所有图标均为本地线条图形，界面是演出模拟，不连接任何社交平台。
 const socialIcons = {
   heart: '<path d="M20.8 4.8a5.4 5.4 0 0 0-7.6 0L12 6l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.6a5.4 5.4 0 0 0 0-7.6Z"/>',
@@ -183,8 +201,9 @@ function frame() {
       if (scene.type === 'chat') phone.querySelectorAll('.chat-bubble').forEach((bubble, i) => bubble.classList.toggle('visible', time >= scene.messages[i].at));
       if (scene.type === 'draft') {
         const chars = Array.from(scene.draft), typed = Math.min(chars.length, Math.max(0, Math.floor((time - 2) * 4)));
-        const deleted = Math.max(0, Math.floor((time - 8) * 5));
-        phone.querySelector('.draft-text').textContent = chars.slice(0, Math.max(0, typed - deleted)).join('');
+        const deleted = Math.max(0, Math.floor((time - 8) * 5)); const newLen = Math.max(0, typed - deleted);
+        if (newLen !== lastDraftLen) { playTypingClick(); lastDraftLen = newLen; }
+        phone.querySelector('.draft-text').textContent = chars.slice(0, newLen).join('');
       }
       cards.forEach((card, i) => {
         const age = count - 1 - i; card.classList.toggle('visible', age >= 0 && age < 2);
