@@ -54,6 +54,7 @@ export function withAudio(scene) {
   if (scene.id === 'room-dark') result.effects.push(fx('message', 2, .70));
   if (scene.id === 'friends-whatsapp') result.effects.push(...scene.messages.map(m => fx('message', m.at, .70)));
   if (scene.id === 'wake-to-celebration') result.effects.push(fx('firework', 1, .45));
+  if (scene.id === 'crowd-scene') result.effects.push(fx('message', 0.5, .50));
   if (scene.id === 'window-fireworks') result.effects.push(...[0, 1.8, 4.9].map(t => fx('firework', t, .50, { repeatEvery: 11 })));
   if (scene.id === 'play-time') result.effects.push(fx('message', 2, .70));
   const byName = new Map();
