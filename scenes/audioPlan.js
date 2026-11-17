@@ -20,25 +20,25 @@ const effects = {
 };
 // id: [音乐, 音乐音量, [[环境音, 音量], ...]]。对话和人声画面刻意降低音乐。
 const plan = {
-  'lonely-room': ['piano', .12, [['rain', .03]]],
-  'unsent-draft': ['piano', .12, [['rain', .03]]],
-  'friends-photos': ['piano', .10, [['rain', .03]]],
-  'alarm-work': ['piano', .11, [['rain', .025]]],
-  'bills': ['piano', .12, [['rain', .035]]],
-  'family-call': ['piano', .06, [['rain', .02]]],
-  'grief': ['piano', .08, [['rain', .03]]],
-  'friends-whatsapp': ['piano', .09, [['rain', .025]]],
-  'hide-away': ['piano', .07, [['rain', .03]]],
-  'window-fireworks': ['christmas', .13, [['street', .09], ['crowd', .07]]],
-  'get-ready-to-go': ['christmas', .11, [['street', .06], ['crowd', .04]]],
-  'crowd-scene': ['christmas', .16, [['street', .12], ['crowd', .12]]],
-  'bench-meeting': ['prayer', .10, [['street', .03]]],
-  'prayer': ['prayer', .05, [['street', .015]]],
-  'jesus-loves-you': ['prayer', .08, [['street', .02]]],
-  'testimony-talk': ['prayer', .08, [['street', .02]]],
-  'encouragement': ['hope', .09, [['street', .02]]],
-  'friends-arrive': ['hope', .11, [['street', .025]]],
-  'ending': ['hope', .16, [['ocean', .025]]]
+  'lonely-room': ['piano', .10, [['rain', .02]]],
+  'unsent-draft': ['piano', .08, [['rain', .015]]],
+  'friends-photos': ['piano', .07, [['rain', .015]]],
+  'alarm-work': ['piano', .09, [['rain', .02]]],
+  'bills': ['piano', .08, [['rain', .025]]],
+  'family-call': ['piano', .05, [['rain', .01]]],
+  'grief': ['piano', .06, [['rain', .02]]],
+  'friends-whatsapp': ['piano', .06, [['rain', .015]]],
+  'hide-away': ['piano', .05, [['rain', .02]]],
+  'window-fireworks': ['christmas', .14, [['street', .10], ['crowd', .08]]],
+  'get-ready-to-go': ['christmas', .12, [['street', .07], ['crowd', .05]]],
+  'crowd-scene': ['christmas', .18, [['street', .10], ['crowd', .14]]],
+  'bench-meeting': ['prayer', .09, [['street', .025]]],
+  'prayer': ['prayer', .04, [['street', .01]]],
+  'jesus-loves-you': ['prayer', .07, [['street', .015]]],
+  'testimony-talk': ['prayer', .07, [['street', .015]]],
+  'encouragement': ['hope', .10, [['street', .02]]],
+  'friends-arrive': ['hope', .12, [['street', .025]]],
+  'ending': ['hope', .18, [['ocean', .03]]]
 };
 function fx(name, at, volume, extra = {}) { return { src: effects[name], name: effectNames[name], at, volume, ...extra }; }
 export function withAudio(scene) {
@@ -54,7 +54,7 @@ export function withAudio(scene) {
   if (scene.id === 'room-dark') result.effects.push(fx('message', 2, .70));
   if (scene.id === 'friends-whatsapp') result.effects.push(...scene.messages.map(m => fx('message', m.at, .70)));
   if (scene.id === 'wake-to-celebration') result.effects.push(fx('firework', 1, .45));
-  if (scene.id === 'crowd-scene') result.effects.push(fx('message', 0.5, .50));
+  // 第六幕：人群声已经通过环境音（crowd）体现，不需要额外手机叮咚声
   if (scene.id === 'window-fireworks') result.effects.push(...[0, 1.8, 4.9].map(t => fx('firework', t, .50, { repeatEvery: 11 })));
   if (scene.id === 'play-time') result.effects.push(fx('message', 2, .70));
   const byName = new Map();
