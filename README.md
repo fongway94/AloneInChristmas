@@ -28,6 +28,10 @@
 - 九幕加预录、对话、群众走位与转场的实际时间须依排练确认；原约 10 分钟为目标，不保证自动计时能达成。
 - 详细操作与声光建议见 `docs/stage-rundown.md`。
 
+## 历史参考
+
+合并时保留了 `main` 原有的 [16 提示点独立演示](archive/16-cue/index.html) 和 [剧本草案](SCRIPT.md)。它们是另一套较早的简化方案，不与现行 37 画面网页或 PPT 同步；旧版的走位、合成音乐和可选对白仅供参考，不应视为当前演出设定。第三幕家人来电对白仍未录制。
+
 ## 本机、部署与编辑
 
 在专案目录执行 `python3 -m http.server 8000`，开启 `http://localhost:8000/operator.html`；不要直接双击 HTML。GitHub Pages 以相对路径部署，`index.html` 是舞台，`operator.html` 是操作台。

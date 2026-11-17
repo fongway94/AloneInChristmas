@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>历史参考 · 16 提示点舞台简报</title>
+<style>
+  :root{--gold:#f5c542;--red:#c0392b;--ink:#10131f;--paper:#fff8ec;--mut:#9aa3b8}
+  *{box-sizing:border-box}html,body{margin:0;height:100%;font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC",system-ui,sans-serif;background:#0b0e18;color:#fff}
+  button{font:inherit;cursor:pointer;border:0}
+  /* ---------- layout ---------- */
+  #app{display:grid;grid-template-rows:auto 1fr auto;height:100dvh}
+  header{display:flex;gap:10px;align-items:center;padding:10px 14px;background:#141828;border-bottom:1px solid #ffffff1f;flex-wrap:wrap}
+  header b{font-size:17px}header .sub{color:var(--mut);font-size:12px}
+  header select,header button.ghost{background:#232842;color:#fff;border:1px solid #ffffff2b;border-radius:9px;padding:7px 10px;font-size:13px}
+  header .sp{flex:1}
+  .on{background:var(--gold)!important;color:#201600!important;font-weight:700}
+  /* ---------- stage ---------- */
+  #stageWrap{position:relative;overflow:hidden;min-height:0}
+  #stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4vmin 6vmin;transition:background 1.2s}
+  .s1{background:radial-gradient(1000px 600px at 50% 0%,#26304d,#0b0e18 70%)}
+  .s2{background:radial-gradient(1000px 600px at 50% 0%,#3a3348,#12101e 70%)}
+  .s3{background:radial-gradient(900px 600px at 50% 0%,#33222b,#0d0a12 75%)}
+  .s4{background:radial-gradient(900px 600px at 50% 100%,#1c2742,#090c15 70%)}
+  .s5{background:radial-gradient(1000px 700px at 50% 0%,#4a2333,#160d1e 65%)}
+  .s6{background:radial-gradient(1100px 700px at 50% -10%,#6b2530,#1d1030 60%,#0d1330)}
+  .s7{background:radial-gradient(900px 600px at 50% 0%,#31435e,#0c1220 70%)}
+  .s8{background:radial-gradient(900px 600px at 50% 0%,#3d4463,#101426 70%)}
+  .s9{background:radial-gradient(1100px 700px at 50% -10%,#7a4a1e,#2a1730 55%,#14224d)}
+  .snow i{position:absolute;top:-4vh;color:#fff;opacity:.75;animation:fall linear infinite;font-style:normal;pointer-events:none}
+  @keyframes fall{to{transform:translateY(112vh) rotate(40deg)}}
+  #actTag{letter-spacing:.35em;color:var(--gold);font-size:clamp(12px,1.6vmin,16px);font-weight:700}
+  #actTitle{font-size:clamp(26px,5vmin,52px);margin:.25em 0 .1em;font-weight:900}
+  #musicTag{color:#ffd9a0;font-size:clamp(12px,1.8vmin,17px);opacity:.9}
+  #ppt{margin-top:3.2vmin;max-width:1000px;font-size:clamp(22px,4.2vmin,46px);line-height:1.45;font-weight:800;text-shadow:0 4px 30px #0009;min-height:2.9em}
+  #ppt .small{font-size:.62em;font-weight:600;color:#ffe9bd}
+  #lines{margin-top:2vmin;display:flex;flex-direction:column;gap:10px;align-items:center;max-width:900px;width:100%}
+  .line{background:#ffffff14;border:1px solid #ffffff26;backdrop-filter:blur(6px);border-radius:16px;padding:10px 18px;font-size:clamp(16px,2.6vmin,27px);line-height:1.5;animation:pop .45s both}
+  .line b{color:var(--gold);margin-right:.4em}
+  .line.new{border-color:var(--gold);background:#f5c54222}
+  .line.new b::after{content:" ⭐新增";font-size:.55em;color:#ffe9a8;vertical-align:super}
+  @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}}
+  #dir{position:absolute;left:0;right:0;bottom:0;padding:10px 18px;background:#000a;color:#dbe2f2;font-size:clamp(12px,1.7vmin,16px);text-align:left;border-top:1px solid #ffffff1f}
+  #dir b{color:var(--gold)}
+  /* Scene 6 crowd */
+  #crowd{display:none;width:100%;max-width:1100px;margin-top:2vmin}
+  .s6on #crowd{display:block}
+  .grp{display:flex;align-items:center;gap:14px;justify-content:center;margin:10px auto;background:#ffffff12;border:1px solid #ffffff22;border-radius:18px;padding:10px 16px;max-width:820px;opacity:0}
+  .s6on .grp{animation:walk 0.9s forwards}
+  .grp:nth-child(1){animation-delay:.3s}.grp:nth-child(2){animation-delay:5s}.grp:nth-child(3){animation-delay:10s}
+  @keyframes walk{from{opacity:0;transform:translateX(-70px)}to{opacity:1;transform:none}}
+  .grp .faces{font-size:clamp(24px,4vmin,40px);white-space:nowrap}
+  .grp .who{text-align:left}.grp .who b{color:var(--gold);font-size:clamp(13px,2vmin,18px)}
+  .grp .who div{font-size:clamp(14px,2.2vmin,21px);line-height:1.45}
+  .girl{margin-top:8px;font-size:clamp(15px,2.2vmin,20px);color:#cdd6ec;opacity:0}
+  .s6on .girl{animation:pop .8s 14.5s forwards}
+  /* ---------- controls ---------- */
+  footer{background:#141828;border-top:1px solid #ffffff1f;padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  #prev,#next{border-radius:12px;padding:12px 22px;font-weight:800}
+  #prev{background:#232842;color:#fff}
+  #next{background:var(--gold);color:#201600;font-size:16px}
+  #prog{flex:1;min-width:160px}
+  #bar{height:8px;background:#ffffff1c;border-radius:99px;overflow:hidden}#bar i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--gold));width:0;transition:width .4s}
+  #cueInfo{font-size:12px;color:var(--mut);margin-top:5px}
+  footer button.ghost{background:#232842;color:#fff;border:1px solid #ffffff2b;border-radius:9px;padding:9px 12px;font-size:13px}
+  kbd{background:#000;border:1px solid #ffffff33;border-bottom-width:3px;border-radius:6px;padding:1px 7px;font-size:12px}
+  /* cue sheet drawer */
+  #sheet{position:fixed;inset:auto 0 0 0;max-height:62dvh;overflow:auto;background:#0f1322f5;border-top:2px solid var(--gold);padding:18px 22px;display:none;z-index:5}
+  #sheet.open{display:block}#sheet h2{margin:0 0 6px}#sheet p{color:var(--mut);line-height:1.7}
+  #sheet table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.6}
+  #sheet th,#sheet td{border-bottom:1px solid #ffffff1c;padding:7px 9px;text-align:left;vertical-align:top}
+  #sheet th{color:var(--gold)}#sheet tr.cur td{background:#f5c5421c}
+  @media(max-width:640px){#dir{display:none}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <span class="sub" style="color:#ffe08b;font-weight:700">历史参考 · 旧版 16 提示点，不是现行演出画面；预录对白未附带</span>
+    <b>🎄 这个圣诞，不再孤单</b><span class="sub">Alone in Christmas · 舞台简报（投放 + 音乐 + 提示，一键一 Cue）</span>
+    <span class="sp"></span>
+    <select id="jump" title="跳幕"></select>
+    <button class="ghost" id="btnMusic">🎵 音乐：开</button>
+    <button class="ghost" id="btnSheet">📋 Cue 表 / 剧本</button>
+    <button class="ghost" id="btnFull">⛶ 全屏幕</button>
+  </header>
+
+  <div id="stageWrap">
+    <div id="stage" class="s1">
+      <div class="snow" id="snow"></div>
+      <div id="actTag"></div><div id="actTitle"></div><div id="musicTag"></div>
+      <div id="crowd">
+        <div class="grp"><span class="faces">🧑‍🤝‍🧑📸🎁</span><span class="who"><b>第一组 · 朋友们（Abraham、欣美、Jessica、美玲、巧清）</b><div>「Merry Christmas！」🎄 「圣诞快乐！」 「来来来，我们一起拍照！」📸 「等一下，我先交换礼物！」🎁</div></span></div>
+        <div class="grp"><span class="faces">💑✨</span><span class="who"><b>第二组 · 情侣（Louis 和女朋友）</b><div>「哇，你看那边的灯饰，好漂亮啊！」✨ 「Merry Christmas，谢谢你陪我过圣诞。」❤️</div></span></div>
+        <div class="grp"><span class="faces">👨‍👩‍👧‍👦🎄</span><span class="who"><b>第三组 · 家庭（Samuel 夫妇一家人）</b><div>孩子：「哇！好漂亮啊！」😍 「圣诞节好热闹啊！」 爸爸妈妈：「慢一点，小心啊！」😄</div></span></div>
+        <div class="girl">👧 悠儿独自穿过人群，低着头——大家都很快乐，只有她，显得格外孤独。</div>
+      </div>
+      <div id="ppt"></div><div id="lines"></div>
+      <div id="dir"></div>
+    </div>
+  </div>
+
+  <footer>
+    <button id="prev">◀ 上一 Cue</button>
+    <div id="prog"><div id="bar"><i></i></div><div id="cueInfo"></div></div>
+    <button id="next">下一 Cue ▶</button>
+    <span class="sub" style="color:var(--mut);font-size:12px"><kbd>Space</kbd>/<kbd>→</kbd> 下一 · <kbd>←</kbd> 上一 · <kbd>M</kbd> 音乐 · <kbd>F</kbd> 全屏幕</span>
+  </footer>
+</div>
+
+<div id="sheet"><h2>📋 Cue 表（已 tune：由「逐句逐幅逐首」合并为一键一 Cue）</h2>
+<p>原做法每句对白、每幅 PPT、每首音乐分开按，九幕要按几十下。现改为 <b style="color:#fff">16 个 Cue</b>：每一按同时出 PPT＋音乐/音效＋对白；
+第六幕更只需 <b style="color:#fff">1 掣</b>，三组人群会自动依次出场讲对白（0s 朋友 → 5s 情侣 → 10s 家庭 → 14.5s 悠儿穿过人群）。⭐ = 今次新增／润饰的对白，用来带气氛，不改原剧情。完整剧本见 <b style="color:#fff">SCRIPT.md</b>。</p>
+<table id="cueTable"><thead><tr><th>#</th><th>幕</th><th>这一掣会发生</th><th>音乐</th></tr></thead><tbody></tbody></table></div>
+
+<script>
+/* ================= MUSIC (Web Audio, no files needed) =================
+   Each track = a well-known public-domain Christmas melody, re-arranged
+   per scene (tempo / waveform / octave) so the music actually changes. */
+const N={C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880,E3:164.81,G3:196,A3:220,B3:246.94,C3:130.81,F3:174.61,D3:146.83,A2:110};
+const TRACKS={
+ silent:{name:"Silent Night〈平安夜〉· 慢板独奏钢琴感",wave:"sine",tempo:340,vol:.20,seq:[["G4",1],["A4",.5],["G4",.5],["E4",2],["G4",1],["A4",.5],["G4",.5],["E4",2],["D5",2],["D5",1],["B4",2],["C5",2],["C5",1],["G4",2],["E4",1],["G4",.5],["A4",.5],["G4",1],["E4",2]]},
+ lonely:{name:"Silent Night〈平安夜〉· 低音慢版（孤单）",wave:"sine",tempo:560,vol:.14,oct:.5,seq:[["G4",1],["A4",.5],["G4",.5],["E4",3],["G4",1],["A4",.5],["G4",.5],["E4",3]]},
+ busy:{name:"Deck the Halls · 急促轻快版（忙碌日常）",wave:"triangle",tempo:170,vol:.12,seq:[["C5",1],["B4",.5],["A4",.5],["G4",1],["A4",1],["B4",1],["G4",1],["E4",1],["F4",1],["G4",1],["A4",1],["B4",.5],["A4",.5],["G4",.5],["F4",.5],["E4",2]]},
+ tense:{name:"低音单音 · 心跳式（坏消息）",wave:"sine",tempo:700,vol:.16,oct:.5,seq:[["E3",2],["E3",2],["D3",2],["E3",3]]},
+ quiet:{name:"O Christmas Tree · 极弱音乐盒（躲在被子里）",wave:"sine",tempo:520,vol:.09,seq:[["C4",1],["F4",1.5],["F4",.5],["F4",1],["G4",1],["A4",1.5],["A4",.5],["A4",1]]},
+ street:{name:"Jingle Bells〈铃儿响叮当〉· 远处热闹版",wave:"triangle",tempo:250,vol:.10,seq:[["E4",1],["E4",1],["E4",2],["E4",1],["E4",1],["E4",2],["G4",1.5],["C4",.5],["D4",1],["E4",3]]},
+ festive:{name:"We Wish You a Merry Christmas + Jingle Bells · 热闹大合奏",wave:"triangle",tempo:215,vol:.18,seq:[["C4",1],["F4",1],["F4",.5],["G4",.5],["F4",.5],["E4",.5],["D4",1],["D4",1],["D4",1],["G4",1],["G4",.5],["A4",.5],["G4",.5],["F4",.5],["E4",1],["C4",1],["E4",1],["A4",1],["A4",.5],["B4",.5],["A4",.5],["G4",.5],["F4",1],["D4",1],["C4",.5],["D4",.5],["G4",1],["E4",2]]},
+ gentle:{name:"Silent Night〈平安夜〉· 温柔钢琴（祷告）",wave:"sine",tempo:430,vol:.16,seq:[["G4",1],["A4",.5],["G4",.5],["E4",2],["G4",1],["A4",.5],["G4",.5],["E4",2],["C5",2],["B4",1],["A4",2],["A4",1],["E4",2]]},
+ hopeful:{name:"Joy to the World〈普世欢腾〉· 光明版",wave:"triangle",tempo:300,vol:.15,seq:[["C5",2],["B4",1],["A4",1],["G4",2],["F4",1],["E4",1],["D4",1],["C4",2],["G4",1],["A4",1],["A4",1],["B4",1],["B4",1],["C5",3]]},
+ finale:{name:"Joy to the World + We Wish You · 盼望大结局",wave:"triangle",tempo:235,vol:.19,seq:[["C5",2],["B4",1],["A4",1],["G4",2],["F4",1],["E4",1],["D4",1],["C4",2],["C4",1],["F4",1],["F4",.5],["G4",.5],["F4",.5],["E4",.5],["D4",1],["D4",1],["G4",1],["A4",1],["C5",3]]}
+};
+let AC=null,musicOn=true,curTrack=null,timer=null,step=0;
+function playTrack(key){
+  stopTrack(); if(!musicOn||!key) return; curTrack=key; step=0;
+  AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+  const t=TRACKS[key];
+  const tick=()=>{
+    if(curTrack!==key) return;
+    const [n,d]=t.seq[step%t.seq.length]; step++;
+    const o=AC.createOscillator(),g=AC.createGain(),f=N[n]*(t.oct||1);
+    o.type=t.wave;o.frequency.value=f;
+    const now=AC.currentTime,dur=t.tempo*d/1000;
+    g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(t.vol,now+.03);
+    g.gain.exponentialRampToValueAtTime(.0001,now+dur*.95);
+    o.connect(g).connect(AC.destination);o.start(now);o.stop(now+dur);
+    const h=AC.createOscillator(),hg=AC.createGain();h.type="sine";h.frequency.value=f/2;
+    hg.gain.setValueAtTime(t.vol*.35,now);hg.gain.exponentialRampToValueAtTime(.0001,now+dur*.9);
+    h.connect(hg).connect(AC.destination);h.start(now);h.stop(now+dur);
+    timer=setTimeout(tick,t.tempo*d);
+  }; tick();
+}
+function stopTrack(){curTrack=null;if(timer)clearTimeout(timer)}
+function sfx(kind){ if(!musicOn)return; AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+  const now=AC.currentTime,beep=(fq,t0,d,v=.12)=>{const o=AC.createOscillator(),g=AC.createGain();o.type="sine";o.frequency.value=fq;g.gain.setValueAtTime(v,now+t0);g.gain.exponentialRampToValueAtTime(.0001,now+t0+d);o.connect(g).connect(AC.destination);o.start(now+t0);o.stop(now+t0+d)};
+  if(kind==="msg"){beep(880,0,.15);beep(1318,.16,.25)}
+  if(kind==="alarm"){for(let i=0;i<4;i++)beep(1046,i*.22,.14,.14)}
+  if(kind==="phone"){beep(1046,0,.3);beep(1046,.4,.3)}
+  if(kind==="firework"){beep(180,0,.7,.06);beep(1200,.5,.4,.05);beep(1560,.62,.5,.05)}
+}
+
+/* ================= SCRIPT DATA — 9 幕, 16 Cues ================= */
+/* cue: {ppt, dir, lines:[[who,text,isNew]], track, sfx, crowd} */
+const SCENES=[
+{t:"第一幕 · 孤独",sub:"女孩：悠儿",cls:"s1",cues:[
+ {track:"lonely",ppt:"「想找个人说说话，<br>却不知道可以找谁。」",dir:"悠儿坐在房间，拿起手机，打了几个字又逐一删除；翻看朋友聚会照片，看身旁空位，抱紧抱枕，低下头。",lines:[["悠儿（打字又删去）","「你们最近好吗……」——算了。",1],["悠儿（看着照片，轻声）","他们……好像都不需要我了。",1]]},
+]},
+{t:"第二幕 · 现实",sub:"闹钟 · 工作 · 账单",cls:"s2",cues:[
+ {track:"busy",sfx:"alarm",ppt:"「生活不会因为我累了，<br>就停下来。」",dir:"闹钟响起，急忙穿外套上班；电话、讯息接连而来，不停接听、记录。回家拆账单、看钱包、低头计算，疲惫揉额头。",lines:[["悠儿（接电话）","喂，好、好，我马上处理……",1],["悠儿（看着账单，叹气）","这个月……又要再省一点了。",1]]},
+]},
+{t:"第三幕 · 无法掌控",sub:"一通电话",cls:"s3",cues:[
+ {track:"tense",ppt:"「有些事，再努力，<br>也无法挽留。」",dir:"整理好账单，深呼吸准备继续面对。突然电话响起——接听后愣住，想开口却说不出话。",lines:[["📞 预录对白（电话音）","喂，请问是悠儿吗？我是医院……你家人刚刚……对不起，我们已经尽力了。",0],["悠儿（颤抖）","……你说什么？不可能……",1]]},
+ {track:"tense",ppt:"「当所有的不幸接踵而来，<br>我还能依靠谁？」",dir:"电话缓缓垂下，伸手想扶椅子，最后坐下，掩面哭泣。灯光渐暗。",lines:[]},
+]},
+{t:"第四幕 · 群组讯息",sub:"圣诞快乐……但我快乐不起来",cls:"s4",cues:[
+ {track:"quiet",sfx:"msg",ppt:"📱 朋友群组<br><span class='small'>朋友A：「Merry Christmas！🎄❤️」<br>朋友B：「圣诞快乐！今晚大家出来聚一聚吧！」<br>朋友C：「好啊！一起去看圣诞表演！」<br>朋友D：「你呢？要不要一起来？」</span>",dir:"🔔 讯息提示声。悠儿拿起手机，看着群组，沉默一会，没有回复，慢慢放下手机，轻轻摇头，躺到床上拉起被子把自己藏起来。",lines:[["悠儿（看着手机，低声）","我也想去……可是，我真的没有力气了。",1]]},
+ {track:"quiet",ppt:"「有时候，不是不想快乐，<br>而是真的没有力气快乐。」",dir:"灯光只剩床边一盏小灯，音乐极弱。停顿 3 秒才转场，让观众感受那份安静。",lines:[]},
+]},
+{t:"第五幕 · 圣诞夜的街头",sub:"窗外的热闹",cls:"s5",cues:[
+ {track:"street",sfx:"firework",ppt:"🎆 灿烂烟花 · 圣诞灯饰<br>热闹的街道",dir:"🎆 烟花声、欢呼声、远处圣诞歌。悠儿被吵醒，坐起身望向窗外，轻轻叹气、摇头，起身穿外套、围围巾，决定出去走走。",lines:[["悠儿（望窗外）","外面好热闹……为什么我一点也开心不起来？",1],["悠儿（围上围巾）","出去走走吧……总好过一个人留在这里。",1]]},
+]},
+{t:"第六幕 · 人群之中 ⭐重点加戏",sub:"三组人群依次出场 · 只要按 1 掣",cls:"s6",cues:[
+ {track:"festive",crowd:1,ppt:"",dir:"【自动演出，不用再按】0s 朋友组有说有笑拍照、交换礼物 → 5s 情侣牵手看灯饰 → 10s 家庭孩子兴奋指着装饰 → 14.5s 悠儿低头穿过人群。灯光全场最光最暖，衬托她的孤独。",lines:[]},
+ {track:"festive",ppt:"「原来最深的孤独，<br>不是身边没有人，<br>而是在人群之中，<br>仍然觉得自己孤单。」",dir:"音乐慢慢收细，人群定格／退场，只剩悠儿在台中。停顿 2 秒，转第七幕。",lines:[["悠儿（望着人群，轻声）","原来这么多人……也可以这么孤单。",1]]},
+]},
+{t:"第七幕 · 长椅与祷告",sub:"男孩：方炜",cls:"s7",cues:[
+ {track:"gentle",ppt:"",dir:"街头长椅。悠儿坐下，双眼放空望远方，无视身旁的男孩方炜。男孩看着她，轻声问——没有追问，只是安静陪伴。",lines:[["👦 方炜","你还好吗？"],["悠儿","（没有回答，只是轻轻摇头，眼泪慢慢流下）",0]]},
+ {track:"gentle",ppt:"🙏 预录祷告<br><span class='small'>「亲爱的主耶稣，虽然我不知道她经历了甚么，但祢都知道。求祢安慰她受伤的心，擦干她的眼泪。让她知道，即使在最孤独的时候，她也不是一个人。因为祢一直爱着她。奉主耶稣基督的名祷告，阿们。」</span>",dir:"方炜：虽然我不知道你经历了甚么，但如果你愿意，我可以为你祷告吗？悠儿惊讶，犹豫片刻，轻轻点头。男孩低头合十祷告。祷告后，女孩慢慢抬起头。",lines:[["👦 方炜","虽然我不知道你经历了甚么，但如果你愿意，我可以为你祷告吗？"]]},
+]},
+{t:"第八幕 · 因为耶稣爱你",sub:"方炜的见证",cls:"s8",cues:[
+ {track:"gentle",ppt:"",dir:"祷告结束，悠儿慢慢抬起头，问他为何为陌生人祷告。",lines:[["👧 悠儿","你为甚么要为我祷告？我们又不认识。"],["👦 方炜","因为耶稣爱你。"],["👧 悠儿","耶稣……爱我？"]]},
+ {track:"hopeful",ppt:"「你看见的笑容背后，<br>也许藏着一段<br>不为人知的故事。」",dir:"PPT 配合男孩过去困境画面。旁白预录：男孩曾经历痛苦、失落，也曾觉得无法再坚持；但在最无助时认识耶稣，透过信仰与身边人的陪伴，重新找到面对生活的力量。",lines:[["👦 方炜","我以前也以为，只有自己这么痛苦。"],["👦 方炜","后来才发现，原来每个人都有不容易的时候。"],["👦 方炜","相信耶稣，不代表人生从此没有困难。"],["👦 方炜","但我知道，无论发生甚么事，我都不需要独自面对。"]]},
+]},
+{t:"第九幕 · 故事还没有结束",sub:"一起去看圣诞话剧",cls:"s9",cues:[
+ {track:"hopeful",ppt:"",dir:"方炜温柔鼓励。悠儿低下头，慢慢擦干眼泪，表情开始柔和。",lines:[["👦 方炜","我不知道你的困难甚么时候会过去。"],["👦 方炜","但我相信，你的故事还没有结束。"],["👦 方炜","不要放弃，好吗？因为耶稣爱你。"]]},
+ {track:"finale",sfx:"msg",ppt:"",dir:"方炜看时间：哎呀，圣诞话剧快开始了！🔔 讯息声，朋友们（全部约瑟组员）来到。众人热情邀请，悠儿犹豫，看了看大家，终于轻轻点头，露出久违笑容。众人围绕她一起走向出口。",lines:[["👦 方炜","哎呀！圣诞话剧快开始了！"],["Jessica","Hey！我们到了！"],["欣美","快点！圣诞话剧要开始啦！"],["👥 朋友们 ⭐","来啦来啦，一起去！你也一起来啊！",1],["👦 方炜","对了！你要不要跟我们一起去看？"]]},
+ {track:"finale",ppt:"「这个圣诞节，<br>也许你的世界仍有黑暗……」<br><br>「但有一道光，从未离开。」<br><br>✨「因为耶稣爱你。」",dir:"音乐推上最高点，灯光全开，众人回头向观众微笑／挥手谢幕。停留至少 8 秒才熄灯。",lines:[["👥 众人 ⭐","Merry Christmas！耶稣爱你！",1]]},
+]},
+];
+/* flatten */
+const FLAT=[];SCENES.forEach((s,si)=>s.cues.forEach((c,ci)=>FLAT.push({si,ci,...c})));
+let idx=0;
+const $=id=>document.getElementById(id);
+for(let i=0;i<70;i++){const s=document.createElement("i");s.textContent="❄";s.style.left=Math.random()*100+"vw";s.style.fontSize=6+Math.random()*12+"px";s.style.animationDuration=7+Math.random()*9+"s";s.style.animationDelay=-Math.random()*10+"s";$("snow").appendChild(s)}
+$("jump").innerHTML=SCENES.map((s,i)=>`<option value="${i}">第${"一二三四五六七八九"[i]}幕 · ${s.t.split("·")[1]||s.t}</option>`).join("");
+$("cueTable").querySelector("tbody").innerHTML=FLAT.map((c,i)=>`<tr data-i="${i}"><td>${i+1}</td><td>${SCENES[c.si].t}</td><td>${c.ppt?c.ppt.replace(/<br>/g," ").replace(/<[^>]+>/g,""):"（演出／对白）"}${c.crowd?" ※三组自动出场":""}</td><td>${TRACKS[c.track].name}</td></tr>`).join("");
+
+function render(){
+  const c=FLAT[idx],s=SCENES[c.si];
+  const st=$("stage");st.className=s.cls+(c.crowd?" s6on":"");
+  $("actTag").textContent=s.t;$("actTitle").textContent=s.sub;
+  $("musicTag").textContent="🎵 "+TRACKS[c.track].name+(c.sfx?"　·　🔔 音效":"");
+  $("ppt").innerHTML=c.ppt||"";
+  $("lines").innerHTML=(c.lines||[]).map(l=>`<div class="line${l[2]?" new":""}"><b>${l[0]}：</b>${l[1]}</div>`).join("");
+  $("dir").innerHTML="<b>🎬 舞台指示（操作员／演员看，观众不需理会）：</b>"+c.dir;
+  $("bar").firstElementChild.style.width=((idx+1)/FLAT.length*100)+"%";
+  $("cueInfo").textContent=`Cue ${idx+1} / ${FLAT.length} · ${s.t} · 第 ${c.ci+1} 掣`;
+  $("jump").value=c.si;
+  document.querySelectorAll("#cueTable tr").forEach(r=>r.classList.toggle("cur",+r.dataset.i===idx));
+  playTrack(c.track); if(c.sfx)setTimeout(()=>sfx(c.sfx),350);
+}
+function go(d){idx=Math.min(FLAT.length-1,Math.max(0,idx+d));render()}
+$("next").onclick=()=>go(1);$("prev").onclick=()=>go(-1);
+$("stageWrap").addEventListener("click",e=>{if(e.target.closest("#dir"))return;go(1)});
+$("jump").onchange=e=>{const si=+e.target.value;idx=FLAT.findIndex(c=>c.si===si);render()};
+$("btnMusic").onclick=e=>{musicOn=!musicOn;e.target.textContent=musicOn?"🎵 音乐：开":"🔇 音乐：关";e.target.classList.toggle("on",!musicOn);musicOn?render():stopTrack()};
+$("btnFull").onclick=()=>document.documentElement.requestFullscreen?.();
+$("btnSheet").onclick=()=>$("sheet").classList.toggle("open");
+document.addEventListener("keydown",e=>{
+  if(e.key===" "||e.key==="ArrowRight"){e.preventDefault();go(1)}
+  else if(e.key==="ArrowLeft")go(-1);
+  else if(e.key.toLowerCase()==="m")$("btnMusic").click();
+  else if(e.key.toLowerCase()==="f")$("btnFull").click();
+  else if(e.key.toLowerCase()==="c")$("sheet").classList.toggle("open");
+});
+render();
+</script>
+</body>
+</html>
