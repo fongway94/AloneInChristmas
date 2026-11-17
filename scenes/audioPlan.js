@@ -18,36 +18,38 @@ const effects = {
   message: 'assets/audio/sfx/message-v2.wav', alarm: 'assets/audio/sfx/alarm-v2.wav',
   ring: 'assets/audio/sfx/phone-ring-v2.wav', firework: 'assets/audio/sfx/firework-v2.wav'
 };
-// id: [音乐, 音乐音量, [[环境音, 音量], ...]]。对话和人声画面刻意降低音乐。
+// id: [音乐, 音乐音量, [[环境音, 音量], ...], synthTune]
+// synthTune: Web Audio 合成聖誕旋律（silentNight, jingleBells, joyToTheWorld, weWishYou, oChristmasTree）
+// 若設定 synthTune，將以合成音樂代替 MP3 音樂檔案，音質更好且無需外部檔案。
 const plan = {
-  'lonely-room': ['piano', .10, [['rain', .02]]],
-  'unsent-draft': ['piano', .08, [['rain', .015]]],
-  'friends-photos': ['piano', .07, [['rain', .015]]],
-  'alarm-work': ['piano', .09, [['rain', .02]]],
-  'bills': ['piano', .08, [['rain', .025]]],
-  'family-call': ['piano', .05, [['rain', .01]]],
-  'grief': ['piano', .06, [['rain', .02]]],
-  'friends-whatsapp': ['piano', .06, [['rain', .015]]],
-  'hide-away': ['piano', .05, [['rain', .02]]],
-  'window-fireworks': ['christmas', .14, [['street', .10], ['crowd', .08]]],
-  'get-ready-to-go': ['christmas', .12, [['street', .07], ['crowd', .05]]],
-  'crowd-scene': ['christmas', .18, [['street', .10], ['crowd', .14]]],
-  'bench-meeting': ['prayer', .09, [['street', .025]]],
-  'prayer': ['prayer', .04, [['street', .01]]],
-  'jesus-loves-you': ['prayer', .07, [['street', .015]]],
-  'testimony-talk': ['prayer', .07, [['street', .015]]],
-  'encouragement': ['hope', .10, [['street', .02]]],
-  'friends-arrive': ['hope', .12, [['street', .025]]],
-  'ending': ['hope', .18, [['ocean', .03]]]
+  'lonely-room': ['piano', .06, [['rain', .02]], 'silentNight'],
+  'unsent-draft': ['piano', .04, [['rain', .015]], 'silentNight'],
+  'friends-photos': ['piano', .04, [['rain', .015]], 'silentNight'],
+  'alarm-work': ['piano', .05, [['rain', .02]], 'silentNight'],
+  'bills': ['piano', .05, [['rain', .025]], 'silentNight'],
+  'family-call': ['piano', .03, [['rain', .01]], 'silentNight'],
+  'grief': ['piano', .04, [['rain', .02]], 'silentNight'],
+  'friends-whatsapp': ['piano', .04, [['rain', .015]], 'oChristmasTree'],
+  'hide-away': ['piano', .03, [['rain', .02]], 'oChristmasTree'],
+  'window-fireworks': ['christmas', .10, [['street', .10], ['crowd', .08]], 'jingleBells'],
+  'get-ready-to-go': ['christmas', .08, [['street', .07], ['crowd', .05]], 'jingleBells'],
+  'crowd-scene': ['christmas', .12, [['street', .10], ['crowd', .14]], 'weWishYou'],
+  'bench-meeting': ['prayer', .06, [['street', .025]], 'silentNight'],
+  'prayer': ['prayer', .03, [['street', .01]], 'silentNight'],
+  'jesus-loves-you': ['prayer', .05, [['street', .015]], 'silentNight'],
+  'testimony-talk': ['prayer', .05, [['street', .015]], 'silentNight'],
+  'encouragement': ['hope', .07, [['street', .02]], 'joyToTheWorld'],
+  'friends-arrive': ['hope', .09, [['street', .025]], 'joyToTheWorld'],
+  'ending': ['hope', .14, [['ocean', .03]], 'joyToTheWorld']
 };
 function fx(name, at, volume, extra = {}) { return { src: effects[name], name: effectNames[name], at, volume, ...extra }; }
 export function withAudio(scene) {
   const entry = plan[scene.id];
   if (!entry) throw new Error(`缺少音频配置：${scene.id}`);
-  const [theme, volume, ambient] = entry;
+  const [theme, volume, ambient, synthTune] = entry;
   const music = { name: musicNames[theme], src: musicFiles[theme], continuity: `music-${theme}`, loop: true, fadeIn: 2, volume };
   const ambience = ambient.map(([name, gain]) => ({ name: ambienceNames[name], src: ambienceFiles[name], continuity: `ambience-${name}`, loop: true, fadeIn: 2, volume: gain }));
-  const result = { volume: 1, music, ambience, effects: (scene.audio?.effects || []).map(item => ({ ...item, name: scene.id === 'prayer' ? '预录祷告' : '预录旁白', kind: 'voice' })) };
+  const result = { volume: 1, music, ambience, synthTune, effects: (scene.audio?.effects || []).map(item => ({ ...item, name: scene.id === 'prayer' ? '预录祷告' : '预录旁白', kind: 'voice' })) };
   if (scene.id === 'alarm-work') result.effects.push(fx('alarm', .5, .60));
   if (scene.id === 'work-pressure') result.effects.push(...scene.notifications.map(n => fx('message', n.at, .70)));
   if (scene.id === 'family-call') result.effects.push(fx('ring', 1.2, .60));
