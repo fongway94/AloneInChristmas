@@ -234,8 +234,8 @@ if (!preview) window.addEventListener('pointerdown', () => {
   const scene = scenes[state.index];
   if (!scene) return;
   const time = elapsed(state);
-  const fullyFaded = scene.fadeAt != null && time >= scene.fadeAt + scene.fadeDuration;
-  audio.update(time, state.playing && !fullyFaded, state.black || state.muted, state.volume ?? 1,
+  // 音樂不應因畫面淡出或黑屏而中斷；只有暫停/靜音/輸出操作台才停止音軌。
+  audio.update(time, state.playing, state.muted || state.audioOutput === 'operator', state.volume ?? 1,
     { music: state.musicVolume ?? 1, effects: state.effectsVolume ?? 1, voice: state.voiceVolume ?? 1 }, true);
 });
 if (!preview) window.addEventListener('keydown', event => {
