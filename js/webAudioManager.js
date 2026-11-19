@@ -132,7 +132,14 @@ export class WebAudioManager {
         let actual = this.position(track);
         if (track.loop && !track.repeatEvery) actual %= track.buffer.duration;
         const delta = Math.abs(actual - target), loopDelta = track.loop ? Math.min(delta, Math.abs(track.buffer.duration - delta)) : delta;
-        if (loopDelta > 1.5) this.stopTrack(track);
+        if (loopDelta > 1.5) {
+          if (track.loop && !track.repeatEvery) {
+            // 循環音軌：同步 target 到實際播放位置，避免在場景淡出/黑屏後因時間偏差被反覆停止/重啟
+            track.lastTarget = actual;
+          } else {
+            this.stopTrack(track);
+          }
+        }
       }
       if (!track.node && !track.ended) this.startTrack(track, target);
       const fadeIn = track.fadeIn && track.transitionAt == null ? Math.min(1, (time - start) / track.fadeIn) : 1;
