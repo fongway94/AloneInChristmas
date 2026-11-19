@@ -214,6 +214,8 @@ function frame() {
       phone.classList.toggle('vibrate', state.playing && time < scene.duration && time - lastAt < .48);
     }
     // 音樂應持續播放，不應因畫面淡出（fullyFaded）或黑屏（black）而中斷；
+    // 使用 rawTime（實際流逝時間）而非截斷於 scene.duration 的 time，避免音軌
+    // 在場景結束後被反覆 seek 回舊位置而聽起來像停止。
     // 只有操作員暫停（playing=false）或靜音/輸出至操作台時才停止音軌。
     audio.update(rawTime, state.playing, state.muted || state.audioOutput === 'operator', state.volume ?? 1, { music: state.musicVolume ?? 1, effects: state.effectsVolume ?? 1, voice: state.voiceVolume ?? 1 });
   } else audio.update(0, state.playing, state.muted || state.audioOutput === 'operator');
