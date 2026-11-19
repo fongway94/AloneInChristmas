@@ -167,7 +167,7 @@ function build(scene) {
   root.append(layer);
   return { layer, phone, cards, caption, motion, lightReveal, motionFrame: null };
 }
-manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); xmasSynth.stop(); if (scene.synthTune && value.playing && !value.black && !value.muted && value.audioOutput !== 'operator') xmasSynth.play(scene.synthTune, 0.12); } if (!value.playing || value.black || value.muted || value.audioOutput === 'operator') { audio.update(0, false, true); xmasSynth.setVolume(0); } else if (value.audioOutput !== 'operator' && scenes[value.index]?.synthTune) { xmasSynth.setVolume(0.12); } });
+manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); xmasSynth.stop(); if (scene.synthTune && value.playing && !value.black && !value.muted && value.audioOutput !== 'operator') xmasSynth.play(scene.synthTune, 0.12); } if (!value.playing || value.muted || value.audioOutput === 'operator') { audio.update(0, false, true); xmasSynth.setVolume(0); } else if (value.audioOutput !== 'operator' && scenes[value.index]?.synthTune) { xmasSynth.setVolume(0.12); } });
 function frame() {
   const scene = scenes[state.index];
   if (scene && view) {
@@ -213,8 +213,10 @@ function frame() {
       const lastAt = count ? notes[count - 1].at : -10;
       phone.classList.toggle('vibrate', state.playing && time < scene.duration && time - lastAt < .48);
     }
-    audio.update(rawTime, state.playing && !fullyFaded, state.black || state.muted || state.audioOutput === 'operator', state.volume ?? 1, { music: state.musicVolume ?? 1, effects: state.effectsVolume ?? 1, voice: state.voiceVolume ?? 1 });
-  } else audio.update(0, false, true);
+    // 音樂應持續播放，不應因畫面淡出（fullyFaded）或黑屏（black）而中斷；
+    // 只有操作員暫停（playing=false）或靜音/輸出至操作台時才停止音軌。
+    audio.update(rawTime, state.playing, state.muted || state.audioOutput === 'operator', state.volume ?? 1, { music: state.musicVolume ?? 1, effects: state.effectsVolume ?? 1, voice: state.voiceVolume ?? 1 });
+  } else audio.update(0, state.playing, state.muted || state.audioOutput === 'operator');
   if (soundChannel && Date.now() - lastSoundReport > 1500) {
     soundChannel.postMessage({ status: audio.status?.() || '请点击舞台画面启用声音', at: Date.now() }); lastSoundReport = Date.now();
   }
