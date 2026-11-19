@@ -25,10 +25,10 @@ const effects = {
 // synthTune: Web Audio 合成聖誕旋律（silentNight, jingleBells, joyToTheWorld, weWishYou, oChristmasTree）
 // 若設定 synthTune，將以合成音樂代替 MP3 音樂檔案，音質更好且無需外部檔案。
 const plan = {
-  'lonely-room': ['sad1', .15, [['rain', .02]], null],
-  'unsent-draft': ['sad1', .15, [['rain', .02]], null],
-  'friends-photos': ['sad1', .15, [['rain', .02]], null],
-  'no-one-to-talk': ['sad1', .12, [], null],
+  'lonely-room': ['sad1', .22, [['rain', .02]], null],
+  'unsent-draft': ['sad1', .22, [['rain', .02]], null],
+  'friends-photos': ['sad1', .22, [['rain', .02]], null],
+  'no-one-to-talk': ['sad1', .22, [], null],
   'alarm-work': ['busy1', .12, [['rain', .03]], null],
   'bills': ['busy1', .12, [['rain', .04]], null],
   'life-stops-for-no-one': ['busy1', .12, [], null],
