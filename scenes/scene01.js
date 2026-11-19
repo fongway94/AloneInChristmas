@@ -29,7 +29,9 @@ export default [
   { ...base, id: 'no-one-to-talk', type: 'room', title: '没人可以说话', subtitle: '黑屏字幕', duration: 10, background: '',
     caption: '想找个人说话，却不知道可以找谁。',
     captionAt: 2,
-    description: '黑屏显示字幕，让观众专注文字。',
-    cue: '黑屏保持，等观众读完字幕后再进入第二幕。',
+    fadeAt: 7,
+    fadeDuration: 3,
+    description: '黑屏显示字幕，淡出后进入第二幕。',
+    cue: '黑屏显示字幕，等观众读完后淡出，再进入第二幕。',
     dialogues: [] }
 ];

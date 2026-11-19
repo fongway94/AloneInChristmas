@@ -12,10 +12,18 @@ export default [
     dialogues: [
       { at: 4, speaker: '悠兒', text: '喂，好、好，我马上处理……', note: '接电话' }
     ] },
-  { ...base, id: 'bills', type: 'room', title: '帐单与钱包', subtitle: '回家后的压力', duration: 16, background: 'assets/images/penang-bills.png', caption: '生活不会因为我累了，就停下来。', captionAt: 4,
+  { ...base, id: 'bills', type: 'room', title: '帐单与钱包', subtitle: '回家后的压力', duration: 16, background: 'assets/images/penang-bills.png',
     description: '女孩拆开帐单，翻看钱包、低头计算，疲惫地揉着额头。',
     cue: '让演员完整完成拆帐单、查看钱包与计算的动作，再推进。',
     dialogues: [
       { at: 6, speaker: '悠兒', text: '这个月……又要再省一点了。', note: '看帐单，叹气' }
-    ] }
+    ] },
+  { ...base, id: 'life-stops-for-no-one', type: 'room', title: '生活不会因为我累了', subtitle: '黑屏字幕', duration: 10, background: '',
+    caption: '生活不会因为我累了，就停下来。',
+    captionAt: 2,
+    fadeAt: 7,
+    fadeDuration: 3,
+    description: '黑屏显示字幕，淡出后进入第三幕。',
+    cue: '黑屏显示字幕，等观众读完后淡出，再进入第三幕。',
+    dialogues: [] }
 ];
