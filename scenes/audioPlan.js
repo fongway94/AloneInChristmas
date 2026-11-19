@@ -3,7 +3,8 @@ const musicFiles = {
   piano: 'assets/audio/music/piano-worship-01.mp3',
   prayer: 'assets/audio/music/peaceful-prayer-01.mp3',
   hope: 'assets/audio/music/morning-prayer-01.mp3',
-  christmas: 'assets/audio/music/christmas-angels-lofi.mp3'
+  christmas: 'assets/audio/music/christmas-angels-lofi.mp3',
+  sad1: 'assets/audio/music/悲伤音乐一.mp3'
 };
 const ambienceFiles = {
   rain: 'assets/audio/ambience/rain.m4a',
@@ -11,7 +12,7 @@ const ambienceFiles = {
   crowd: 'assets/audio/ambience/crowd-soft.m4a',
   ocean: 'assets/audio/ambience/ocean_surf.m4a'
 };
-const musicNames = { piano: '轻柔钢琴', prayer: '温柔祷告音乐', hope: '盼望主题', christmas: '圣诞器乐' };
+const musicNames = { piano: '轻柔钢琴', prayer: '温柔祷告音乐', hope: '盼望主题', christmas: '圣诞器乐', sad1: '悲伤音乐一' };
 const ambienceNames = { rain: '雨声', street: '街道环境', crowd: '远处人群', ocean: '海浪' };
 const effectNames = { message: '手机讯息', alarm: '闹钟', ring: '电话铃声', firework: '烟花' };
 const effects = {
@@ -22,9 +23,9 @@ const effects = {
 // synthTune: Web Audio 合成聖誕旋律（silentNight, jingleBells, joyToTheWorld, weWishYou, oChristmasTree）
 // 若設定 synthTune，將以合成音樂代替 MP3 音樂檔案，音質更好且無需外部檔案。
 const plan = {
-  'lonely-room': ['piano', .06, [['rain', .02]], 'silentNight'],
-  'unsent-draft': ['piano', .04, [['rain', .015]], 'silentNight'],
-  'friends-photos': ['piano', .04, [['rain', .015]], 'silentNight'],
+  'lonely-room': ['sad1', .07, [['rain', .01]], null],
+  'unsent-draft': ['sad1', .07, [['rain', .01]], null],
+  'friends-photos': ['sad1', .07, [['rain', .01]], null],
   'alarm-work': ['piano', .05, [['rain', .02]], 'silentNight'],
   'bills': ['piano', .05, [['rain', .025]], 'silentNight'],
   'family-call': ['piano', .03, [['rain', .01]], 'silentNight'],
