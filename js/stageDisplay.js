@@ -167,7 +167,7 @@ function build(scene) {
   root.append(layer);
   return { layer, phone, cards, caption, motion, lightReveal, motionFrame: null };
 }
-manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); xmasSynth.stop(); if (scene.synthTune && value.playing && !value.black && !value.muted && value.audioOutput !== 'operator') xmasSynth.play(scene.synthTune, 0.12); } if (!value.playing || value.muted || value.audioOutput === 'operator') { audio.update(0, false, true); xmasSynth.setVolume(0); } else if (value.audioOutput !== 'operator' && scenes[value.index]?.synthTune) { xmasSynth.setVolume(0.12); } });
+manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); xmasSynth.stop(); if (scene.synthTune && value.playing && !value.black && !value.muted && value.audioOutput !== 'operator') xmasSynth.play(scene.synthTune, 0.12); } if (!value.playing || value.muted) { audio.update(0, false, true); xmasSynth.setVolume(0); } else if (value.audioOutput !== 'operator' && scenes[value.index]?.synthTune) { xmasSynth.setVolume(0.12); } });
 function frame() {
   const scene = scenes[state.index];
   if (scene && view) {
