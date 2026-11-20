@@ -6,8 +6,8 @@ export default [
     caption: '忙碌的一天',
     captionAt: 0,
     captionDuration: 5,
-    phoneShowAt: 5,
-    cue: '先只显示「忙碌的一天」字幕和背景，约5秒后字幕淡出，手机再淡入，工作讯息依次出现；演员配合接听和记录。',
+    phoneShowAt: 7,
+    cue: '先只显示「忙碌的一天」字幕和背景，约5秒后字幕淡出，2秒後手机淡入，工作讯息依次出现；演员配合接听和记录。',
     notifications: [
       { at: 5.5, receivedAt: '08:35', sender: '工作通知', message: '早安，今天的报告请尽快交给我。', icon: '工', color: 'slate' },
       { at: 7, receivedAt: '09:40', sender: '主管', message: '客户还在等回复，麻烦你再跟进一下。', icon: '信', color: 'sage' },
