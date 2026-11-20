@@ -56,8 +56,8 @@ export function withAudio(scene) {
   const ambience = ambient.map(([name, gain]) => ({ name: ambienceNames[name], src: ambienceFiles[name], continuity: `ambience-${name}`, loop: true, fadeIn: 2, volume: gain }));
   const result = { volume: 1, music, ambience, synthTune, effects: (scene.audio?.effects || []).map(item => ({ ...item, name: scene.id === 'prayer' ? '预录祷告' : '预录旁白', kind: 'voice' })) };
   if (scene.id === 'alarm-work') {
-    // 鈴聲延遲到手機淡入後（7秒）才播放，避免在字幕顯示時已經響鈴
-    result.effects.push(fx('alarm', 7, .60));
+    // 鈴聲延遲到手機完全淡入後（7秒開始淡入 + 1.5秒過渡 = 8.5秒）才播放
+    result.effects.push(fx('alarm', 8.5, .60));
     result.effects.push(...scene.notifications.map(n => fx('message', n.at, .70)));
   }
   if (scene.id === 'work-pressure') result.effects.push(...scene.notifications.map(n => fx('message', n.at, .70)));
