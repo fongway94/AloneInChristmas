@@ -9,8 +9,8 @@ export default [
     phoneShowAt: 7,
     cue: '先只显示「忙碌的一天」字幕和背景，约5秒后字幕淡出，2秒後手机淡入，工作讯息依次出现；演员配合接听和记录。',
     notifications: [
-      { at: 5.5, receivedAt: '08:35', sender: '工作通知', message: '早安，今天的报告请尽快交给我。', icon: '工', color: 'slate' },
-      { at: 7, receivedAt: '09:40', sender: '主管', message: '客户还在等回复，麻烦你再跟进一下。', icon: '信', color: 'sage' },
+      { at: 9, receivedAt: '08:35', sender: '工作通知', message: '早安，今天的报告请尽快交给我。', icon: '工', color: 'slate' },
+      { at: 9.5, receivedAt: '09:40', sender: '主管', message: '客户还在等回复，麻烦你再跟进一下。', icon: '信', color: 'sage' },
       { at: 11, receivedAt: '11:15', sender: '工作通知', message: '会议时间提前了，请记得准时出席。', icon: '工', color: 'slate' }
     ],
     dialogues: [
