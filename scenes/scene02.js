@@ -11,7 +11,9 @@ export default [
     notifications: [
       { at: 9, receivedAt: '08:35', sender: '工作通知', message: '早安，今天的报告请尽快交给我。', icon: '工', color: 'slate' },
       { at: 9.5, receivedAt: '09:40', sender: '主管', message: '客户还在等回复，麻烦你再跟进一下。', icon: '信', color: 'sage' },
-      { at: 11, receivedAt: '11:15', sender: '工作通知', message: '会议时间提前了，请记得准时出席。', icon: '工', color: 'slate' }
+      { at: 11, receivedAt: '11:15', sender: '工作通知', message: '会议时间提前了，请记得准时出席。', icon: '工', color: 'slate' },
+      { at: 13, receivedAt: '13:20', sender: '同事', message: '午餐一起吗？', icon: '信', color: 'sage' },
+      { at: 15, receivedAt: '14:50', sender: '工作群组', message: '下午会议室已更换，请注意。', icon: '工', color: 'slate' }
     ],
     dialogues: [
       { at: 4, speaker: '悠兒', text: '喂，好、好，我马上处理……', note: '接电话' }
