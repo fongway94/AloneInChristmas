@@ -26,27 +26,28 @@ const effects = {
 // synthTune: Web Audio 合成聖誕旋律（silentNight, jingleBells, joyToTheWorld, weWishYou, oChristmasTree）
 // 若設定 synthTune，將以合成音樂代替 MP3 音樂檔案，音質更好且無需外部檔案。
 const plan = {
-  'lonely-room': ['sad1', .15, [['rain', .02]], null],
-  'unsent-draft': ['sad1', .15, [['rain', .02]], null],
-  'friends-photos': ['sad1', .15, [['rain', .02]], null],
-  'no-one-to-talk': ['sad1', .12, [], null],
-  'alarm-work': ['busy1', .8, [['rain', .03]], null],
-  'bills': ['busy1', .8, [['rain', .04]], null],
-  'life-stops-for-no-one': ['busy1', .8, [], null],
-  'family-call': ['sad2', .12, [['rain', .02]], null],
-  'grief': ['sad2', .12, [['rain', .03]], null],
-  'friends-whatsapp': ['lonely1', .04, [['rain', .015]], null],
-  'hide-away': ['lonely1', .03, [['rain', .02]], null],
-  'window-fireworks': ['lonely1', .10, [['street', .10], ['crowd', .08]], null],
-  'get-ready-to-go': ['lonely1', .08, [['street', .07], ['crowd', .05]], null],
-  'crowd-scene': ['christmas', .12, [['street', .10], ['crowd', .14]], 'weWishYou'],
-  'bench-meeting': ['prayer', .06, [['street', .025]], 'silentNight'],
-  'prayer': ['prayer', .03, [['street', .01]], 'silentNight'],
-  'jesus-loves-you': ['prayer', .05, [['street', .015]], 'silentNight'],
-  'testimony-talk': ['prayer', .05, [['street', .015]], 'silentNight'],
-  'encouragement': ['hope', .07, [['street', .02]], 'joyToTheWorld'],
-  'friends-arrive': ['hope', .09, [['street', .025]], 'joyToTheWorld'],
-  'ending': ['hope', .14, [['ocean', .03]], 'joyToTheWorld']
+  // 所有音樂音量皆為原始上傳音量（1.0），不再調整
+  'lonely-room': ['sad1', 1, [['rain', .02]], null],
+  'unsent-draft': ['sad1', 1, [['rain', .02]], null],
+  'friends-photos': ['sad1', 1, [['rain', .02]], null],
+  'no-one-to-talk': ['sad1', 1, [], null],
+  'alarm-work': ['busy1', 1, [['rain', .03]], null],
+  'bills': ['busy1', 1, [['rain', .04]], null],
+  'life-stops-for-no-one': ['busy1', 1, [], null],
+  'family-call': ['sad2', 1, [['rain', .02]], null],
+  'grief': ['sad2', 1, [['rain', .03]], null],
+  'friends-whatsapp': ['lonely1', 1, [['rain', .015]], null],
+  'hide-away': ['lonely1', 1, [['rain', .02]], null],
+  'window-fireworks': ['lonely1', 1, [['street', .10], ['crowd', .08]], null],
+  'get-ready-to-go': ['lonely1', 1, [['street', .07], ['crowd', .05]], null],
+  'crowd-scene': ['christmas', 1, [['street', .10], ['crowd', .14]], 'weWishYou'],
+  'bench-meeting': ['prayer', 1, [['street', .025]], 'silentNight'],
+  'prayer': ['prayer', 1, [['street', .01]], 'silentNight'],
+  'jesus-loves-you': ['prayer', 1, [['street', .015]], 'silentNight'],
+  'testimony-talk': ['prayer', 1, [['street', .015]], 'silentNight'],
+  'encouragement': ['hope', 1, [['street', .02]], 'joyToTheWorld'],
+  'friends-arrive': ['hope', 1, [['street', .025]], 'joyToTheWorld'],
+  'ending': ['hope', 1, [['ocean', .03]], 'joyToTheWorld']
 };
 function fx(name, at, volume, extra = {}) { return { src: effects[name], name: effectNames[name], at, volume, ...extra }; }
 export function withAudio(scene) {
