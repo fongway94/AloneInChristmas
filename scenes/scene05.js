@@ -6,7 +6,7 @@ export default [
     dialogues: [
       { at: 4, speaker: '悠兒', text: '外面好热闹……为什么我一点也开心不起？', note: '望窗外' }
     ] },
-  { ...base, id: 'get-ready-to-go', type: 'room', title: '决定出去走走', subtitle: '穿上外套与围巾', duration: 12, background: 'assets/images/penang-bedroom.png',
+  { ...base, id: 'get-ready-to-go', type: 'room', title: '决定出去走走', subtitle: '穿上外套与围巾', duration: 12, background: 'assets/images/christmas-window.png',
     description: '女孩起身，穿上外套、围上围巾，决定独自出去。',
     cue: '等服装与走位准备好，再切换到街头。',
     dialogues: [
