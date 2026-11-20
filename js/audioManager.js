@@ -70,11 +70,11 @@ export class AudioManager {
       }
       const fadeIn = track.fadeIn && !track.transitionAt ? Math.min(1, (time - start) / track.fadeIn) : 1;
       const fadeOut = track.fadeOut && Number.isFinite(end) ? Math.max(0, Math.min(1, (end - time) / track.fadeOut)) : 1;
-      // 音樂保持原始上傳音量，不受操作台總音量和音樂音量縮放
+      // 音樂保持原始上傳音量，不受操作台總音量和音樂音量縮放；允許 track.volume 超過 1 做額外增益
       // 音效與語音仍受 masterVolume 與 group 縮放
       let targetVolume;
       if (track.kind === 'music') {
-        targetVolume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * fadeIn * fadeOut));
+        targetVolume = Math.max(0, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * fadeIn * fadeOut);
       } else {
         const group = levels[track.kind] ?? 1;
         targetVolume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * masterVolume * group * fadeIn * fadeOut));
