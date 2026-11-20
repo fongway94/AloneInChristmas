@@ -205,8 +205,8 @@ function frame() {
       phone.classList.toggle('lit', phoneVisible);
       if (scene.type === 'social') phone.classList.toggle('show-social', phoneVisible && time >= (scene.posts[0]?.at ?? 1.8));
       phone.classList.toggle('show-interface', phoneVisible && time >= 1.4);
-      // 社交場景結束時關閉手機屏幕
-      if (scene.type === 'social' && time >= scene.duration) {
+      // 場景結束時關閉手機屏幕（社交、電話等類型）
+      if ((scene.type === 'social' || scene.type === 'phone') && time >= scene.duration) {
         phone.classList.remove('lit'); phone.classList.remove('show-social'); phone.classList.remove('show-interface');
       }
       if (scene.type === 'chat') phone.querySelectorAll('.chat-bubble').forEach((bubble, i) => bubble.classList.toggle('visible', time >= scene.messages[i].at));
