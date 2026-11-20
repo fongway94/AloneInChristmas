@@ -189,7 +189,10 @@ function frame() {
     layer.style.setProperty('--entrance', String(entrance));
     if (view.lightReveal) { const reveal = Math.max(0, Math.min(1, (time - (scene.lightAt || 0)) / (scene.lightDuration || 5))); view.lightReveal.style.opacity = String(entrance * reveal); }
     layer.classList.toggle('paused', !state.playing || state.black || fullyFaded);
-    if (caption) caption.classList.toggle('visible', time >= scene.captionAt);
+    if (caption) {
+      const captionShow = time >= scene.captionAt && (!scene.captionDuration || time < scene.captionAt + scene.captionDuration);
+      caption.classList.toggle('visible', captionShow);
+    }
 
     if (phone) {
       const notes = scene.notifications || [];
