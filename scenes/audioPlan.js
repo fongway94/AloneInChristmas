@@ -61,7 +61,7 @@ export function withAudio(scene) {
     result.effects.push(...scene.notifications.map(n => fx('message', n.at, .70)));
   }
   if (scene.id === 'work-pressure') result.effects.push(...scene.notifications.map(n => fx('message', n.at, .70)));
-  if (scene.id === 'family-call') result.effects.push(fx('ring', 1.2, .60));
+  if (scene.id === 'family-call') result.effects.push(fx('ring', 5, .60));
   if (scene.id === 'room-dark') result.effects.push(fx('message', 2, .70));
   if (scene.id === 'friends-whatsapp') result.effects.push(...scene.messages.map(m => fx('message', m.at, .70)));
   if (scene.id === 'wake-to-celebration') result.effects.push(fx('firework', 1, .45));
