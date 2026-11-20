@@ -62,6 +62,10 @@ export class AudioManager {
         .some(i => target >= seekable.start(i) && target <= seekable.end(i));
       if (!track.started && !canSeek) track.started = true;
       if (canSeek && !a.seeking && (!track.started || Math.abs(a.currentTime - target) > 1.5) && (!track.lastSeek || Date.now() - track.lastSeek > 1000)) {
+        if (track.loop && !track.repeatEvery) {
+          // 循環音軌：同步 target 到實際播放位置，避免場景淡出/黑屏後因時間偏差被反覆 seek
+          target = a.currentTime;
+        }
         try { a.currentTime = target; track.lastSeek = Date.now(); track.started = true; } catch (_) {}
       }
       const fadeIn = track.fadeIn && !track.transitionAt ? Math.min(1, (time - start) / track.fadeIn) : 1;
