@@ -87,7 +87,8 @@ function render() {
   $('output-operator').classList.toggle('active', localOutput);
   const rawTime = scene ? elapsed(state) : 0;
   const faded = scene?.fadeAt != null && rawTime >= scene.fadeAt + scene.fadeDuration;
-  if (localOutput) localAudio.update(rawTime, !!scene && state.playing && !faded, state.black || state.muted, state.volume ?? 1,
+  // 音樂不應因黑屏（state.black）而中斷；只有暫停/靜音才停止音軌。
+  if (localOutput) localAudio.update(rawTime, !!scene && state.playing, state.muted, state.volume ?? 1,
     { music: state.musicVolume ?? 1, effects: state.effectsVolume ?? 1, voice: state.voiceVolume ?? 1 });
   if (state.muted || (state.volume ?? 1) === 0) $('output-status').textContent = '全部声音已静音，或总音量为零。';
   else if (localOutput) $('output-status').textContent = '本操作台：' + (localAudio.status?.() || '已选择；如无声音，请再次点击本操作台播放。');
