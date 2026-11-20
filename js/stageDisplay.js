@@ -197,12 +197,19 @@ function frame() {
       const clock = notificationClock(scene.clock, notes, time);
       phone.querySelector('.status > span').textContent = clock; phone.querySelector('.clock').textContent = clock;
       if (scene.type === 'social') phone.querySelector('.social-feed').style.transform = `translateY(${-100 * socialPosition(scene.posts, time)}%)`;
-      phone.classList.toggle('lit', time >= 1); phone.classList.toggle('show-social', scene.type === 'social' && time >= (scene.posts[0]?.at ?? 1.8));
-      phone.classList.toggle('show-interface', time >= 1.4);
+      const phoneVisible = time >= (scene.phoneShowAt ?? 1);
+      phone.classList.toggle('lit', phoneVisible);
+      if (scene.type === 'social') phone.classList.toggle('show-social', phoneVisible && time >= (scene.posts[0]?.at ?? 1.8));
+      phone.classList.toggle('show-interface', phoneVisible && time >= 1.4);
+      // 社交場景結束時關閉手機屏幕
+      if (scene.type === 'social' && time >= scene.duration) {
+        phone.classList.remove('lit'); phone.classList.remove('show-social'); phone.classList.remove('show-interface');
+      }
       if (scene.type === 'chat') phone.querySelectorAll('.chat-bubble').forEach((bubble, i) => bubble.classList.toggle('visible', time >= scene.messages[i].at));
       if (scene.type === 'draft') {
         const chars = Array.from(scene.draft), typed = Math.min(chars.length, Math.max(0, Math.floor((time - 2) * 4)));
-        const deleted = Math.max(0, Math.floor((time - 8) * 5)); const newLen = Math.max(0, typed - deleted);
+        // 刪除速度比輸入更快（每秒 8 個字），聲音跟隨每個字符變化
+        const deleted = Math.max(0, Math.floor((time - 8) * 8)); const newLen = Math.max(0, typed - deleted);
         if (newLen !== lastDraftLen) { playTypingClick(); lastDraftLen = newLen; }
         phone.querySelector('.draft-text').textContent = chars.slice(0, newLen).join('');
       }
