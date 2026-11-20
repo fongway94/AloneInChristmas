@@ -26,7 +26,7 @@ const effects = {
 // synthTune: Web Audio 合成聖誕旋律（silentNight, jingleBells, joyToTheWorld, weWishYou, oChristmasTree）
 // 若設定 synthTune，將以合成音樂代替 MP3 音樂檔案，音質更好且無需外部檔案。
 const plan = {
-  // 所有音樂音量皆為原始上傳音量（1.0），不再調整
+  // 所有音樂音量皆為原始上傳音量（1.0），不再調整；lonely1 稍微大聲一點（1.3）
   'lonely-room': ['sad1', 1, [['rain', .02]], null],
   'unsent-draft': ['sad1', 1, [['rain', .02]], null],
   'friends-photos': ['sad1', 1, [['rain', .02]], null],
@@ -36,10 +36,10 @@ const plan = {
   'life-stops-for-no-one': ['busy1', 1, [], null],
   'family-call': ['sad2', 1, [['rain', .02]], null],
   'grief': ['sad2', 1, [['rain', .03]], null],
-  'friends-whatsapp': ['lonely1', 1, [['rain', .015]], null],
-  'hide-away': ['lonely1', 1, [['rain', .02]], null],
-  'window-fireworks': ['lonely1', 1, [['street', .10], ['crowd', .08]], null],
-  'get-ready-to-go': ['lonely1', 1, [['street', .07], ['crowd', .05]], null],
+  'friends-whatsapp': ['lonely1', 1.3, [['rain', .015]], null],
+  'hide-away': ['lonely1', 1.3, [['rain', .02]], null],
+  'window-fireworks': ['lonely1', 1.3, [['street', .10], ['crowd', .08]], null],
+  'get-ready-to-go': ['lonely1', 1.3, [['street', .07], ['crowd', .05]], null],
   'crowd-scene': ['christmas', 1, [['street', .10], ['crowd', .14]], 'weWishYou'],
   'bench-meeting': ['prayer', 1, [['street', .025]], 'silentNight'],
   'prayer': ['prayer', 1, [['street', .01]], 'silentNight'],
