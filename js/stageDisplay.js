@@ -201,6 +201,7 @@ function frame() {
       phone.querySelector('.status > span').textContent = clock; phone.querySelector('.clock').textContent = clock;
       if (scene.type === 'social') phone.querySelector('.social-feed').style.transform = `translateY(${-100 * socialPosition(scene.posts, time)}%)`;
       const phoneVisible = time >= (scene.phoneShowAt ?? 1);
+      phone.style.display = phoneVisible ? '' : 'none';
       phone.classList.toggle('lit', phoneVisible);
       if (scene.type === 'social') phone.classList.toggle('show-social', phoneVisible && time >= (scene.posts[0]?.at ?? 1.8));
       phone.classList.toggle('show-interface', phoneVisible && time >= 1.4);
