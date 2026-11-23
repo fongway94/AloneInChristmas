@@ -56,7 +56,7 @@ export function withAudio(scene) {
   const [theme, volume, ambient, synthTune] = entry;
   const music = { name: musicNames[theme], src: musicFiles[theme], continuity: `music-${theme}`, loop: true, fadeIn: 2, volume };
   const ambience = ambient.map(([name, gain]) => ({ name: ambienceNames[name], src: ambienceFiles[name], continuity: `ambience-${name}`, loop: true, fadeIn: 2, volume: gain, kind: 'effects' }));
-  const result = { volume: 1, music, ambience, synthTune, effects: (scene.audio?.effects || []).map(item => ({ ...item, name: scene.id === 'prayer' ? '预录祷告' : '预录旁白', kind: 'voice' })) };
+  const result = { volume: 1, music, ambience, synthTune, effects: (scene.audio?.effects || []).map(item => ({ ...item, name: scene.id === 'prayer' ? '预录祷告' : '预录旁白', kind: item.kind ?? 'voice' })) };
   if (scene.id === 'alarm-work') {
     // 鈴聲延遲到手機完全淡入後（7秒開始淡入 + 1.5秒過渡 = 8.5秒）才播放
     result.effects.push(fx('alarm', 8.5, .85));
