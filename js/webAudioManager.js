@@ -140,13 +140,16 @@ export class WebAudioManager {
       if (!track.node && !track.ended) this.startTrack(track, target);
       const fadeIn = track.fadeIn && track.transitionAt == null ? Math.min(1, (time - start) / track.fadeIn) : 1;
       const fadeOut = track.fadeOut && Number.isFinite(end) ? Math.max(0, Math.min(1, (end - time) / track.fadeOut)) : 1;
-      // 音樂響應音樂音量滑塊（levels.music），但不響應總音量滑塊（masterVolume），避免過度縮放
-      // 音效與語音仍受 masterVolume 與 levels 縮放
+      // 每個音頻類型只響應其對應的音量滑塊，不響應總音量滑塊（masterVolume），避免過度縮放
       let volume;
       if (track.kind === 'music') {
         volume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * (levels.music ?? 1) * fadeIn * fadeOut));
+      } else if (track.kind === 'effects') {
+        volume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * (levels.effects ?? 1) * fadeIn * fadeOut));
+      } else if (track.kind === 'voice') {
+        volume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * (levels.voice ?? 1) * fadeIn * fadeOut));
       } else {
-        volume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * masterVolume * (levels[track.kind] ?? 1) * fadeIn * fadeOut));
+        volume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * fadeIn * fadeOut));
       }
       if (volume === 0) track.transitionAt = null;
       if (track.transitionAt != null) {
