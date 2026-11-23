@@ -37,7 +37,7 @@ export class AudioManager {
     // 不同音乐／环境音切换时短暂交叉淡化，避免切画面时突然中断。
     this.retiring = this.retiring.filter(track => {
       const remaining = Math.max(0, 1 - (Date.now() - track.startedAt) / track.duration);
-      if (!playing || black || masterVolume === 0 || levels[track.kind] === 0 || remaining <= 0) { track.audio.pause(); track.audio.src = ''; return false; }
+      if (!playing || black || levels[track.kind] === 0 || remaining <= 0) { track.audio.pause(); track.audio.src = ''; return false; }
       track.audio.volume = Math.max(0, Math.min(1, track.volume * remaining)); return true;
     });
     for (const track of this.tracks) {
