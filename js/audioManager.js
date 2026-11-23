@@ -71,9 +71,10 @@ export class AudioManager {
       const fadeIn = track.fadeIn && !track.transitionAt ? Math.min(1, (time - start) / track.fadeIn) : 1;
       const fadeOut = track.fadeOut && Number.isFinite(end) ? Math.max(0, Math.min(1, (end - time) / track.fadeOut)) : 1;
       // 每個音頻類型只響應其對應的音量滑塊，不響應總音量滑塊（masterVolume），避免過度縮放
+      // 音樂允許 track.volume 超過 1 做額外增益（例如 lonely1 設為 1.3）
       let targetVolume;
       if (track.kind === 'music') {
-        targetVolume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * (levels.music ?? 1) * fadeIn * fadeOut));
+        targetVolume = Math.max(0, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * (levels.music ?? 1) * fadeIn * fadeOut);
       } else if (track.kind === 'effects') {
         targetVolume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * (levels.effects ?? 1) * fadeIn * fadeOut));
       } else if (track.kind === 'voice') {
