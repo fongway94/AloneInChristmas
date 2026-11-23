@@ -148,7 +148,8 @@ export class WebAudioManager {
       } else if (track.kind === 'effects') {
         volume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * (levels.effects ?? 1) * fadeIn * fadeOut));
       } else if (track.kind === 'voice') {
-        volume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * (levels.voice ?? 1) * fadeIn * fadeOut));
+        // 語音允許 track.volume 超過 1 做額外增益（例如第六幕錄音設為 1.5）
+        volume = Math.max(0, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * (levels.voice ?? 1) * fadeIn * fadeOut);
       } else {
         volume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * fadeIn * fadeOut));
       }
