@@ -49,7 +49,7 @@ const plan = {
   'friends-arrive': ['hope', 1, [['street', .025]], 'joyToTheWorld'],
   'ending': ['hope', 1, [['ocean', .03]], 'joyToTheWorld']
 };
-function fx(name, at, volume, extra = {}) { return { src: effects[name], name: effectNames[name], at, volume, ...extra }; }
+function fx(name, at, volume, extra = {}) { return { src: effects[name], name: effectNames[name], at, volume, kind: 'effects', ...extra }; }
 export function withAudio(scene) {
   const entry = plan[scene.id];
   if (!entry) throw new Error(`缺少音频配置：${scene.id}`);
@@ -59,17 +59,17 @@ export function withAudio(scene) {
   const result = { volume: 1, music, ambience, synthTune, effects: (scene.audio?.effects || []).map(item => ({ ...item, name: scene.id === 'prayer' ? '预录祷告' : '预录旁白', kind: 'voice' })) };
   if (scene.id === 'alarm-work') {
     // 鈴聲延遲到手機完全淡入後（7秒開始淡入 + 1.5秒過渡 = 8.5秒）才播放
-    result.effects.push(fx('alarm', 8.5, .60));
-    result.effects.push(...scene.notifications.map(n => fx('message', n.at, .70)));
+    result.effects.push(fx('alarm', 8.5, .85));
+    result.effects.push(...scene.notifications.map(n => fx('message', n.at, .85)));
   }
-  if (scene.id === 'work-pressure') result.effects.push(...scene.notifications.map(n => fx('message', n.at, .70)));
-  if (scene.id === 'family-call') result.effects.push(fx('ring', 5, .60));
-  if (scene.id === 'room-dark') result.effects.push(fx('message', 2, .70));
-  if (scene.id === 'friends-whatsapp') result.effects.push(...scene.messages.map(m => fx('message', m.at, .70)));
-  if (scene.id === 'wake-to-celebration') result.effects.push(fx('firework', 1, .45));
+  if (scene.id === 'work-pressure') result.effects.push(...scene.notifications.map(n => fx('message', n.at, .85)));
+  if (scene.id === 'family-call') result.effects.push(fx('ring', 5, .85));
+  if (scene.id === 'room-dark') result.effects.push(fx('message', 2, .85));
+  if (scene.id === 'friends-whatsapp') result.effects.push(...scene.messages.map(m => fx('message', m.at, .85)));
+  if (scene.id === 'wake-to-celebration') result.effects.push(fx('firework', 1, .70));
   // 第六幕：人群声已经通过环境音（crowd）体现，不需要额外手机叮咚声
-  if (scene.id === 'window-fireworks') result.effects.push(...[0, 1.8, 4.9].map(t => fx('firework', t, .50, { repeatEvery: 11 })));
-  if (scene.id === 'play-time') result.effects.push(fx('message', 2, .70));
+  if (scene.id === 'window-fireworks') result.effects.push(...[0, 1.8, 4.9].map(t => fx('firework', t, .70, { repeatEvery: 11 })));
+  if (scene.id === 'play-time') result.effects.push(fx('message', 2, .85));
   const byName = new Map();
   for (const item of result.effects) {
     const name = item.name + (item.repeatEvery ? `（每 ${item.repeatEvery} 秒重复）` : '');
