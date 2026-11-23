@@ -2,13 +2,13 @@ const street = 'assets/images/penang-street-local.png';
 const recording = (n, at) => ({ src: `Music/Christmas Recording ${n}.mp4`, at, volume: 1, kind: 'voice' });
 const base = { act: '第六幕：人群中的孤独', transitionIn: 1.5, audio: { music: null, effects: [], volume: .7 } };
 export default [
-  { ...base, id: 'crowd-scene', type: 'room', title: '热闹的人群', subtitle: '三组人依序出场', duration: 40, background: 'assets/images/penang-festive-local.png', warmth: .15, caption: '原来最深的孤独，不是身边没有人，而是在人群之中，仍然觉得自己孤单。', captionAt: 14,
+  { ...base, id: 'crowd-scene', type: 'room', title: '热闹的人群', subtitle: '三组人依序出场', duration: 95, background: 'assets/images/penang-festive-local.png', warmth: .15, caption: '原来最深的孤独，不是身边没有人，而是在人群之中，仍然觉得自己孤单。', captionAt: 14,
     description: '舞台上开始出现热闹的人群。第一组朋友们有说有笑地走过，互相拍照、交换礼物；第二组情侣牵着手，甜蜜地欣赏圣诞灯饰；第三组家庭开心走过，孩子兴奋地指着圣诞装饰。女孩独自在人群中穿梭，低着头，显得格外孤独。',
-    cue: '三组人依序出场并说对白，随后播放圣诞录音序列（12段）；最后女孩穿过人群，字幕淡入。',
+    cue: '三组人依序出场并说对白，随后播放圣诞录音序列（14段，每段在上一段结束后播放）；最后女孩穿过人群，字幕淡入。',
     audio: { music: null, volume: 1, effects: [
-      recording(1, 6), recording(2, 8), recording(3, 9), recording(4, 11), recording(5, 12),
-      recording(6, 21), recording(7, 23), recording(8, 24), recording(9, 25),
-      recording(10, 32), recording(11, 33), recording(12, 35)
+      recording(1, 6), recording(2, 12), recording(3, 18), recording(4, 24), recording(5, 28),
+      recording(6, 39), recording(7, 47), recording(8, 53), recording(9, 57),
+      recording(10, 66), recording(11, 71), recording(12, 79), recording(13, 86), recording(14, 91)
     ] },
     dialogues: [
       { at: 1, speaker: '👥 朋友们', text: 'Merry Christmas！🎄', note: 'Abraham、欣美、Jessica、美玲、巧清' },
