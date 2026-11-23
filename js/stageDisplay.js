@@ -20,7 +20,7 @@ const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.o
 const root = document.querySelector('#stage');
 let currentIndex = null, currentRun = null, view = null, state;
 
-// 打字声：iPhone 風格正弦波輕微點擊音
+// 打字声：iPhone 風格正弦波輕微點擊音；音量響應「音效与环境音量」滑塊
 let typingCtx = null;
 function playTypingClick() {
   if (!typingCtx) typingCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -30,7 +30,8 @@ function playTypingClick() {
   osc.type = 'sine';
   osc.frequency.setValueAtTime(1100, typingCtx.currentTime);
   osc.frequency.exponentialRampToValueAtTime(900, typingCtx.currentTime + 0.04);
-  gain.gain.setValueAtTime(0.03, typingCtx.currentTime);
+  const effectsVolume = state ? state.effectsVolume ?? 1 : 1;
+  gain.gain.setValueAtTime(0.03 * effectsVolume, typingCtx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.001, typingCtx.currentTime + 0.05);
   osc.connect(gain).connect(typingCtx.destination);
   osc.start();
