@@ -31,7 +31,7 @@ function playTypingClick() {
   osc.frequency.setValueAtTime(1100, typingCtx.currentTime);
   osc.frequency.exponentialRampToValueAtTime(900, typingCtx.currentTime + 0.04);
   const effectsVolume = state ? state.effectsVolume ?? 1 : 1;
-  gain.gain.setValueAtTime(0.03 * effectsVolume, typingCtx.currentTime);
+  gain.gain.setValueAtTime(0.12 * effectsVolume, typingCtx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.001, typingCtx.currentTime + 0.05);
   osc.connect(gain).connect(typingCtx.destination);
   osc.start();
