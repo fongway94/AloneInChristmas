@@ -140,11 +140,11 @@ export class WebAudioManager {
       if (!track.node && !track.ended) this.startTrack(track, target);
       const fadeIn = track.fadeIn && track.transitionAt == null ? Math.min(1, (time - start) / track.fadeIn) : 1;
       const fadeOut = track.fadeOut && Number.isFinite(end) ? Math.max(0, Math.min(1, (end - time) / track.fadeOut)) : 1;
-      // 音樂保持原始上傳音量，不受操作台總音量和音樂音量縮放；允許 track.volume 超過 1 做額外增益
+      // 音樂響應音樂音量滑塊（levels.music），但不響應總音量滑塊（masterVolume），避免過度縮放
       // 音效與語音仍受 masterVolume 與 levels 縮放
       let volume;
       if (track.kind === 'music') {
-        volume = Math.max(0, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * fadeIn * fadeOut);
+        volume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * (levels.music ?? 1) * fadeIn * fadeOut));
       } else {
         volume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (track.volume ?? 1) * masterVolume * (levels[track.kind] ?? 1) * fadeIn * fadeOut));
       }
