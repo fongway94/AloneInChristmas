@@ -101,7 +101,7 @@ export class WebAudioManager {
     const ctx = this.context;
     this.retiring = this.retiring.filter(item => {
       const remaining = Math.max(0, 1 - (ctx.currentTime - item.startedAt) / 1.2);
-      if (!playing || black || masterVolume === 0 || levels[item.track.kind] === 0 || remaining <= 0) { this.stopTrack(item.track); return false; }
+      if (!playing || black || levels[item.track.kind] === 0 || remaining <= 0) { this.stopTrack(item.track); return false; }
       if (item.track.gain) item.track.gain.gain.setTargetAtTime(item.volume * remaining, ctx.currentTime, .02);
       return true;
     });
@@ -175,7 +175,8 @@ export class WebAudioManager {
       }
       const fadeIn = fb.fadeIn && !fb.transitionAt ? Math.min(1, (time - start) / fb.fadeIn) : 1;
       const group = levels[fb.kind] ?? 1;
-      let targetVolume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (fb.volume ?? 1) * masterVolume * group * fadeIn));
+      // 音效與環境音只響應 levels.effects，不響應 masterVolume（總音量），避免過度縮放
+      let targetVolume = Math.max(0, Math.min(1, (this.scene.audio.volume ?? 1) * (fb.volume ?? 1) * group * fadeIn));
       if (fb.transitionAt) {
         const p = Math.min(1, (Date.now() - fb.transitionAt) / 1200);
         targetVolume = fb.fromVolume + (targetVolume - fb.fromVolume) * p;
