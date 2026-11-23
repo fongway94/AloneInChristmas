@@ -8,7 +8,8 @@ const musicFiles = {
   sad1: 'Music/悲伤音乐一.mp3',
   busy1: 'Music/忙生活音乐一.mp3',
   sad2: 'Music/悲伤音乐二.mp3',
-  lonely1: 'Music/孤单音乐一.mp3'
+  lonely1: 'Music/孤单音乐一.mp3',
+  lonely2: 'Music/孤单音乐二.mp3'
 };
 const ambienceFiles = {
   rain: 'assets/audio/ambience/rain.m4a',
@@ -16,7 +17,7 @@ const ambienceFiles = {
   crowd: 'assets/audio/ambience/crowd-soft.m4a',
   ocean: 'assets/audio/ambience/ocean_surf.m4a'
 };
-const musicNames = { piano: '轻柔钢琴', prayer: '温柔祷告音乐', hope: '盼望主题', christmas: '圣诞器乐', christmas1: '圣诞音乐一', sad1: '悲伤音乐一', busy1: '忙生活音乐一', sad2: '悲伤音乐二', lonely1: '孤单音乐一' };
+const musicNames = { piano: '轻柔钢琴', prayer: '温柔祷告音乐', hope: '盼望主题', christmas: '圣诞器乐', christmas1: '圣诞音乐一', sad1: '悲伤音乐一', busy1: '忙生活音乐一', sad2: '悲伤音乐二', lonely1: '孤单音乐一', lonely2: '孤单音乐二' };
 const ambienceNames = { rain: '雨声', street: '街道环境', crowd: '远处人群', ocean: '海浪' };
 const effectNames = { message: '手机讯息', alarm: '闹钟', ring: '电话铃声', firework: '烟花' };
 const effects = {
@@ -42,10 +43,10 @@ const plan = {
   'window-fireworks': ['lonely1', 1.3, [['street', .10], ['crowd', .08]], null],
   'get-ready-to-go': ['lonely1', 1.3, [['street', .07], ['crowd', .05]], null],
   'crowd-scene': ['christmas1', 1, [['street', .10], ['crowd', .14]], null],
-  'bench-meeting': ['sad2', 1, [['street', .025]], null],
-  'prayer': ['sad2', 1, [['street', .01]], null],
-  'jesus-loves-you': ['sad2', 1, [['street', .015]], null],
-  'testimony-talk': ['sad2', 1, [['street', .015]], null],
+  'bench-meeting': ['lonely1', 1.3, [['street', .025]], null],
+  'prayer': ['lonely1', 1.3, [['street', .01]], null],
+  'jesus-loves-you': ['lonely2', 1, [['street', .015]], null],
+  'testimony-talk': ['lonely2', 1, [['street', .015]], null],
   'encouragement': ['hope', 1, [['street', .02]], 'joyToTheWorld'],
   'friends-arrive': ['hope', 1, [['street', .025]], 'joyToTheWorld'],
   'ending': ['hope', 1, [['ocean', .03]], 'joyToTheWorld']
