@@ -4,6 +4,7 @@ const musicFiles = {
   prayer: 'assets/audio/music/peaceful-prayer-01.mp3',
   hope: 'assets/audio/music/morning-prayer-01.mp3',
   christmas: 'assets/audio/music/christmas-angels-lofi.mp3',
+  christmas1: 'Music/圣诞音乐一.mp3',
   sad1: 'Music/悲伤音乐一.mp3',
   busy1: 'Music/忙生活音乐一.mp3',
   sad2: 'Music/悲伤音乐二.mp3',
@@ -15,7 +16,7 @@ const ambienceFiles = {
   crowd: 'assets/audio/ambience/crowd-soft.m4a',
   ocean: 'assets/audio/ambience/ocean_surf.m4a'
 };
-const musicNames = { piano: '轻柔钢琴', prayer: '温柔祷告音乐', hope: '盼望主题', christmas: '圣诞器乐', sad1: '悲伤音乐一', busy1: '忙生活音乐一', sad2: '悲伤音乐二', lonely1: '孤单音乐一' };
+const musicNames = { piano: '轻柔钢琴', prayer: '温柔祷告音乐', hope: '盼望主题', christmas: '圣诞器乐', christmas1: '圣诞音乐一', sad1: '悲伤音乐一', busy1: '忙生活音乐一', sad2: '悲伤音乐二', lonely1: '孤单音乐一' };
 const ambienceNames = { rain: '雨声', street: '街道环境', crowd: '远处人群', ocean: '海浪' };
 const effectNames = { message: '手机讯息', alarm: '闹钟', ring: '电话铃声', firework: '烟花' };
 const effects = {
@@ -40,11 +41,11 @@ const plan = {
   'hide-away': ['lonely1', 1.3, [['rain', .02]], null],
   'window-fireworks': ['lonely1', 1.3, [['street', .10], ['crowd', .08]], null],
   'get-ready-to-go': ['lonely1', 1.3, [['street', .07], ['crowd', .05]], null],
-  'crowd-scene': ['christmas', 1, [['street', .10], ['crowd', .14]], 'weWishYou'],
-  'bench-meeting': ['prayer', 1, [['street', .025]], 'silentNight'],
-  'prayer': ['prayer', 1, [['street', .01]], 'silentNight'],
-  'jesus-loves-you': ['prayer', 1, [['street', .015]], 'silentNight'],
-  'testimony-talk': ['prayer', 1, [['street', .015]], 'silentNight'],
+  'crowd-scene': ['christmas1', 1, [['street', .10], ['crowd', .14]], null],
+  'bench-meeting': ['christmas1', 1, [['street', .025]], null],
+  'prayer': ['christmas1', 1, [['street', .01]], null],
+  'jesus-loves-you': ['christmas1', 1, [['street', .015]], null],
+  'testimony-talk': ['christmas1', 1, [['street', .015]], null],
   'encouragement': ['hope', 1, [['street', .02]], 'joyToTheWorld'],
   'friends-arrive': ['hope', 1, [['street', .025]], 'joyToTheWorld'],
   'ending': ['hope', 1, [['ocean', .03]], 'joyToTheWorld']
