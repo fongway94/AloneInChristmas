@@ -8,10 +8,10 @@ export default [
     cue: '手机讯息声自动响起。朋友入场、招呼、邀请；等女孩点头笑容出现后再推进。',
     audio: { music: null, volume: 1, effects: [
       tts('assets/audio/voice-scene09-start.mp3', 2),
-      recording(13, 8),
+      recording(13, 6),
       recording(14, 11),
       tts('assets/audio/voice-scene09-invite.mp3', 15),
-      recording(15, 22)
+      recording(15, 20)
     ] },
     dialogues: [
       { at: 3, speaker: '👦 方炜', text: '哎呀！圣诞话剧快开始了！', note: '看时间' },
