@@ -16,6 +16,15 @@ export default [
       { at: 8, speaker: '朋友C', text: '好啊！一起去看圣诞表演！' },
       { at: 11, speaker: '朋友D', text: '你呢？要不要一起来？' }
     ] },
+  { ...base, id: 'friends-instagram', type: 'social', title: '朋友聚会', subtitle: 'Instagram 动态', duration: 18, background: room, phoneShowAt: 2,
+    description: '手机屏幕显示 Instagram 动态，朋友们在聚会餐厅欢聚，女孩看着屏幕，沉默不语。',
+    cue: 'Instagram 动态滚动显示朋友聚会照片，最后手机屏幕自动关闭。',
+    posts: [
+      { author: '朋友A', photo: 'assets/images/instagram-gathering-1.png', likes: '其他人赞过', caption: '圣诞聚会！大家好开心 🎄❤️', age: '刚才', at: 2 },
+      { author: '朋友B', photo: 'assets/images/instagram-gathering-2.png', likes: '其他人赞过', caption: '家人团聚，好温暖 🍽️', age: '1 小时前', at: 8 },
+      { author: '朋友C', photo: 'assets/images/instagram-gathering-3.png', likes: '其他人赞过', caption: 'Merry Christmas！🎁', age: '2 小时前', at: 14 }
+    ],
+    dialogues: [] },
   { ...base, id: 'hide-away', type: 'room', title: '没有力气快乐', subtitle: '把自己藏起来', duration: 15, background: room, dim: .22, caption: '有时候，不是不想快乐，而是真的没有力气快乐。', captionAt: 4,
     description: '女孩把手机放在一旁，轻轻摇头，躺到床上拉起被子。',
     cue: '待女孩完成躺下、拉被子的动作再推进。音乐保持安静、孤单。',
