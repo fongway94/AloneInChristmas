@@ -1,9 +1,18 @@
 const bench = 'assets/images/penang-bench-local.png';
+const tts = (path, at, volume = 5) => ({ src: path, at, volume, kind: 'voice' });
+const recording = (n, at, volume = 5) => ({ src: `Music/Christmas Recording ${n}.mp4`, at, volume, kind: 'voice' });
 const base = { act: '第九幕：因为耶稣爱你', transitionIn: 1.5, audio: { music: null, effects: [], volume: .7 } };
 export default [
-  { ...base, id: 'friends-arrive', type: 'room', title: '朋友们来了', subtitle: '热情邀请', duration: 14, background: bench, warmth: .5,
+  { ...base, id: 'friends-arrive', type: 'room', title: '朋友们来了', subtitle: '热情邀请', duration: 25, background: bench, warmth: .5,
     description: '男孩站起身，看看时间，发现圣诞话剧快开始了。朋友们到场，热情地向女孩打招呼并邀请她一起去看。女孩犹豫后轻轻点头，露出久违的笑容。',
     cue: '手机讯息声自动响起。朋友入场、招呼、邀请；等女孩点头笑容出现后再推进。',
+    audio: { music: null, volume: 1, effects: [
+      tts('assets/audio/voice-scene09-start.mp3', 2),
+      recording(13, 8),
+      recording(14, 11),
+      tts('assets/audio/voice-scene09-invite.mp3', 15),
+      recording(15, 22)
+    ] },
     dialogues: [
       { at: 3, speaker: '👦 方炜', text: '哎呀！圣诞话剧快开始了！', note: '看时间' },
       { at: 5, speaker: 'Jessica', text: 'Hey！我们到了！', note: '朋友们上台' },
