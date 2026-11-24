@@ -40,7 +40,6 @@ const plan = {
   'family-call': ['sad2', 1, [['rain', .02]], null],
   'grief': ['sad2', 1, [['rain', .03]], null],
   'friends-whatsapp': ['lonely1', 1.3, [['rain', .015]], null],
-  'friends-instagram': ['lonely2', 1, [['street', .02]], null],
   'hide-away': ['lonely1', 1.3, [['rain', .02]], null],
   'window-fireworks': ['lonely1', 1.3, [['street', .10], ['crowd', .08]], null],
   'get-ready-to-go': ['lonely1', 1.3, [['street', .07], ['crowd', .05]], null],
