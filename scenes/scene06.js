@@ -7,8 +7,8 @@ export default [
     cue: '三组人依序出场并说对白，随后播放圣诞录音序列（12段，按指定绝对时间播放）；最后录音结束后字幕淡入。',
     audio: { music: null, volume: 1, effects: [
       recording(1, 6), recording(2, 9), recording(3, 16), recording(4, 22), recording(5, 24),
-      recording(6, 38), recording(7, 44), recording(8, 51, 10), recording(9, 55),
-      recording(10, 64), recording(11, 68), recording(12, 77)
+      recording(6, 38), recording(7, 44), recording(8, 51, 12), recording(9, 55),
+      recording(10, 64, 8), recording(11, 68, 8), recording(12, 77, 8)
     ] },
     dialogues: [
       { at: 1, speaker: '👥 朋友们', text: 'Merry Christmas！🎄', note: 'Abraham、欣美、Jessica、美玲、巧清' },
