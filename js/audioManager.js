@@ -1,6 +1,23 @@
 // 舞台窗口播放音频；操作台内嵌预览始终静音。
 export class AudioManager {
   constructor(muted = false) { this.muted = muted; this.scene = null; this.tracks = []; this.retiring = []; }
+  // HTML Audio 後備路徑：以 fetch 預熱 HTTP 快取，讓 <audio> 元素切換時即時播放
+  preload(sources) {
+    for (const src of new Set(sources)) {
+      if (!src) continue;
+      fetch(src, { cache: 'force-cache' }).then(r => r.arrayBuffer()).catch(() => {});
+    }
+  }
+  // 預載指定場景的全部音源（音樂＋環境＋音效/人聲）
+  preloadScene(scene) {
+    if (!scene?.audio) return;
+    const cfg = scene.audio;
+    this.preload([
+      ...(cfg.music ? [cfg.music.src] : []),
+      ...(cfg.ambience || []).map(item => item.src),
+      ...(cfg.effects || []).map(item => item.src)
+    ].filter(Boolean));
+  }
   load(scene) {
     const oldScene = this.scene;
     const previous = this.tracks;

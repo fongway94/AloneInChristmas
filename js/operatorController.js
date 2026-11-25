@@ -46,7 +46,10 @@ $('output-operator').addEventListener('click', () => {
   manager.setAudioOutput('operator');
   // resume() 必须直接在用户点击时调用，不能等到动画帧。
   localAudio.unlock?.();
-  localAudio.preload?.(scenes.flatMap(scene => scene.audio?.effects || []).map(track => track.src).filter(Boolean));
+  localAudio.preload?.(scenes.flatMap(scene => {
+    const cfg = scene.audio; if (!cfg) return [];
+    return [...(cfg.music ? [cfg.music.src] : []), ...(cfg.ambience || []).map(item => item.src), ...(cfg.effects || []).map(track => track.src)];
+  }).filter(Boolean));
   const scene = scenes[state.index], time = scene ? elapsed(state) : 0;
   const faded = scene?.fadeAt != null && time >= scene.fadeAt + scene.fadeDuration;
   localAudio.update(time, state.playing && !faded, state.black || state.muted, state.volume ?? 1,

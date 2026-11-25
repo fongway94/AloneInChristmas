@@ -6,17 +6,54 @@ import { xmasSynth } from './xmasSynth.js?v=audio4';
 const manager = new SceneManager();
 const preview = new URLSearchParams(location.search).has('preview');
 const audio = createAudioManager(preview);
-// 短音效及人声可提前解码，降低手机网络导致错过提示点的风险。
+// 收集場景音源與圖片，提前預載以降低切換時的等待
+function sceneAudioSources(scene) {
+  if (!scene?.audio) return [];
+  const cfg = scene.audio;
+  return [
+    ...(cfg.music ? [cfg.music.src] : []),
+    ...(cfg.ambience || []).map(item => item.src),
+    ...(cfg.effects || []).map(item => item.src)
+  ].filter(Boolean);
+}
+function sceneImageSources(scene) {
+  if (!scene) return [];
+  return [scene.background, scene.overlayBackground, ...(scene.posts || []).map(post => post.photo)].filter(Boolean);
+}
+// 短音效及人声体积小，可全部提前解码；长音乐/环境音只预载前两幕，其余在空闲时分批预载，避免一次解码太多占用手机内存
 if (!preview) {
-  const sources = scenes.flatMap(scene => scene.audio?.effects || []).map(track => track.src).filter(Boolean);
-  if (audio.preload) audio.preload(sources);
-  else for (const src of new Set(sources)) fetch(src, { cache: 'force-cache' }).then(r => r.arrayBuffer()).catch(() => {});
+  const shortSources = scenes.flatMap(scene => scene.audio?.effects || []).map(track => track.src).filter(Boolean);
+  if (audio.preload) audio.preload(shortSources);
+  else for (const src of new Set(shortSources)) fetch(src, { cache: 'force-cache' }).then(r => r.arrayBuffer()).catch(() => {});
+  const longSources = [...new Set(scenes.slice(0, 2).flatMap(sceneAudioSources))];
+  if (audio.preload) audio.preload(longSources);
+  else for (const src of longSources) fetch(src, { cache: 'force-cache' }).then(r => r.arrayBuffer()).catch(() => {});
+  const restLong = [...new Set(scenes.slice(2).flatMap(sceneAudioSources))].filter(src => !longSources.includes(src));
+  const warmRest = () => { if (audio.preload) audio.preload(restLong); else for (const src of restLong) fetch(src, { cache: 'force-cache' }).then(r => r.arrayBuffer()).catch(() => {}); };
+  if ('requestIdleCallback' in window) requestIdleCallback(warmRest, { timeout: 8000 });
+  else setTimeout(warmRest, 3000);
+}
+// 預載下一場景的音樂與圖片：操作員推進前先解碼好，切換時即時播放
+function preloadNextScene(index) {
+  const next = scenes[index + 1];
+  if (!next) return;
+  if (audio.preloadScene) audio.preloadScene(next);
+  else if (audio.preload) audio.preload(sceneAudioSources(next));
+  for (const src of sceneImageSources(next)) {
+    const image = new Image(); image.src = src;
+    if (image.decode) image.decode().catch(() => {});
+  }
 }
 // 把舞台音频状态回传操作台；预览窗口不广播，避免误报。
 let soundChannel = null, lastSoundReport = 0;
 if (!preview) try { soundChannel = new BroadcastChannel('alone-in-christmas-audio-status'); } catch (_) {}
-// 提前载入图片，降低现场切换时等待解码的机率。
-const preloaded = [...new Set(scenes.flatMap(scene => [scene.background, scene.overlayBackground, ...(scene.posts || []).map(post => post.photo)]).filter(Boolean))].map(src => { const image = new Image(); image.src = src; return image; });
+// 提前载入图片，降低现场切换时等待解码的机率。前两幕立即载入，其余在空闲时分批载入，避免一次下载 77MB 塞爆网络、反而拖慢音乐下载
+const earlyImages = [...new Set(scenes.slice(0, 2).flatMap(sceneImageSources))];
+for (const src of earlyImages) { const image = new Image(); image.src = src; if (image.decode) image.decode().catch(() => {}); }
+const restImages = [...new Set(scenes.slice(2).flatMap(sceneImageSources))].filter(src => !earlyImages.includes(src));
+const warmImages = () => { for (const src of restImages) { const image = new Image(); image.src = src; if (image.decode) image.decode().catch(() => {}); } };
+if ('requestIdleCallback' in window) requestIdleCallback(warmImages, { timeout: 8000 });
+else setTimeout(warmImages, 3000);
 const root = document.querySelector('#stage');
 let currentIndex = null, currentRun = null, view = null, state;
 
@@ -168,7 +205,7 @@ function build(scene) {
   root.append(layer);
   return { layer, phone, cards, caption, motion, lightReveal, motionFrame: null };
 }
-manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); xmasSynth.stop(); if (scene.synthTune && value.playing && !value.black && !value.muted && value.audioOutput !== 'operator') xmasSynth.play(scene.synthTune, 0.12); } if (!value.playing || value.muted) { audio.update(0, false, true); xmasSynth.setVolume(0); } else if (value.audioOutput !== 'operator' && scenes[value.index]?.synthTune) { xmasSynth.setVolume(0.12); } });
+manager.subscribe(value => { state = value; if (currentIndex !== value.index || currentRun !== value.runId) { currentIndex = value.index; currentRun = value.runId; const scene = scenes[currentIndex]; view = build(scene); audio.load(scene); preloadNextScene(currentIndex); xmasSynth.stop(); if (scene.synthTune && value.playing && !value.black && !value.muted && value.audioOutput !== 'operator') xmasSynth.play(scene.synthTune, 0.12); } if (!value.playing || value.muted) { audio.update(0, false, true); xmasSynth.setVolume(0); } else if (value.audioOutput !== 'operator' && scenes[value.index]?.synthTune) { xmasSynth.setVolume(0.12); } });
 function frame() {
   const scene = scenes[state.index];
   if (scene && view) {
