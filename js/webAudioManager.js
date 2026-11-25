@@ -7,6 +7,7 @@ export class WebAudioManager {
     this.muted = muted;
     this.context = muted || !Context ? null : new Context();
     this.scene = null; this.tracks = []; this.retiring = []; this.cache = new Map();
+    this.preloadedAt = new Map(); // src -> 最近預載時間戳，避免 load() 誤淘汰剛預載的下一場景資源
     this.failed = new Set(); this.lastState = { playing: false, black: true };
     this.fallbacks = new Map(); // src -> HTML Audio 後備音軌（Web Audio 解码失败时使用）
   }
@@ -23,7 +24,18 @@ export class WebAudioManager {
       this.context.resume().catch(() => {});
     } catch (_) { /* 稍后可重新点击 */ }
   }
-  preload(sources) { if (this.context) for (const src of new Set(sources)) this.getBuffer(src); }
+  preload(sources) { if (!this.context) return; const now = Date.now(); for (const src of new Set(sources)) { if (!src) continue; this.preloadedAt.set(src, now); this.getBuffer(src); } }
+  // 預載指定場景的全部音源（音樂＋環境＋音效/人聲），用於下一場景提前解碼，避免切換時延遲
+  preloadScene(scene) {
+    if (!this.context || !scene?.audio) return;
+    const cfg = scene.audio;
+    const sources = [
+      ...(cfg.music ? [cfg.music.src] : []),
+      ...(cfg.ambience || []).map(item => item.src),
+      ...(cfg.effects || []).map(item => item.src)
+    ].filter(Boolean);
+    this.preload(sources);
+  }
   getBuffer(src) {
     if (!this.cache.has(src)) {
       const promise = fetch(src).then(response => {
@@ -50,9 +62,21 @@ export class WebAudioManager {
       ...(config.ambience || []).map(item => ({ ...item, kind: 'effects' })),
       ...(config.effects || []).map(item => ({ ...item, kind: item.kind || 'effects' }))
     ].filter(item => item.src);
-    // 只保留当前音乐／环境与小型音效：解码后的长音乐会占用较多手机内存。
+    // 只淘汰非當前場景的長音訊（音樂/環境）：解碼後的長音樂會占用較多手機記憶體。
+    // 短音效與人聲（sfx、錄音、TTS 語音）體積小，保留快取以便切換時即時播放；
+    // 下一場景的音樂由 preloadScene() 在 load() 之後預載，不會被此處淘汰。
     const activeSources = new Set(entries.map(item => item.src));
-    for (const src of this.cache.keys()) if (!activeSources.has(src) && !src.includes('/sfx/') && !src.endsWith('/prayer.mp3') && !src.endsWith('/testimony.mp3')) this.cache.delete(src);
+    const isLongAudio = src => {
+      if (src.includes('Christmas Recording') || src.includes('/sfx/') || src.includes('voice-')) return false;
+      return src.includes('/music/') || src.includes('/ambience/') || src.startsWith('Music/');
+    };
+    const now = Date.now();
+    for (const src of this.cache.keys()) {
+      if (activeSources.has(src) || !isLongAudio(src)) continue;
+      // 剛預載（60 秒內）的資源不淘汰，確保下一場景切換時即時播放
+      if (now - (this.preloadedAt.get(src) || 0) < 60000) continue;
+      this.cache.delete(src);
+    }
     // 清理不再使用的 HTML Audio 後備
     for (const src of this.fallbacks.keys()) if (!activeSources.has(src)) { const fb = this.fallbacks.get(src); fb.audio.pause(); fb.audio.src = ''; this.fallbacks.delete(src); }
     const reused = new Set();
