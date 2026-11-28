@@ -9,7 +9,7 @@ export default [
       recording(1, 6), recording(2, 9), recording(3, 16), recording(4, 22), recording(5, 24),
       recording(6, 38), recording(7, 44), recording(8, 51, 20), recording(9, 55),
       recording(10, 64, 8), recording(11, 68, 8), recording(12, 77, 8),
-      { src: 'Music/6th scene Recording.mp4', at: 89, volume: 15, kind: 'voice' }
+      { src: 'Music/6th scene Recording.mp4', at: 89, volume: 12, kind: 'voice' }
     ] },
     dialogues: [
       { at: 1, speaker: '👥 朋友们', text: 'Merry Christmas！🎄', note: 'Abraham、欣美、Jessica、美玲、巧清' },

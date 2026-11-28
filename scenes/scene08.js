@@ -6,7 +6,7 @@ export default [
     cue: 'PPT 配合呈现男孩过去困境画面。预录旁白播放约 15 秒；结尾字幕在18秒出现，2秒后播放本幕结尾录音，结束后再推进。',
     audio: { music: null, volume: 1, effects: [
       { src: 'assets/audio/testimony.mp3', at: 2, end: 17.1, volume: 1 },
-      { src: 'Music/8th scene Recording.mp4', at: 20, volume: 15, kind: 'voice' }
+      { src: 'Music/8th scene Recording.mp4', at: 20, volume: 12, kind: 'voice' }
     ] },
     dialogues: [
       { at: 3, speaker: '👦 方炜', text: '我以前也以为，只有自己这么痛苦。', note: '' },

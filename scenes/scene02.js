@@ -29,7 +29,7 @@ export default [
     captionAt: 2,
     fadeAt: 7,
     fadeDuration: 3,
-    audio: { music: null, volume: 1, effects: [{ src: 'Music/2nd scene Recording.mp4', at: 4, volume: 15, kind: 'voice' }] },
+    audio: { music: null, volume: 1, effects: [{ src: 'Music/2nd scene Recording.mp4', at: 4, volume: 12, kind: 'voice' }] },
     description: '黑屏显示字幕，淡出后进入第三幕。',
     cue: '黑屏显示字幕，等观众读完后淡出，再进入第三幕。',
     dialogues: [] }
