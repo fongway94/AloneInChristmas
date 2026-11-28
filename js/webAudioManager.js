@@ -107,16 +107,23 @@ export class WebAudioManager {
     if (!track.node) return;
     track.node.onended = null;
     try { track.node.stop(); } catch (_) {}
-    try { track.node.disconnect(); track.gain.disconnect(); } catch (_) {}
-    track.node = null; track.gain = null;
+    try { track.node.disconnect(); track.gain.disconnect(); track.compressor?.disconnect(); } catch (_) {}
+    track.node = null; track.gain = null; track.compressor = null;
   }
   startTrack(track, target) {
     const node = this.context.createBufferSource(), gain = this.context.createGain();
     node.buffer = track.buffer; node.loop = !!track.loop && !track.repeatEvery;
-    node.connect(gain); gain.connect(this.context.destination);
+    node.connect(gain);
+    if (track.kind === 'voice' && this.context.createDynamicsCompressor) {
+      // 高增益錄音經壓縮器防止峰值削波；音軌增益最高保留 20 倍相容舊設定。
+      const compressor = this.context.createDynamicsCompressor();
+      compressor.threshold.value = -6; compressor.knee.value = 4; compressor.ratio.value = 12;
+      compressor.attack.value = .003; compressor.release.value = .25;
+      gain.connect(compressor); compressor.connect(this.context.destination); track.compressor = compressor;
+    } else gain.connect(this.context.destination);
     track.node = node; track.gain = gain; track.startedAt = this.context.currentTime; track.startOffset = target;
     gain.gain.setValueAtTime(0, this.context.currentTime);
-    node.onended = () => { if (track.node === node) { track.node = null; track.gain = null; track.ended = true; try { node.disconnect(); gain.disconnect(); } catch (_) {} } };
+    node.onended = () => { if (track.node === node) { track.node = null; track.gain = null; track.ended = true; try { node.disconnect(); gain.disconnect(); track.compressor?.disconnect(); } catch (_) {} track.compressor = null; } };
     try { node.start(0, target); } catch (_) { this.stopTrack(track); }
   }
   update(time, playing, black, masterVolume = 1, levels = {}) {
@@ -183,7 +190,8 @@ export class WebAudioManager {
         volume = track.fromVolume + (volume - track.fromVolume) * p;
         if (p >= 1) track.transitionAt = null;
       }
-      track.currentVolume = Math.max(0, Math.min(1, volume));
+      // 語音/錄音 track.volume 可用 15 等乘數增益；Web Audio GainNode 可超過 1，HTML Audio 後備仍限制於 1。
+      track.currentVolume = Math.max(0, Math.min(track.kind === 'voice' ? 20 : 1, volume));
       if (track.gain) track.gain.gain.setTargetAtTime(track.currentVolume, ctx.currentTime, .02);
     }
     // 驱动 HTML Audio 后备音轨
