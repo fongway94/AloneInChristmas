@@ -12,8 +12,8 @@ export default [
     ] },
   { ...base, id: 'grief', type: 'closing', title: '我还能依靠谁？', subtitle: '掩面哭泣', duration: 28, background: room, caption: '有些事，再努力，也无法挽留。\n\n当所有的不幸接踵而来，我还能依靠谁？', captionAt: 3, fadeAt: 24, fadeDuration: 4,
     audio: { music: null, volume: 1, effects: [
-      { src: 'Music/3rd scene a Recording.mp4', at: 5, volume: 15, kind: 'voice' },
-      { src: 'Music/3rd scene b Recording.mp4', at: 13.2, volume: 15, kind: 'voice' }
+      { src: 'Music/3rd scene a Recording.mp4', at: 5, volume: 12, kind: 'voice' },
+      { src: 'Music/3rd scene b Recording.mp4', at: 13.2, volume: 12, kind: 'voice' }
     ] },
     description: '女孩扶着椅子坐下，掩面哭泣。',
     cue: '留足表演和沉默时间，字幕淡入后也不自动切换。黑场会保持；等女孩与灯光准备好，再进入第四幕。' }

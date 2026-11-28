@@ -17,7 +17,7 @@ export default [
       { at: 11, speaker: '朋友D', text: '你呢？要不要一起来？' }
     ] },
   { ...base, id: 'hide-away', type: 'room', title: '没有力气快乐', subtitle: '把自己藏起来', duration: 18, background: room, dim: .22, caption: '有时候，不是不想快乐，而是真的没有力气快乐。', captionAt: 4,
-    audio: { music: null, volume: 1, effects: [{ src: 'Music/4th scene Recording.mp4', at: 6, volume: 15, kind: 'voice' }] },
+    audio: { music: null, volume: 1, effects: [{ src: 'Music/4th scene Recording.mp4', at: 6, volume: 12, kind: 'voice' }] },
     description: '女孩把手机放在一旁，轻轻摇头，躺到床上拉起被子。',
     cue: '待女孩完成躺下、拉被子的动作再推进。音乐保持安静、孤单。',
     dialogues: [

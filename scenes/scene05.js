@@ -11,7 +11,7 @@ export default [
     cue: '等服装与走位准备好，再切换到街头。',
     caption: '我还是……出去走走吧',
     captionAt: 6,
-    audio: { music: null, volume: 1, effects: [{ src: 'Music/5th scene Recording.mp4', at: 8, volume: 15, kind: 'voice' }] },
+    audio: { music: null, volume: 1, effects: [{ src: 'Music/5th scene Recording.mp4', at: 8, volume: 12, kind: 'voice' }] },
     dialogues: [
       { at: 4, speaker: '悠兒', text: '出去走走吧……总好过一个人留在这里。', note: '围上围巾' }
     ] }
